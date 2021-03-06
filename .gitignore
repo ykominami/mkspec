@@ -1,3 +1,5 @@
+*.code-workspace
+rubocop-cof.yml
 *.gem
 *.rbc
 /.config
