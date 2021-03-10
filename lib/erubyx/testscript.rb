@@ -1,10 +1,11 @@
+# frozen_string_literal: true
 module Erubyx
   class TestScript
     attr_reader :name, :script_name, :test_groups
 
     def initialize(name, limit)
       @name = name
-      @script_name = %(#{name}_rspec.rb)
+      @script_name = %(#{name}_spec.rb)
       @limit = limit
       @test_groups = []
       @total_test_cases = 0

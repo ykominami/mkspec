@@ -1,25 +1,31 @@
+# frozen_string_literal: true
+
 module Erubyx
+  require 'yaml'
+
   class Root
-    def initialize(yml_fname, data_top_dir)
-      @setting = YAML.load_file(yml_fname)
-      @path = @setting['path']
-      @data_top_pn = Pathname(data_top_dir)
-      @pn = @data_top_pn + @path
+    def initialize(yml_fname, config)
+      puts "Root| yml_fname=#{yml_fname}"
+      @setting_hash = YAML.load_file(yml_fname)
+      @path = @setting_hash['path']
+      puts "In Root| @path=#{@path}"
+      @config = config
+      @pn = @config.make_path_under_data_dir( @path )
       @level = 1
     end
 
     def result
       hash = {}
-      @setting.each do |k, v|
+      @setting_hash.each do |k, v|
         if v.instance_of?(Hash)
-          hash[k] = Item.new(@level + 1, k, v['path'], v, @data_top_pn)
+          hash[k] = Item.new(@level + 1, k, v['path'], v, @config)
           hash[k].load
         else
           hash[k] = v
         end
       end
       p "In Root @pn=#{@pn}"
-      item = Item.new(@level, :root, @pn, hash, @data_top_pn)
+      item = Item.new(@level, :root, @pn, hash, @config)
       item.load
       item.result
     end

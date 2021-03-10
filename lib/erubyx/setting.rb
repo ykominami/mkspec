@@ -1,21 +1,29 @@
+# frozen_string_literal: true
+
 module Erubyx
   class Setting
-    attr_reader :path, :output_path, :testscript, :make_arg, :yaml_path
+    attr_reader :template_path, :testscript, :make_arg, :data_yaml_path
 
-    def initialize(testscript, data_top_dir, make_arg)
+    def initialize(testscript, config, make_arg)
       @testscript = testscript
       @hash = {}
-      sub_pn = Pathname.new(@testscript.name)
-      @path = sub_pn + 'content.txt'
-      pn = Pathname.new(data_top_dir)
-      @output_path = pn + @path
-      @yaml_path = pn + %(#{@testscript.name}.yml)
+
+      #sub_pn = config.make_path_under_setting_dir(@testscript.name)
+      #sub_pn.mkdir unless sub_pn.exist?
+
+      data_sub_pn = config.make_path_under_data_dir(@testscript.name)
+      data_sub_pn.mkdir unless data_sub_pn.exist?
+      @template_path = data_sub_pn + 'content.txt'
+
+      @path_value = @template_path.relative_path_from(data_sub_pn.parent)
+
+      @data_yaml_path = data_sub_pn + %(#{@testscript.name}.yml)
       @make_arg = make_arg
     end
 
-    def setup
-      @hash['path'] = @path.to_s
-      @hash['desc'] = 'tecsgen command'
+    def setup(desc)
+      @hash['path'] = @path_value.to_s
+      @hash['desc'] = desc
       @hash['rspec_describe_head'] = { 'path' => 'rspec_describe_head/content.txt' }
       @hash['rspec_describe_end'] = { 'path' => 'rspec_describe_end/content.txt' }
       @hash['rspec_describe_context_end'] = { 'path' => 'rspec_describe_context_end/content.txt' }
@@ -33,8 +41,9 @@ module Erubyx
       end
     end
 
-    def output_yaml
-      File.open(@yaml_path, 'w') do |file|
+    def output_data_yamlfile
+      puts "Setting.output_yamlfile @data_yaml_path=#{@data_yaml_path}"
+      File.open(@data_yaml_path, 'w') do |file|
         file.write(YAML.dump(@hash))
       end
     end

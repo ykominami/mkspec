@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module Erubyx
   class Item
-    def initialize(level, tag, path, hash, data_top_pn)
+    def initialize(level, tag, path, hash, config)
       @level = level
       @tag = tag
       @path = Pathname.new(path)
       @hash = hash
-      @data_top_pn = data_top_pn
+      @config = config
       @pn = if @path.exist?
               @path
             else
-              @data_top_pn + @path
+              config.make_path_under_data_dir( @path )
             end
       @re = Regexp.new("^(\s*)<%=(.+)%>")
       @extracted = nil

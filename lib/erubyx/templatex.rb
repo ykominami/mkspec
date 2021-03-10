@@ -1,10 +1,10 @@
+# frozen_string_literal: true
 module Erubyx
   class Templatex
     def initialize(setting)
       @setting = setting
-      @path = @setting.path
-      @output_path = @setting.output_path
-      pn = Pathname.new(@output_path)
+      @template_path = @setting.template_path
+      pn = Pathname.new(@template_path)
       pn.parent.mkdir unless pn.parent.exist?
       @content = ''
       @make_arg = @setting.make_arg
@@ -46,7 +46,7 @@ end
     end
 
     def output
-      File.open(@output_path, 'w') do |file|
+      File.open(@template_path, 'w') do |file|
         file.write(@content)
       end
     end

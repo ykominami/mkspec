@@ -1,59 +1,114 @@
 require 'pathname'
 
 module UtilHelper
-  
-  def self.make_args( test_data_dir, target_parent_dir , num , tecsgen_name, result_name , script_path, *param_name )
+  def self.make_args( test_data_dir, target_parent_dir , num , cmd_for_test, result_name , script_path, *param_name )
     target_dir = Pathname.new(target_parent_dir) + num.to_s
     result = Pathname.new(target_dir) + result_name
     list = param_name.join(" ")
 
-    "#{script_path} #{test_data_dir} #{result} #{tecsgen_name} #{target_dir} #{list}"
+    "#{script_path} #{test_data_dir} #{result} #{cmd_fortest} #{target_dir} #{list}"
+  end
+
+  def self.make_conf(top_dir, test_data_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
+    Conf.new(top_dir, test_data_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
   end
 
   class Conf
-    attr_reader :cmd_path
-    
-    def initialize(top_dir, test_data_dir, test_case_dir, tecsgen, tecsmerge, cmd_path)
-      @top_dir = Pathname.new( top_dir )
-      @test_data_dir = Pathname.new( test_data_dir )
-      @test_case_dir = Pathname.new( test_case_dir )
-      @tecsgen = tecsgen
-      @tecsmerge = tecsmerge
-      @cmd_path = Pathname.new( cmd_path )
+    attr_reader :test_cmd_path
+
+    def initialize(top_dir, test_data_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
+      @top_dir_pn = Pathname.new( top_dir )
+      @test_data_dir_pn = Pathname.new( test_data_dir )
+      @test_case_dir_pn = Pathname.new( test_case_dir )
+      @target_cmd_1 = target_cmd_1
+      @target_cmd_2 = target_cmd_2
+      @current_pn = Pathname.new(Dir.pwd)
+      @test_cmd_path_pn = @current_pn + "bin" + test_cmd
+      unless @test_cmd_path_pn.exist?
+        @test_cmd_path_pn = @current_pn + "spec" + "bin" + test_cmd
+        unless @test_cmd_path_pn.exist?
+          @test_cmd_path_pn = find_cmd( @current_pn , test_cmd)
+        end
+      end
+      unless @test_cmd_path_pn
+        #puts "@test_cmd_path_pn=#{@test_cmd_path_pn}"
+        raise
+      end
+    end
+
+    def make_cmdline_base( target_cmd, target_dir, result, optx, *param_names )
+      params = param_names.join(" ")
+
+      "#{@test_cmd_path_pn} #{@test_data_dir_pn} #{result} #{target_cmd} #{target_dir} #{optx} #{params}"
+    end
+
+    def make_cmdline_1( target_dir, result, optx, *param_names )
+      make_cmdline_base( @target_cmd_1, target_dir, result, optx, *param_names )
+    end
+
+    def make_cmdline_2( target_dir, result, optx, *param_name )
+      make_cmdline_base( @target_cmd_2, target_dir, result, optx, *param_names )
+    end
+
+    def find_cmd(start_dir , cmd)
+      ret = [false, nil]
+      pn = Pathname.new(start_dir)
+      while ret[0] == false
+        cmd_pn = pn + cmd
+        if cmd_pn.exist?
+          ret = [true, cmd_pn]
+        else
+          cmd_pn = pn + "bin" + cmd
+          if cmd_pn.exist?
+           ret = [true, cmd_pn]
+          end
+        end
+        if ret[0] == false
+          if pn == pn.parent
+            ret = [true, nil]
+          else
+            pn = pn.parent
+          end
+        end
+      end
+      ret[1]
     end
 
     def make_target_dir( target_parent_dir , num )
       ret = ""
       if target_parent_dir
+        target_parent_pn = Pathname.new(target_parent_dir)
         if num
-          ret =target_parent_dir + num.to_s
+          ret =target_parent_pn + "#{num}"
         else
-          ret = target_parent_dir
+          ret = target_parent_pn
         end
       else
         if num
-          ret = num.to_s
+          ret = Pathname.new( "#{new}")
         end
       end
 
-      ret
+      ret.to_s
     end
-    
+
     def make_result_file_path( target_dir , result )
       ret = ""
       if target_dir
+        target_pn = Pathname.new(target_dir)
         if result
-          ret = target_dir + result.to_s
+          ret = target_pn + result
         else
-          ret = target_dir
+          ret = target_pn
         end
       else
         if result
-          ret = result
+          result_pn = Pathname.new(result)
+          ret = result_pn
         end
       end
 
-      ret
+      ret.to_s
     end
 
     def make_target_dir_and_result_file_path( target_parent_dir , num , result )
@@ -61,12 +116,6 @@ module UtilHelper
       result_file_path = make_result_file_path( target_dir , result )
 
       [target_dir , result_file_path]
-    end
-    
-    def make_args( target_dir, result, optx, *param_name )
-      params = param_name.join(" ")
-
-      "#{@cmd_path} #{@test_data_dir} #{result} #{@tecsgen} #{target_dir} #{optx} #{params}"
     end
 
     def get_relative_path_base( target_dir , base_dir = nil)
@@ -84,13 +133,13 @@ module UtilHelper
       end
       relative_pn
     end
-    
+
     def get_relative_path(target_top_dir, target_sub_dir , base_dir = nil)
       target_top_pn = Pathname.new(target_top_dir)
       target_pn = target_top_pn + target_sub_dir
       get_relative_path_base( target_pn , base_dir )
     end
-    
+
     def make_include_path_option( include_path , current_path = nil)
       relative_pn = get_relative_path( @test_data_dir, include_path , current_path)
       %!-I #{relative_pn}!
@@ -198,9 +247,5 @@ module UtilHelper
     def make_idx_is_id_option
       %!-i!
     end
-  end
-
-  def self.set_conf(top_dir, test_data_dir, test_case_dir, tecsgen, tecsmerge, cmd_path)
-    Conf.new(top_dir, test_data_dir, test_case_dir, tecsgen, tecsmerge, cmd_path)
   end
 end
