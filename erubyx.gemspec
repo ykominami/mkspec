@@ -34,6 +34,16 @@ Gem::Specification.new do |spec|
 
   # For more information and examples about making a new gem, checkout our
   # guide at: https://bundler.io/guides/creating_gem.html
-  spec.add_dependency 'erubis', '~> 2.7.0'
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "aruba"
+  spec.add_development_dependency "pry"
+  spec.add_development_dependency "rb-readline"
+  spec.add_development_dependency "rspec_junit_formatter"
   spec.add_development_dependency 'pre-commit'
+  spec.add_development_dependency 'coderay', '~> 1.1.1'
+  spec.add_development_dependency 'rubocop'
+
+  spec.add_dependency 'erubis', '~> 2.7.0'
 end

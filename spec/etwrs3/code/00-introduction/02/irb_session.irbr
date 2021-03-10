@@ -1,2 +1,0 @@
->> %w[Type in just the bit after the prompt].join(' ')
-=> "Type in just the bit after the prompt"
