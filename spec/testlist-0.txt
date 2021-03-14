@@ -1,3 +1,0 @@
-allocator 1
-allocator 2
-allocator CB make_arg3
