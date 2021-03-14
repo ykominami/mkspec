@@ -3,62 +3,87 @@ require 'pathname'
 require 'fileutils'
 
 module Erubyx
-    class Config
-        DATA_DIR = "data"
-        SCRIPT_DIR = "script"
-        SETTING_DIR = "setting"
-        TEST_CASE_DIR = "test_case"
+  module X
+  end
 
-        def setup_archive_dir
-            if @archive_pn.exist?
-#                @archive_pn.each_child do |x|
-                    puts "@archive_pn=#{@archive_pn}"
-                    puts " @test_data_data_dir_pn=#{@test_data_data_dir_pn}"
-                    FileUtils.copy_entry( @archive_pn , @test_data_data_dir_pn )
-#                end
-            end
-        end
+  class Config
+    # spec
+    #     /_test_archive
+    #     /misc
 
-        def initialize(test_data_dir , spec_dir)
-            pn = Pathname.new(test_data_dir)
-            pn.mkpath unless pn.exist?
-            @test_data_dir_pn = pn
-            @test_data_setting_dir_pn = setup_directory(SETTING_DIR)
-            @test_data_data_dir_pn = setup_directory(DATA_DIR)
-            @test_data_script_dir_pn = setup_directory(SCRIPT_DIR)
-            @test_data_test_case_dir_pn = setup_directory(DATA_DIR)
+    #     /output
+    #     /output/script
+    #     /output/test_case
+    #     /output/template_and_data
+    #     /output/setting
+    #
+    TEST_DIR = 'test'
+    TEST_ARCHIVE_DIR = '_test_archive'
+    MISC_DIR = 'misc'
 
-            puts "spec_dir=#{spec_dir}"
-            @spec_pn = Pathname.new(spec_dir)
-            puts "@spec_pn=#{@spec_pn}"
-            @archive_pn = @spec_pn + "test_data" + "_test_archive"
-            setup_archive_dir
-        end
+    ROOT_OUTPUT_DIR = 'output'
+    OUTPUT_SCRIPT_DIR = 'script'
+    OUTPUT_TEST_CASE_DIR = 'test_case'
+    OUTPUT_TEMPLATE_AND_DATA_DIR = 'template_and_data'
 
-        def setup_directory(dir)
-            pn = @test_data_dir_pn + dir
-            pn.mkpath unless pn.exist?
-            pn
-        end
+    def initialize(output_dir, test_case_dir = nil)
+      @spec_pn = get_spec_pn
+      @test_dir_pn = @spec_pn + TEST_DIR
 
-        def make_path_under_setting_dir(fname)
-            @test_data_setting_dir_pn ||= setup_directory(SETTING_DIR)
-            @test_data_setting_dir_pn + fname
-        end
+      @misc_dir_pn = @test_dir_pn + MISC_DIR
+      @root_output_dir_pn = @test_dir_pn + ROOT_OUTPUT_DIR
 
-        def make_path_under_data_dir(fname)
-            @test_data_data_dir_pn ||= setup_directory(SETTING_DIR)
-            @test_data_data_dir_pn + fname
-        end
+      pn = @root_output_dir_pn + output_dir
+      pn.mkpath unless pn.exist?
+      @output_dir_pn = pn
 
-        def make_path_under_script_dir(fname)
-            @test_data_script_dir_pn ||= setup_directory(SCRIPT_DIR)
-            @test_data_script_dir_pn + fname
-        end
+      @output_template_and_data_dir_pn = setup_directory(OUTPUT_TEMPLATE_AND_DATA_DIR)
+      @output_script_dir_pn = setup_directory(OUTPUT_SCRIPT_DIR)
+      unless test_case_dir
+        @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
+      else
+        pn = Pathname.new(test_case_dir)
+        pn.mkpath unless pn.exist?
+        @output_test_case_dir_pn = pn
+      end
 
-        def make_path_under_test_case_dir(fname)
-            @test_data_test_case_dir_pn ||= setup_directory(TEST_CASE_DIR)
-            @test_data_test_case_dir_pn + fname
-        end
+      @archive_dir_pn = @test_dir_pn + TEST_ARCHIVE_DIR
+      setup_archive_dir
     end
+
+    def setup_archive_dir
+      if @archive_dir_pn.exist?
+        FileUtils.copy_entry(@archive_dir_pn, @output_template_and_data_dir_pn)
+      end
+    end
+
+    def get_spec_pn
+      pn = Pathname.new(__FILE__).parent.parent.parent + "spec"
+      if pn.exist?
+        @spec_pn = pn
+      end
+    end
+
+    def setup_directory(dir)
+      pn = @output_dir_pn + dir
+      pn.mkpath unless pn.exist?
+      pn
+    end
+
+    def make_path_under_misc_dir(fname)
+      @misc_dir_pn + fname
+    end
+
+    def make_path_under_template_and_data_dir(fname)
+      @output_template_and_data_dir_pn + fname
+    end
+
+    def make_path_under_script_dir(fname)
+      @output_script_dir_pn + fname
+    end
+
+    def make_path_under_test_case_dir(fname)
+      @output_test_case_dir_pn + fname
+    end
+  end
 end

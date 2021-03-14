@@ -5,12 +5,14 @@ module Erubyx
 
   class Root
     def initialize(yml_fname, config)
-      puts "Root| yml_fname=#{yml_fname}"
-      @setting_hash = YAML.load_file(yml_fname)
+      yml_pn = Pathname.new(yml_fname)
+      if yml_pn.exist?
+        yml_pn = config.make_path_under_misc_dir( yml_pn )
+      end
+      @setting_hash = YAML.load_file(yml_pn)
       @path = @setting_hash['path']
-      puts "In Root| @path=#{@path}"
       @config = config
-      @pn = @config.make_path_under_data_dir( @path )
+      @pn = @config.make_path_under_template_and_data_dir( @path )
       @level = 1
     end
 
@@ -24,7 +26,6 @@ module Erubyx
           hash[k] = v
         end
       end
-      p "In Root @pn=#{@pn}"
       item = Item.new(@level, :root, @pn, hash, @config)
       item.load
       item.result

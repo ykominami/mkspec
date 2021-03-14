@@ -9,8 +9,8 @@ module UtilHelper
     "#{script_path} #{test_data_dir} #{result} #{cmd_fortest} #{target_dir} #{list}"
   end
 
-  def self.make_conf(top_dir, test_data_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
-    Conf.new(top_dir, test_data_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
+  def self.make_conf(top_dir, output_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
+    Conf.new(top_dir, output_dir, test_case_dir, test_cmd, target_cmd_1, target_cmd_2)
   end
 
   class Conf
@@ -85,7 +85,7 @@ module UtilHelper
         end
       else
         if num
-          ret = Pathname.new( "#{new}")
+          ret = Pathname.new( "#{num}")
         end
       end
 

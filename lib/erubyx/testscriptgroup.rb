@@ -3,8 +3,8 @@ module Erubyx
   class TestScriptGroup
     attr_reader :testscripts
 
-    def initialize(fname, start_char, limit, make_arg)
-      @fname = fname
+    def initialize(tsv_path, start_char, limit, make_arg)
+      @tsv_path = tsv_path
       @name = start_char
       @limit = limit
       @make_arg = make_arg
@@ -14,7 +14,7 @@ module Erubyx
     end
 
     def setup
-      @data = File.readlines(@fname).each_with_object({}) do |l, state|
+      @data = File.readlines(@tsv_path).each_with_object({}) do |l, state|
         tgroup, tcase, test_1, test_2, extra = l.chomp.split(/\s+|\t+/)
         tgroup.tr!('-', '_')
         tgroup.tr!('.', '_')

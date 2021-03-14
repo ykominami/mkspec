@@ -11,7 +11,7 @@ module Erubyx
       #sub_pn = config.make_path_under_setting_dir(@testscript.name)
       #sub_pn.mkdir unless sub_pn.exist?
 
-      data_sub_pn = config.make_path_under_data_dir(@testscript.name)
+      data_sub_pn = config.make_path_under_template_and_data_dir(@testscript.name)
       data_sub_pn.mkdir unless data_sub_pn.exist?
       @template_path = data_sub_pn + 'content.txt'
 
@@ -42,7 +42,6 @@ module Erubyx
     end
 
     def output_data_yamlfile
-      puts "Setting.output_yamlfile @data_yaml_path=#{@data_yaml_path}"
       File.open(@data_yaml_path, 'w') do |file|
         file.write(YAML.dump(@hash))
       end

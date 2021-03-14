@@ -11,7 +11,7 @@ module Erubyx
       @pn = if @path.exist?
               @path
             else
-              config.make_path_under_data_dir( @path )
+              config.make_path_under_template_and_data_dir( @path )
             end
       @re = Regexp.new("^(\s*)<%=(.+)%>")
       @extracted = nil
@@ -26,17 +26,14 @@ module Erubyx
         next unless @re.match(l)
 
         space = Regexp.last_match[1]
-        # puts "space=#{space}"
         key = Regexp.last_match[2].strip
         state[key] = space.size
       end
     end
 
     def load
-      puts "@pn=#{@pn}"
       @content_lines = File.readlines(@pn)
       @tag_table = analyze(@content_lines)
-      pp @tag_table
     end
 
     def result
@@ -45,11 +42,6 @@ module Erubyx
     end
 
     def to_s
-      puts 'to_s'
-      puts '@tag_table='
-      pp @tag_table
-      puts '@tag='
-      pp @tag
       key, size = @tag_table[@tag]
       if @hash[key] && size.zero?
         indent = (@space_hash[size] ||= ' ' * size)
