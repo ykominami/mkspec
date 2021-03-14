@@ -3,9 +3,6 @@ require 'pathname'
 require 'fileutils'
 
 module Erubyx
-  module X
-  end
-
   class Config
     # spec
     #     /_test_archive
