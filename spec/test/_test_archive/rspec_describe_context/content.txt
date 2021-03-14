@@ -1,0 +1,4 @@
+context '<%= context %>' do
+  before(:each) {
+    @target_parent_dir = @test_case_dir + '<%= context %>'
+  }

@@ -1,0 +1,22 @@
+include UtilHelper
+
+before(:all) {
+  @tecsgen = 'tecsgen'
+  @cmd = 'cmd.sh'
+  @top_pn = Pathname.new( ENV['PWD'] )
+  @tecspath = @top_pn + 'spec' +  'tecsgen' + 'tecs'
+  @cmd_pn = @top_pn + 'bin' + @cmd
+
+  ENV['TECSPATH'] = @tecspath.to_s
+
+  #    @s = File.join( %W!#{@start_dir} spec test_data! )
+  @test_data_dir = @top_pn + 'spec' + 'test_data2'
+  @test_case_dir = @test_data_dir + 'test_case'
+
+  @asp_dir="/mnt/v/ext2/svn-tecs/asp+tecs"
+  @asp3_dir="/mnt/v/ASP/ASP3/asp3_arm_gcc-20191006.tar/asp3"
+
+  @tecsmerge_cmd='tecsmerge'
+  @result = 'result.txt'
+  @conf = UtilHelper.set_conf(@top_pn, @test_data_dir, @test_case_dir, @tecsgen, @tecsmerge_cmd, @cmd_pn)
+}
