@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Erubyx
   class TestScript
     attr_reader :name, :script_name, :test_groups

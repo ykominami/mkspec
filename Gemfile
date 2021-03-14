@@ -6,13 +6,12 @@ source 'https://rubygems.org'
 gemspec
 # gem 'clitest', :git => 'git://github.com/ykominami/clitest.git',
 #              :branch => "main"
-# gem 'clitest',  :github => 'ykominami/clitest'
-gem 'clitest',  :path => '/home/ykominami/repo/clitest'
+#gem 'clitest',  :github => 'ykominami/clitest'
+gem 'clitest',  path: '/home/ykominami/repo/clitest'
 
 gem 'rake', '~> 13.0'
 
 group :development do
   gem 'rspec', '~> 3.0'
   gem 'rubocop', '~> 1.7'
-#  gem 'rubocop', require: false , '~> 1.7'
 end

@@ -1,20 +1,27 @@
 # frozen_string_literal: true
+
 require 'pathname'
 require 'fileutils'
 
 module Erubyx
   class Config
-    # spec
-    #     /_test_archive
-    #     /misc
+    attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn, 
+    :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
+    :archive_dir_pn
 
-    #     /output
-    #     /output/script
-    #     /output/test_case
-    #     /output/template_and_data
-    #     /output/setting
+    # spec
+    #     /test
+    #          /_test_archive
+    #     　　　/misc
+    #     　　　/output
+    #     　　　/output/script
+    #     　　　/output/test_case
+    #     　　　/output/template_and_data
+    #     　　　/output/setting
     #
+    SPEC_DIR = 'spec'
     TEST_DIR = 'test'
+
     TEST_ARCHIVE_DIR = '_test_archive'
     MISC_DIR = 'misc'
 
@@ -23,9 +30,10 @@ module Erubyx
     OUTPUT_TEST_CASE_DIR = 'test_case'
     OUTPUT_TEMPLATE_AND_DATA_DIR = 'template_and_data'
 
-    def initialize(output_dir, test_case_dir = nil)
-      @spec_pn = get_spec_pn
-      @test_dir_pn = @spec_pn + TEST_DIR
+    def initialize(spec_dir, output_dir, test_case_dir = nil)
+      @spec_dir_pn = Pathname.new(spec_dir)
+
+      @test_dir_pn = @spec_dir_pn + TEST_DIR
 
       @misc_dir_pn = @test_dir_pn + MISC_DIR
       @root_output_dir_pn = @test_dir_pn + ROOT_OUTPUT_DIR
@@ -36,12 +44,12 @@ module Erubyx
 
       @output_template_and_data_dir_pn = setup_directory(OUTPUT_TEMPLATE_AND_DATA_DIR)
       @output_script_dir_pn = setup_directory(OUTPUT_SCRIPT_DIR)
-      unless test_case_dir
-        @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
-      else
+      if test_case_dir
         pn = Pathname.new(test_case_dir)
         pn.mkpath unless pn.exist?
         @output_test_case_dir_pn = pn
+      else
+        @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
       end
 
       @archive_dir_pn = @test_dir_pn + TEST_ARCHIVE_DIR
@@ -49,16 +57,7 @@ module Erubyx
     end
 
     def setup_archive_dir
-      if @archive_dir_pn.exist?
-        FileUtils.copy_entry(@archive_dir_pn, @output_template_and_data_dir_pn)
-      end
-    end
-
-    def get_spec_pn
-      pn = Pathname.new(__FILE__).parent.parent.parent + "spec"
-      if pn.exist?
-        @spec_pn = pn
-      end
+      FileUtils.copy_entry(@archive_dir_pn, @output_template_and_data_dir_pn) if @archive_dir_pn.exist?
     end
 
     def setup_directory(dir)

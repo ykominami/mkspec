@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'erubis'
 require 'yaml'
 require 'pathname'
@@ -18,11 +19,14 @@ require_relative 'erubyx/mkscript'
 require_relative 'erubyx/config'
 
 module Erubyx
-  MAKE_ARG = "make_arg"
+  MAKE_ARG = 'make_arg'
 
   EXIT_CODE_OF_CMDLINE_OPTION_ERROR = 10
+  
+  SPEC_DIR = "spec"
+  SPEC_PN = Pathname.new(__FILE__).parent.parent + SPEC_DIR
 
-  class Error < StandardError; 
+  class Error < StandardError
     include Erubis::PrefixedLineEnhancer
   end
   # Your code goes here...

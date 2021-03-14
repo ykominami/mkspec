@@ -11,7 +11,7 @@ module Erubyx
       @pn = if @path.exist?
               @path
             else
-              config.make_path_under_template_and_data_dir( @path )
+              config.make_path_under_template_and_data_dir(@path)
             end
       @re = Regexp.new("^(\s*)<%=(.+)%>")
       @extracted = nil
@@ -53,8 +53,19 @@ module Erubyx
         content = @content_lines.join
       end
       eruby = PrefixedLineEruby.new(content)
+      puts "----"
+      puts "content=#{content}"
+      puts "---- END"
+      puts "@hash=#{@hash}"
+      puts "---- END END"
       @extract_count += 1
-      @extracted = eruby.result(@hash)
+      puts "@hash.class=#{@hash.class}"
+      puts %(Item to_s hash['func_name']=|#{@hash['func_name']}|)
+      begin
+        @extracted = eruby.result(@hash)
+      rescue => err
+        p err
+      end
     end
   end
 end

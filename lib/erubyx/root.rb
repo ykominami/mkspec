@@ -6,13 +6,11 @@ module Erubyx
   class Root
     def initialize(yml_fname, config)
       yml_pn = Pathname.new(yml_fname)
-      if yml_pn.exist?
-        yml_pn = config.make_path_under_misc_dir( yml_pn )
-      end
+      yml_pn = config.make_path_under_misc_dir(yml_pn) if yml_pn.exist?
       @setting_hash = YAML.load_file(yml_pn)
       @path = @setting_hash['path']
       @config = config
-      @pn = @config.make_path_under_template_and_data_dir( @path )
+      @pn = @config.make_path_under_template_and_data_dir(@path)
       @level = 1
     end
 

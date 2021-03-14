@@ -11,11 +11,11 @@ require 'erubyx'
 # require 'pry'
 # Pry.start
 
-#require 'irb'
-#IRB.start(__FILE__)
+# require 'irb'
+# IRB.start(__FILE__)
 
 mkscript = Erubyx::Mkscript.new(ARGV)
 mkscript.do_process
 
 exit 0
-#p tsg.result
+# p tsg.result

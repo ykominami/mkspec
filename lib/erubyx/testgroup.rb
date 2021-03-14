@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Erubyx
   class TestGroup
     attr_reader :name, :test_cases, :size, :make_arg
