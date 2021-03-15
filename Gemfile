@@ -9,9 +9,3 @@ gemspec
 #gem 'clitest',  :github => 'ykominami/clitest'
 gem 'clitest',  path: '/home/ykominami/repo/clitest'
 
-gem 'rake', '~> 13.0'
-
-group :development do
-  gem 'rspec', '~> 3.0'
-  gem 'rubocop', '~> 1.7'
-end
