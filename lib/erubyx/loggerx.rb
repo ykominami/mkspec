@@ -7,7 +7,15 @@ module Erubyx
   class Loggerx
     LOG_FILE = "logtest.log"
 
-    def initialize(fname, stdout, level = Logger::INFO)
+    def initialize(fname, stdout, level = :info)
+      level_hs = {
+                  :info => Logger::INFO,
+                  :debug => Logger::DEBUG,
+                  :warn => Logger::WARN,
+                  :error => Logger::ERROR,
+                  :fatal => Logger::FATAL,
+                  :unknown => Logger::UNKNOWN,
+      }
       if fname == false
         fname = nil
       end
