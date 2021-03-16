@@ -4,7 +4,7 @@ require 'pathname'
 require 'fileutils'
 
 module Erubyx
-  class Config
+  class Config < Objectx
     attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn, 
     :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
     :archive_dir_pn
@@ -13,11 +13,11 @@ module Erubyx
     #     /test
     #          /_test_archive
     #     　　　/misc
-    #     　　　/output
-    #     　　　/output/script
-    #     　　　/output/test_case
-    #     　　　/output/template_and_data
-    #     　　　/output/setting
+    # test-output
+    # test-output/script
+    # test-output/test_case
+    # test-output/template_and_data
+    # test-output/setting
     #
     SPEC_DIR = 'spec'
     TEST_DIR = 'test'
@@ -25,18 +25,22 @@ module Erubyx
     TEST_ARCHIVE_DIR = '_test_archive'
     MISC_DIR = 'misc'
 
-    ROOT_OUTPUT_DIR = 'output'
+#    ROOT_OUTPUT_DIR = 'output'
+    ROOT_OUTPUT_DIR = 'test_output'
     OUTPUT_SCRIPT_DIR = 'script'
     OUTPUT_TEST_CASE_DIR = 'test_case'
     OUTPUT_TEMPLATE_AND_DATA_DIR = 'template_and_data'
 
     def initialize(spec_dir, output_dir, test_case_dir = nil)
+      super()
+
       @spec_dir_pn = Pathname.new(spec_dir)
 
       @test_dir_pn = @spec_dir_pn + TEST_DIR
 
       @misc_dir_pn = @test_dir_pn + MISC_DIR
-      @root_output_dir_pn = @test_dir_pn + ROOT_OUTPUT_DIR
+      top_pn = @spec_dir_pn + ".."
+      @root_output_dir_pn = top_pn + ROOT_OUTPUT_DIR
 
       pn = @root_output_dir_pn + output_dir
       pn.mkpath unless pn.exist?

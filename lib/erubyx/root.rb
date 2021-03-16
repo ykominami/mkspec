@@ -3,10 +3,13 @@
 module Erubyx
   require 'yaml'
 
-  class Root
+  class Root < Objectx
     def initialize(yml_fname, config)
+      super()
+
       yml_pn = Pathname.new(yml_fname)
       yml_pn = config.make_path_under_misc_dir(yml_pn) if yml_pn.exist?
+      @_log.debug("yaml_lod yml_pn=#{yml_pn}")
       @setting_hash = YAML.load_file(yml_pn)
       @path = @setting_hash['path']
       @config = config
