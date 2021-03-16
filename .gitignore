@@ -64,3 +64,5 @@ Gemfile.lock
 .rspec_status
 package-lock.json
 
+#
+_DATA
