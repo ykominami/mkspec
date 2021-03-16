@@ -1,22 +1,28 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class Mkscript
+  class Mkscript < Objectx
     require 'optparse'
 
     def print_debug
-      puts "tsv_fname=#{@tsv_fname}"
-      puts "output_dir=#{@output_dir}"
-      puts "cmd=#{@cmd}"
+      @_log.debug_b { [
+        "tsv_fname=#{@tsv_fname}",
+        "output_dir=#{@output_dir}",
+        "cmd=#{@cmd}"
+      ] }
     end
 
     def show_usage_and_exit(opt, message)
-      puts message
-      puts opt.banner
-      exit Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR
+      @_log.debug_b{ [
+        message,
+        opt.banner,
+        Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR,
+      ] }
     end
 
     def initialize(argv)
+      super()
+
       @cmd = 'detect'
       opt = OptionParser.new
       opt.banner = "ruby #{$PROGRAM_NAME} -d dir -t tsv_fname -c (detect|all|partial) -s char -l limit"
@@ -33,26 +39,24 @@ module Erubyx
       show_usage_and_exit(opt, 'D') unless @start_char
       show_usage_and_exit(opt, 'E') unless @limit
 
-      @make_arg = Erubyx::MAKE_ARG
-      puts "mkscript.rb Erubyx::MAKE_ARG=#{Erubyx::MAKE_ARG}"
-      puts "mkscript.rb @make_arg=#{@make_arg}"
+      @content_name_of_make_arg = Erubyx::MAKE_ARG
       @config = Config.new(SPEC_PN,  @output_dir)
       @tsv_path = Pathname.new(@tsv_fname)
 
       @tsv_path = @config.make_path_under_setting_dir(@tsv_path) unless @tsv_path.exist?
 
-      @tsg = Erubyx::TestScriptGroup.new(@tsv_path, @start_char, @limit, @make_arg)
+      @tsg = Erubyx::TestScriptGroup.new(@tsv_path, @start_char, @limit, @content_name_of_make_arg)
       @tsg.setup
     end
 
     def do_process
       case @cmd
       when 'all'
-        process_all(@tsg, @config, @make_arg)
+        process_all(@tsg, @config, @content_name_of_make_arg)
       when 'detect'
-        process_detect(@tsg, @make_arg)
+        process_detect(@tsg, @content_name_of_make_arg)
       else
-        process_partial(@tsg, @config, @make_arg)
+        process_partial(@tsg, @config, @content_name_of_make_arg)
       end
       true
     end
@@ -60,22 +64,24 @@ module Erubyx
     def process_detect(_tsg, _make_arg)
       @tsg.testscripts.map do |testscript|
         testscript.test_groups.map do |test_group|
-          puts '== test_group'
-          puts test_group.name
-          puts '  === test_case'
+          @_log.debug_b{[
+            '== test_group',
+            test_group.name,
+            '  === test_case'
+          ]}
           test_group.test_cases.map do |test_case|
-            puts test_case.name
+            @_log.debug test_case.name
           end
         end
-        puts ' ###'
+        @_log.debug ' ###'
       end
     end
 
-    def process_all(tsg, config, make_arg)
-      puts "process_all make_arg=#{make_arg}"
+    def process_all(tsg, config,  func_name_of_make_arg)
+      #puts "process_all make_arg=#{func_name_of_make_arg}"
       array = tsg.testscripts.map do |testscript|
-        puts "process_all setting make_arg=#{make_arg}"
-        setting = Erubyx::Setting.new(testscript, config, make_arg)
+        #puts "process_all setting func_name_of_make_arg=#{func_name_of_make_arg}"
+        setting = Erubyx::Setting.new(testscript, config, func_name_of_make_arg)
         setting.setup('tecsgen command')
 
         setting.output_data_yamlfile
@@ -100,9 +106,9 @@ module Erubyx
       end
     end
 
-    def process_partial(tsg, config, make_arg)
+    def process_partial(tsg, config, func_name_of_make_arg)
       array = tsg.testscripts.map do |testscript|
-        setting = Erubyx::Setting.new(testscript, config, make_arg)
+        setting = Erubyx::Setting.new(testscript, config, func_name_of_make_arg)
         setting.setup('tecsgen command')
         templatex = nil
         [setting, templatex]

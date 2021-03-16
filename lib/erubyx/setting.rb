@@ -1,11 +1,14 @@
 # frozen_string_literal: true
+require 'pp'
 
 module Erubyx
-  class Setting
-    attr_reader :template_path, :testscript, :make_arg, :data_yaml_path
+  class Setting < Objectx
+    attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
 
-    def initialize(testscript, config, make_arg)
-      puts "Setting.initialize make_arg=#{make_arg}"
+    def initialize(testscript, config, func_name_of_make_arg)
+      super()
+
+      @_log.debug( "Setting.initialize func_name_of_make_arg=#{func_name_of_make_arg}" )
       @testscript = testscript
       @hash = {}
 
@@ -19,12 +22,12 @@ module Erubyx
       @path_value = @template_path.relative_path_from(data_sub_pn.parent)
 
       @data_yaml_path = data_sub_pn + %(#{@testscript.name}.yml)
-      if make_arg == nil || make_arg =~ /^\s*$/
-        puts "Setting testscript.name=#{testscript.name}"
-        puts "Setting make_arg=|#{make_arg}|"
+      if func_name_of_make_arg == nil || func_name_of_make_arg =~ /^\s*$/
+        @_log.debug("Setting testscript.name=#{testscript.name}")
+        @_log.debug("Setting func_name_of_make_arg=|#{func_name_of_make_arg}|")
         raise
       end
-      @make_arg = make_arg
+      @func_name_of_make_arg = func_name_of_make_arg
     end
 
     def setup(desc)
@@ -36,19 +39,33 @@ module Erubyx
       @testscript.test_groups.map do |test_group|
         make_context(test_group.name)
         begin
-          make_make_arg(@make_arg)
+          make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
         rescue => err
-          puts "1 test_group.name=#{test_group.name}"
+          @_log.debug_b{ 
+            ["1 test_group.name=#{test_group.name}",
+            err.to_s,
+            "1 Fail make_make_arg",
+            "test_group.content_name_of_make_arg=#{test_group.content_name_of_make_arg}",
+            "@func_name_of_make_arg=#{@func_name_of_make_arg}"]
+          }
+          exit 100
         end
         test_group.test_cases.map do |test_case|
+          func_name = @func_name_of_make_arg
           if test_case.extra
             func_name = test_case.extra
           end
           begin
-            make_make_arg(func_name)
+            make_make_arg(test_group.content_name_of_make_arg, func_name)
           rescue => err
-            puts "2 test_group.name=#{test_group.name}"
-            puts "2 test_case.name=#{test_case.name}"
+            @_log.debug_b {
+              ["2 test_group.name=#{test_group.name}",
+              "2 test_case.name=#{test_case.name}",
+              err.to_s,
+              "2 test_group.content_name_of_make_arg=#{test_group.content_name_of_make_arg}",
+              "2 Fail make_make_arg"]
+             }
+            exit 200
           end
             make_context_context(test_case.name, test_group.name, test_case.dir, test_case.test_1, test_case.test_2,
                                func_name)
@@ -69,10 +86,12 @@ module Erubyx
       }
     end
 
-    def make_make_arg(func_name, option_list = [])
-      raise if name == nil or name =~ /\s*/
-
-      @hash[name] = {
+    def make_make_arg(content_name, func_name, option_list = [])
+      if func_name == nil or func_name =~ /^\s*$/
+        @_log.debug "make_make_arg func_name=#{func_name}|"
+        raise
+      end
+      @hash[content_name] = {
         'path' => 'make_arg/content.txt',
         'func_name' => func_name,
         'option_list' => option_list
@@ -87,7 +106,7 @@ module Erubyx
         'cdlfile' => %(#{test_group}.cdl),
         'test_1' => test_1,
         'test_2' => test_2,
-        'make_arg' => func_name
+        'func_name' => func_name
       }
     end
   end

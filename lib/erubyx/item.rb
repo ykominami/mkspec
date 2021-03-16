@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class Item
+  class Item < Objectx
     def initialize(level, tag, path, hash, config)
+      super()
+
       @level = level
       @tag = tag
       @path = Pathname.new(path)
@@ -48,23 +50,47 @@ module Erubyx
         content = @content_lines.each_with_object([0, []]) do |l, state|
           state[1] << (indent + l) if state[0].positive?
           state[0] += 1
-        end[1].join
+        end
       else
         content = @content_lines.join
       end
       eruby = PrefixedLineEruby.new(content)
-      puts "----"
-      puts "content=#{content}"
-      puts "---- END"
-      puts "@hash=#{@hash}"
-      puts "---- END END"
+      @_log.debug_b {
+        [ "----",
+        "content=#{content}",
+        "---- END",
+        "@hash=#{@hash}",
+        "---- END END"]
+      }
       @extract_count += 1
-      puts "@hash.class=#{@hash.class}"
-      puts %(Item to_s hash['func_name']=|#{@hash['func_name']}|)
+      @_log.debug_b {
+        [ "@hash.class=#{@hash.class}",
+        %(Item to_s hash['func_name']=|#{@hash['func_name']}|),
+        %(Item to_s hash['make_arg']=|#{@hash['make_arg']}|),
+        ]
+      }
+#=begin
+      @hash.map{|k,v|
+        @_log.debug("k=#{k}")
+        if v.instance_of?(Hash)
+          v.map { |k2,v2|
+            @_log.debug("  k2=#{k2}")
+          }
+        else
+          @_log.debug("v=#{v}")
+        end
+      }
+#=end
       begin
         @extracted = eruby.result(@hash)
       rescue => err
-        p err
+        @_log.debug_b {
+          ["3 Item.to_s",
+           err.to_s,
+           "@path=#{@path}",
+           "content=#{content}"
+          ]
+        }
       end
     end
   end

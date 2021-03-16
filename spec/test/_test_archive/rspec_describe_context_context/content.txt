@@ -1,6 +1,6 @@
 context '<%= context %>' do
   before(:each) {
-    args = <%= make_arg %>('<%= dir %>', "<%= cdlfile %>")
+    args = <%= func_name %>('<%= dir %>', "<%= cdlfile %>")
 
     run_command("bash #{args}")
   }

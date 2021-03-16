@@ -2,8 +2,8 @@ def <%= func_name %>(name, *file_list)
   target_dir, result_file_path = @conf.make_target_dir_and_result_file_path( @target_parent_dir , name , @result)
   option_extra = []
 
-  <% for item in option_list %> 
+  <% for item in option_list %>
   <%= item %>
-  <% end %>       
+  <% end %> 
   @conf.make_args( target_dir , result_file_path, option_extra.join(' '), file_list )
 end

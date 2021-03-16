@@ -12,22 +12,18 @@ RSpec.describe Erubyx do
   let(:tecsgen) { 'tecsgen' }
   let(:cmd) { 'cmd.sh' }
   let(:test_dir_pn) { spec_pn + "test" }
-  let(:output_dir) { (Pathname.new('_DATA') + 'hier5').to_s }
+  let(:output_dir) { (Pathname.new('_DATA') + 'hier6').to_s }
 =begin
-
   let(:test_misc_dir_pn) { "#{test_dir_pn}misc" }
   let(:test_misc_dir) { test_misc_dir_pn.to_s }
-  let(:test_case_dir_pn) { "#{test_dir_pn}test_case" }
-  let(:test_case_dir) { test_case_dir_pn.to_s }
 =end
+  let(:test_case_dir_pn) { test_dir_pn + "test_case" }
+  let(:test_case_dir) { test_case_dir_pn.to_s }
   let(:asp_dir) { test_dir_pn+ "asp" + "tecs" }
   let(:asp3_dir) { test_dir_pn + "asp3" }
   let(:tecsmerge_cmd) { 'tecsmerge' }
-  let(:result) { 'result.txt' }
   let(:start_char) { 'a' }
   let(:limit) { 6 }
-#  let(:top_pn) { Pathname.new(ENV['PWD']) }
-#  let(:conf) { UtilHelper.make_conf(top_pn, output_dir, test_case_dir, cmd, tecsgen, tecsmerge_cmd) }
   let(:conf) { UtilHelper.make_conf(config_0) }
   let(:test_1) { 'test_1' }
   let(:test_2) { 'test_2' }
@@ -49,7 +45,7 @@ RSpec.describe Erubyx do
   end
 
   def create_instance_of_config_2
-    Erubyx::Config.new(output_dir, test_case_dir)
+    Erubyx::Config.new(spec_dir, output_dir, test_case_dir)
   end
 
   def create_instance_of_root
@@ -75,8 +71,8 @@ RSpec.describe Erubyx do
   def create_instance_of_setting
     testscript = create_instance_of_testscript
     config = create_instance_of_config
-    make_arg = 'make_arg'
-    Erubyx::Setting.new(testscript, config, make_arg)
+    func_name_of_make_arg = 'make_arg'
+    Erubyx::Setting.new(testscript, config, func_name_of_make_arg)
   end
 
   def create_instance_of_templatex
@@ -84,28 +80,28 @@ RSpec.describe Erubyx do
     Erubyx::Templatex.new(setting)
   end
 
-  def create_instance_of_testgroup(tgroup, make_arg)
-    Erubyx::TestGroup.new(tgroup, make_arg)
+  def create_instance_of_testgroup(tgroup, make_arg_basename)
+    Erubyx::TestGroup.new(tgroup, make_arg_basename)
   end
 
   def create_instance_of_testgroup_0
-    make_arg = 'make_arg'
+    make_arg_basename = 'make_arg'
     tgroup_0 = 'mruby-MrubyBridge'
     tgroup = tgroup_0.tr('-', '_').tr('.', '_')
-    Erubyx::TestGroup.new(tgroup, make_arg)
+    Erubyx::TestGroup.new(tgroup, make_arg_basename)
   end
 
   def create_instance_of_testcase
-    make_arg = 'make_arg'
+    make_arg_basename = 'make_arg'
     tgroup_0 = 'mruby-MrubyBridge'
     tgroup = tgroup_0.tr('-', '_').tr('.', '_')
-    test_group = create_instance_of_testgroup(tgroup, make_arg)
+    test_group = create_instance_of_testgroup(tgroup, make_arg_basename)
     tcase_0 = '6.2'
     tcase = tcase_0.tr('-', '_').tr('.', '_')
     test_1 = nil
     test_2 = nil
     extra = nil
-    Erubyx::TestCase.new(test_group, tgroup, tcase, make_arg, test_1, test_2, extra)
+    Erubyx::TestCase.new(test_group, tcase, test_1, test_2, extra)
   end
 
   def create_instance_of_testscript
@@ -118,8 +114,8 @@ RSpec.describe Erubyx do
     fname = misc_tsv_fname
     start_char = 'f'
     limit = 5
-    make_arg = 'make_arg'
-    Erubyx::TestScriptGroup.new(fname, start_char, limit, make_arg)
+    make_arg_basename = 'make_arg'
+    Erubyx::TestScriptGroup.new(fname, start_char, limit, make_arg_basename)
   end
 
   def create_instance_of_testscript
@@ -130,10 +126,6 @@ RSpec.describe Erubyx do
 
   def create_instance_of_mkscript(argv)
     Erubyx::Mkscript.new(argv)
-  end
-
-  def create_instance_of_mkspec(argv)
-    Erubyx::Mkspec.new(argv)
   end
 
   context 'create instance of class' do
