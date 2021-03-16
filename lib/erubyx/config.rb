@@ -4,7 +4,7 @@ require 'pathname'
 require 'fileutils'
 
 module Erubyx
-  class Config < Objectx
+  class Config
     attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn, 
     :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
     :archive_dir_pn
@@ -32,8 +32,6 @@ module Erubyx
     OUTPUT_TEMPLATE_AND_DATA_DIR = 'template_and_data'
 
     def initialize(spec_dir, output_dir, test_case_dir = nil)
-      super()
-
       @spec_dir_pn = Pathname.new(spec_dir)
 
       @test_dir_pn = @spec_dir_pn + TEST_DIR

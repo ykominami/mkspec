@@ -2,13 +2,12 @@
 require 'pp'
 
 module Erubyx
-  class Setting < Objectx
+  class Setting
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
 
     def initialize(testscript, config, func_name_of_make_arg)
-      super()
 
-      @_log.debug( "Setting.initialize func_name_of_make_arg=#{func_name_of_make_arg}" )
+      Loggerxcm.debug( "Setting.initialize func_name_of_make_arg=#{func_name_of_make_arg}" )
       @testscript = testscript
       @hash = {}
 
@@ -23,8 +22,8 @@ module Erubyx
 
       @data_yaml_path = data_sub_pn + %(#{@testscript.name}.yml)
       if func_name_of_make_arg == nil || func_name_of_make_arg =~ /^\s*$/
-        @_log.debug("Setting testscript.name=#{testscript.name}")
-        @_log.debug("Setting func_name_of_make_arg=|#{func_name_of_make_arg}|")
+        Loggerxcm.debug("Setting testscript.name=#{testscript.name}")
+        Loggerxcm.debug("Setting func_name_of_make_arg=|#{func_name_of_make_arg}|")
         raise
       end
       @func_name_of_make_arg = func_name_of_make_arg
@@ -41,7 +40,7 @@ module Erubyx
         begin
           make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
         rescue => err
-          @_log.debug_b{ 
+          Loggerxcm.debug_b{ 
             ["1 test_group.name=#{test_group.name}",
             err.to_s,
             "1 Fail make_make_arg",
@@ -58,7 +57,7 @@ module Erubyx
           begin
             make_make_arg(test_group.content_name_of_make_arg, func_name)
           rescue => err
-            @_log.debug_b {
+            Loggerxcm.debug_b {
               ["2 test_group.name=#{test_group.name}",
               "2 test_case.name=#{test_case.name}",
               err.to_s,
@@ -88,7 +87,7 @@ module Erubyx
 
     def make_make_arg(content_name, func_name, option_list = [])
       if func_name == nil or func_name =~ /^\s*$/
-        @_log.debug "make_make_arg func_name=#{func_name}|"
+        Loggerxcm.debug "make_make_arg func_name=#{func_name}|"
         raise
       end
       @hash[content_name] = {

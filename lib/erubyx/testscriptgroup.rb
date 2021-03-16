@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class TestScriptGroup < Objectx
+  class TestScriptGroup
     attr_reader :testscripts, :prefix_make_arg
 
     def initialize(tsv_path, start_char, limit, make_arg_basename)
-      super()
 
       @tsv_path = tsv_path
       @name = start_char

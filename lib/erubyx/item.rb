@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class Item < Objectx
+  class Item
     def initialize(level, tag, path, hash, config)
-      super()
 
       @level = level
       @tag = tag
@@ -55,7 +54,7 @@ module Erubyx
         content = @content_lines.join
       end
       eruby = PrefixedLineEruby.new(content)
-      @_log.debug_b {
+      Loggerxcm.debug_b {
         [ "----",
         "content=#{content}",
         "---- END",
@@ -63,7 +62,7 @@ module Erubyx
         "---- END END"]
       }
       @extract_count += 1
-      @_log.debug_b {
+      Loggerxcm.debug_b {
         [ "@hash.class=#{@hash.class}",
         %(Item to_s hash['func_name']=|#{@hash['func_name']}|),
         %(Item to_s hash['make_arg']=|#{@hash['make_arg']}|),
@@ -71,20 +70,20 @@ module Erubyx
       }
 #=begin
       @hash.map{|k,v|
-        @_log.debug("k=#{k}")
+        Loggerxcm.debug("k=#{k}")
         if v.instance_of?(Hash)
           v.map { |k2,v2|
-            @_log.debug("  k2=#{k2}")
+            Loggerxcm.debug("  k2=#{k2}")
           }
         else
-          @_log.debug("v=#{v}")
+          Loggerxcm.debug("v=#{v}")
         end
       }
 #=end
       begin
         @extracted = eruby.result(@hash)
       rescue => err
-        @_log.debug_b {
+        Loggerxcm.debug_b {
           ["3 Item.to_s",
            err.to_s,
            "@path=#{@path}",

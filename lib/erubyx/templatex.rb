@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class Templatex < Objectx
+  class Templatex
     def initialize(setting)
-      super()
 
       @setting = setting
       @template_path = @setting.template_path

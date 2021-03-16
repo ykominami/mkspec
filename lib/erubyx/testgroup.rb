@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class TestGroup < Objectx
+  class TestGroup
     attr_reader :name, :test_cases, :size, :content_name_of_make_arg
 
     def initialize(name, make_arg_basename, extra = nil)
-      super()
 
       @name = name
       @test_cases = []
@@ -24,8 +23,8 @@ module Erubyx
     end
 
     def print
-      @_log.debug '# TestGroup'
-      @_log.debug @name
+      Loggerxcm.debug '# TestGroup'
+      Loggerxcm.debug @name
       @test_cases.map(&:print)
     end
   end
