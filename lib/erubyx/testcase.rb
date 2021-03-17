@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class TestCase < Objectx
+  class TestCase
     attr_reader :name, :dir, :test_1, :test_2, :extra
 
     def initialize(test_group, name, dir, test_1, test_2, extra = nil)
-      super()
 
       @test_group = test_group
       @name = name
@@ -16,7 +15,7 @@ module Erubyx
     end
 
     def print
-      @_log.debug "testcase=#{@name}"
+      Loggerxcm.debug "testcase=#{@name}"
     end
   end
 end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class Mkscript < Objectx
+  class Mkscript
     require 'optparse'
 
     def print_debug
-      @_log.debug_b { [
+      Loggerxcm.debug_b { [
         "tsv_fname=#{@tsv_fname}",
         "output_dir=#{@output_dir}",
         "cmd=#{@cmd}"
@@ -13,7 +13,7 @@ module Erubyx
     end
 
     def show_usage_and_exit(opt, message)
-      @_log.debug_b{ [
+      Loggerxcm.debug_b{ [
         message,
         opt.banner,
         Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR,
@@ -21,7 +21,6 @@ module Erubyx
     end
 
     def initialize(argv)
-      super()
 
       @cmd = 'detect'
       opt = OptionParser.new
@@ -64,16 +63,16 @@ module Erubyx
     def process_detect(_tsg, _make_arg)
       @tsg.testscripts.map do |testscript|
         testscript.test_groups.map do |test_group|
-          @_log.debug_b{[
+          Loggerxcm.debug_b{[
             '== test_group',
             test_group.name,
             '  === test_case'
           ]}
           test_group.test_cases.map do |test_case|
-            @_log.debug test_case.name
+            Loggerxcm.debug test_case.name
           end
         end
-        @_log.debug ' ###'
+        Loggerxcm.debug ' ###'
       end
     end
 

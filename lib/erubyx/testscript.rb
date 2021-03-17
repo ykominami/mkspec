@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Erubyx
-  class TestScript < Objectx
+  class TestScript
     attr_reader :name, :script_name, :test_groups
 
     def initialize(name, limit)
-      super()
 
       @name = name
       @script_name = %(#{name}_spec.rb)
@@ -15,7 +14,7 @@ module Erubyx
     end
 
     def print
-      @_log.debug %(#{@script_name} #{@test_groups.size})
+      Loggerxcm.debug %(#{@script_name} #{@test_groups.size})
       @test_groups.map(&:print)
     end
 
