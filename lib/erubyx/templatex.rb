@@ -23,6 +23,8 @@ module Erubyx
     def setup
       lines = []
       str = %(
+# frozen_string_literal: true
+require 'spec_helper'
 require 'pathname'
 
 RSpec.describe '<%= desc %>', type: :aruba do
@@ -37,11 +39,9 @@ RSpec.describe '<%= desc %>', type: :aruba do
           lines << make_line_2(test_case.extra) if test_case.extra
           lines << make_line_2(test_case.name)
         end
+        lines << '  <%= rspec_describe_context_end %>'
       end
-      str_end = '
-  <%= rspec_describe_context_end %>
-end
-'
+      str_end = '<%= rspec_describe_end %>'
       lines << str_end
 
       @content = lines.join("\n")

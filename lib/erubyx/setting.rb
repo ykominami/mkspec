@@ -11,9 +11,6 @@ module Erubyx
       @testscript = testscript
       @hash = {}
 
-      # sub_pn = config.make_path_under_setting_dir(@testscript.name)
-      # sub_pn.mkdir unless sub_pn.exist?
-
       data_sub_pn = config.make_path_under_template_and_data_dir(@testscript.name)
       data_sub_pn.mkdir unless data_sub_pn.exist?
       @template_path = data_sub_pn + 'content.txt'
@@ -40,7 +37,7 @@ module Erubyx
         begin
           make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
         rescue => err
-          Loggerxcm.debug_b{ 
+          Loggerxcm.debug_b{
             ["1 test_group.name=#{test_group.name}",
             err.to_s,
             "1 Fail make_make_arg",
@@ -66,8 +63,10 @@ module Erubyx
              }
             exit 200
           end
-            make_context_context(test_case.name, test_group.name, test_case.dir, test_case.test_1, test_case.test_2,
-                               func_name)
+            make_context_context(test_case.name, test_group.name, test_case.dir, 
+                                  test_case.test_1, test_case.test_1_value, 
+                                  test_case.test_2, test_case.test_2_value, 
+                                  func_name)
         end
       end
     end
@@ -97,14 +96,16 @@ module Erubyx
       }
     end
 
-    def make_context_context(test_case, test_group, dir, test_1, test_2, func_name)
+    def make_context_context(test_case, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)
       @hash[test_case.to_s] = {
         'path' => 'rspec_describe_context_context/content.txt',
         'context' => test_case.to_s,
         'dir' => dir,
         'cdlfile' => %(#{test_group}.cdl),
         'test_1' => test_1,
+        'test_1_value' => test_1_value,
         'test_2' => test_2,
+        'test_2_value' => test_2_value,
         'func_name' => func_name
       }
     end

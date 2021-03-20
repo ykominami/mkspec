@@ -1,0 +1,3 @@
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/require/2 ~
+##### tecsgen require.cdl  #####
+~

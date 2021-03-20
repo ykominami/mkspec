@@ -48,7 +48,7 @@ allocator	2
 allocator	CB
 romram	normal
 romram	r
-romram	ram-initializerforeach	1
+romram	ram-initializer	1
 composite_alloc	1
 composite_alloc	3
 require	1
@@ -81,14 +81,16 @@ sharedOpaqueRPC	1
 signaturePlugin	1
 celltypePlugin	1
 cellPlugin	1
-CPPBridge	1
+# CPPBridge	1
+cppbridge	1
 reverse_require	1
 domainPlugin	1
 reverse_join	1
 proto	1
 cp_omit	1
 cp_omit	2
-NotificationPlugin	1
+# NotificationPlugin	1
+notificationPlugin	1
 restrict	1
 dynamic	normal
 dynamic	ram-initializer
@@ -102,17 +104,30 @@ dynamic	array-ram-initializer
 dynamic	singleton-array
 dynamic	singleton-array-r
 dynamic	singleton-array-ram-initializer
-TECSInfo	raminitializer
-TECSInfo	ramonly
-TECSInfoAccessor	raminitializer
-TECSInfoAccessor	ramonly
-mruby-MrubyBridge	ASP
-mruby-MrubyBridge	ASP3
-mruby-MrubyBridge	SimpleSample
-mruby-MrubyBridge	TECSInfo
-mruby-MrubyBridge	TECSInfoCompo
-mruby-MrubyBridge	region
-mruby-MrubyBridge	test
+# TECSInfo	raminitializer
+tecsInfo	raminitializer
+# TECSInfo	ramonly
+tecsinfo	ramonly
+# TECSInfoAccessor	raminitializer
+tecsinfoaccessor	raminitializer
+# TECSInfoAccessor	ramonly
+tecsinfoaccessor	ramonly
+# mruby-MrubyBridge	ASP
+mruby-mrubybridge	ASP
+# mruby-MrubyBridge	ASP3
+mruby-mrubybridge	ASP3
+# mruby-MrubyBridge	SimpleSample
+mruby-mrubybridge	SimpleSample
+# mruby-MrubyBridge	TECSInfo
+mruby-mrubybridge	TECSInfo
+# mruby-MrubyBridge	TECSInfoCompo
+mruby-mrubybridge	TECSInfoCompo
+# mruby-MrubyBridge	region
+mruby-mrubybridge	region
+# mruby-MrubyBridge	test
+mruby-mrubybridge	test
 mruby-mrubycellplugin	1
-mruby-MrubyInfoBridge	SimpleSample
-mruby-MrubyInfoBridge	test
+# mruby-MrubyInfoBridge	SimpleSample
+mruby-mrubyinfobridge	SimpleSample
+# mruby-MrubyInfoBridge	test
+mruby-mrubyinfobridge	test

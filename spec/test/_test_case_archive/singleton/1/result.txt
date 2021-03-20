@@ -1,0 +1,12 @@
+do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/singleton/1 -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/include -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/target -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/runtime/include -I RUNTIME/runtime/target singleton.cdl
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/singleton/1 ~
+##### tecsgen -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/include -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/target -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/runtime/include -I RUNTIME/runtime/target singleton.cdl  #####
+singleton.cdl:30:2: warning: W1002 tSingleCall: non-active celltype has no entry port & factory
+singleton.cdl:59:2: warning: W1004 tCompSingleCall : specified singleton but has no singleton in this celltype
+singleton.cdl:49:18: warning: W1007 ::singlecall : non-active cell has no entry join and no factory
+singleton.cdl:61:22: warning: W1007 ::Single : non-active cell has no entry join and no factory
+singleton.cdl:61:22: warning: W1007 ::Single_Single : non-active cell has no entry join and no factory
+Signature#get_descriptor_list sSingleCall
+Signature#get_descriptor_list sSingleEntry
+5 warnings
+~

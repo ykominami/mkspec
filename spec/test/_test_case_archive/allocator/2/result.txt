@@ -1,0 +1,3 @@
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/allocator/2 ~
+##### tecsgen -r -I ../../../RUNTIME/tecs-runtime/include -I ../../../RUNTIME/tecs-runtime/target allocator.cdl  #####
+~

@@ -1,0 +1,6 @@
+do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/portarray/1 -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/include -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/target -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/runtime/include -I RUNTIME/runtime/target portarray.cdl
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/portarray/1 ~
+##### tecsgen -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/include -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/tecs-runtime/target -I /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/RUNTIME/runtime/include -I RUNTIME/runtime/target portarray.cdl  #####
+Signature#get_descriptor_list sArray
+Signature#get_descriptor_list sArrayBack
+~

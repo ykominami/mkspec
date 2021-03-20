@@ -1,0 +1,3 @@
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/region/1 ~
+##### tecsgen -I ../../../cygwin -G "" -G rRegion1 -G rRegion2 -L . region.cdl  #####
+~

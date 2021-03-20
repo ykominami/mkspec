@@ -1,0 +1,3 @@
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/import_C/4 ~
+##### tecsgen -I ./config_win -I ./include -y dupl-incl.cdl  #####
+~

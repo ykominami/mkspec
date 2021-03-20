@@ -4,7 +4,7 @@ require 'pathname'
 require 'clitest'
 
 module UtilHelper
-  def self.make_args(test_data_dir, target_parent_dir, num, _cmd_for_test, result_name, script_path, *param_name)
+  def make_args(test_data_dir, target_parent_dir, num, _cmd_for_test, result_name, script_path, *param_name)
     target_dir = Pathname.new(target_parent_dir) + num.to_s
     result = Pathname.new(target_dir) + result_name
     list = param_name.join(' ')
@@ -39,7 +39,6 @@ module UtilHelper
         @test_cmd_path_pn = find_cmd(@current_pn, test_cmd) unless @test_cmd_path_pn.exist?
       end
       unless @test_cmd_path_pn
-        # puts "@test_cmd_path_pn=#{@test_cmd_path_pn}"
         raise
       end
     end
@@ -118,6 +117,12 @@ module UtilHelper
       result_file_path = make_result_file_path(target_dir, result)
 
       [target_dir, result_file_path]
+    end
+
+    def make_args( target_dir, result, optx, *param_name )
+      params = param_name.join(" ")
+
+      "#{@cmd_path} #{@test_data_dir} #{result} #{@tecsgen} #{target_dir} #{optx} #{params}"
     end
 
     def get_relative_path_base(target_dir, base_dir = nil)

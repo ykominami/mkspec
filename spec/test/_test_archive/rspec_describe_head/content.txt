@@ -1,22 +1,14 @@
 include UtilHelper
+include TestConf
 
-before(:all) {
-  @tecsgen = 'tecsgen'
-  @cmd = 'cmd.sh'
-  @top_pn = Pathname.new( ENV['PWD'] )
-  @tecspath = @top_pn + 'spec' +  'tecsgen' + 'tecs'
-  @cmd_pn = @top_pn + 'bin' + @cmd
+let(:original_output_dir_pn) { Pathname.new('_DATA').join('hier0') }
+let(:original_output_dir) { original_output_dir_pn.to_s }
+let(:conf) { TestConf::TestConf.new( 'tecsgen', 'tecsmerge', __FILE__, original_output_dir) }
+let(:o) { conf.o }
 
-  ENV['TECSPATH'] = @tecspath.to_s
+before(:each) {
+  @tecspath = o.top_dir_pn.join("/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen")
 
-  #    @s = File.join( %W!#{@start_dir} spec test_data! )
-  @test_data_dir = @top_pn + 'spec' + 'test_data2'
-  @test_case_dir = @test_data_dir + 'test_case'
-
-  @asp_dir="/mnt/v/ext2/svn-tecs/asp+tecs"
-  @asp3_dir="/mnt/v/ASP/ASP3/asp3_arm_gcc-20191006.tar/asp3"
-
-  @tecsmerge_cmd='tecsmerge'
-  @result = 'result.txt'
-  @conf = UtilHelper.set_conf(@top_pn, @test_data_dir, @test_case_dir, @tecsgen, @tecsmerge_cmd, @cmd_pn)
+  ENV["TECSPATH"] = @tecspath.to_s
+  ENV['PATH']="/home/ykominami/repo/ns3-tecsgen/tecsgen:#{ENV['PATH']}"
 }
