@@ -10,9 +10,9 @@ module Erubyx
       yml_pn = config.make_path_under_misc_dir(yml_pn) if yml_pn.exist?
       Loggerxcm.debug("yaml_lod yml_pn=#{yml_pn}")
       @setting_hash = YAML.load_file(yml_pn)
-      @path = @setting_hash['path']
+      @content_path = @setting_hash['path']
       @config = config
-      @pn = @config.make_path_under_template_and_data_dir(@path)
+      @content_pn = @config.make_path_under_template_and_data_dir(@content_path)
       @level = 1
     end
 
@@ -20,15 +20,19 @@ module Erubyx
       hash = {}
       @setting_hash.each do |k, v|
         if v.instance_of?(Hash)
-          hash[k] = Item.new(@level + 1, k, v['path'], v, @config)
-          hash[k].load
+          content_path = v['path']
+          yaml_path = nil
+          item = Item.new(@level, 0, k,  v, content_path, yaml_path, @config)
+          hash[k] = item.result
         else
           hash[k] = v
         end
       end
-      item = Item.new(@level, :root, @pn, hash, @config)
-      item.load
-      item.result
+      yaml_path = nil
+      item = Item.new(@level, 0, :root, hash, @content_pn, yaml_path, @config)
+      content = item.result
+      eruby = PrefixedLineEruby.new(content)
+      eruby.result(hash)
     end
   end
 end

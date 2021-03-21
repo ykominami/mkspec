@@ -1,10 +1,9 @@
 context '<%= context %>' do
   before(:each) {
-    args = <%= func_name %>('<%= dir %>', "<%= cdlfile %>")
+    cmdline = <%= func_name %>('<%= dir %>', "<%= cdlfile %>")
 
-    run_command("bash #{args}")
+    run_command("bash #{cmdline}")
   }
-  it '', test_normal_sh:true do expect(last_command_started).<%= test_1 %> end
-  it '', test_normal_sh_out:true do expect(last_command_started).<%= test_1 %> end
-  #    it { expect(last_command_started).to have_output("tecsgen  version 1.8.RC7  Copyright(c) 2008-2019, TOPPERS project. All rights reserved.") }
+  it 'execute successfully', test_normal_sh:true do expect(last_command_started).<%= test_1 %> <%= test_1_value %> end
+  it "don't have error in output", test_normal_sh_out:true do expect(last_command_started).<%= test_2 %> <%= test_2_value %> end
 end

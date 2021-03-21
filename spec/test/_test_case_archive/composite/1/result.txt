@@ -1,0 +1,3 @@
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/composite/1 ~
+##### tecsgen -I ../../../cygwin -I ./src --gen=gen_comp composite.cdl  #####
+~

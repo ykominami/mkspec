@@ -16,6 +16,3 @@ require 'erubyx'
 
 mkscript = Erubyx::Mkscript.new(ARGV)
 mkscript.do_process
-
-exit 0
-# p tsg.result

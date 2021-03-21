@@ -1,4 +1,5 @@
 context '<%= context %>' do
   before(:each) {
-    @target_parent_dir = @test_case_dir + '<%= context %>'
+    test_case_parent_dir = o.output_test_case_root_dir_pn.join('<%= context %>')
+    @cmdline = Clitest::Cmdline.new(nil, nil, test_case_parent_dir, o.target_cmd_1)
   }

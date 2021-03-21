@@ -17,8 +17,8 @@ module Erubyx
       @name
     end
 
-    def add_test_case(testcase_name, dir, test_1, test_2, extra = nil)
-      @test_cases << TestCase.new(self, testcase_name, dir, test_1, test_2, extra)
+    def add_test_case(testcase_name, dir, test_1, test_1_value, test_2, test_2_value, extra = nil)
+      @test_cases << TestCase.new(self, testcase_name, dir, test_1, test_1_value, test_2, test_2_value, extra)
       @size += 1
     end
 

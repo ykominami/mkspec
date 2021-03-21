@@ -12,21 +12,45 @@ module Erubyx
       @make_arg_basename = make_arg_basename
       @testscripts = []
       @current_testscript = nil
-      @default = { 'test_1' => 'to', 'test_2' => 'not_to' }
+      @default = {
+        'test_1' => 'to',
+        'test_1_value' => 'be_successfully_executed',
+        'test_2' => 'not_to',
+        'test_2_value' => 'have_output(/error:/)',
+      }
       @current_testscript = make_testscript(@name)
     end
 
     def setup
       @data = File.readlines(@tsv_path).each_with_object({}) do |l, state|
-        tgroup, tcase, test_1, test_2, extra = l.chomp.split(/\s+|\t+/)
+        tgroup, tcase, test_1, test_1_value, test_2, test_2_value, extra = l.chomp.split(/\s+|\t+/)
+        next if tgroup =~ /^\s*#/
         tgroup.tr!('-', '_')
         tgroup.tr!('.', '_')
         testgroup = (state[tgroup] ||= TestGroup.new(tgroup, @make_arg_basename))
         tcase.tr!('-', '_')
         tcase.tr!('.', '_')
+        array = [test_1, test_1_value , test_2, test_2_value]
+        test_1, test_1_value , test_2, test_2_value = array.map{|x|
+          if x && x =~ /^\s*$/
+            x = nil
+          end
+          x
+        }
+
         test_1 = @default['test_1'] unless test_1
+        test_1_value = @default['test_1_value'] unless test_1_value
         test_2 = @default['test_2'] unless test_2
-        testgroup.add_test_case( "#{testgroup}_#{tcase}", tcase, test_1, test_2, extra )
+        test_2_value = @default['test_2_value'] unless test_2_value
+        Loggerxcm.debug_b{
+          %W(
+            test_1=#{test_1}
+            test_1_value=#{test_1_value}
+            test_2=#{test_2}
+            test_2_value=#{test_2_value}
+          )
+        }
+        testgroup.add_test_case( "#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_2, test_2_value, extra )
       end
       @data.each do |x|
         testgrop = x[1]

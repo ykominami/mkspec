@@ -1,0 +1,6 @@
+do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/12 error-12.idl
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/12 ~
+##### tecsgen error-12.idl  #####
+error-12.idl:1:18: error: G1016 syntax error near 'int32'
+1 error
+~

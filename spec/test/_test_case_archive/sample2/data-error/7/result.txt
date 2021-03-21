@@ -1,0 +1,6 @@
+do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/7 error-7.idl
+/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/7 ~
+##### tecsgen error-7.idl  #####
+error-7.idl:9:1: error: G1016 syntax error near '}'
+1 error
+~

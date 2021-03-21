@@ -5,23 +5,23 @@ module Erubyx
     require 'optparse'
 
     def print_debug
-      Loggerxcm.debug_b { [
-        "tsv_fname=#{@tsv_fname}",
-        "output_dir=#{@output_dir}",
+      Loggerxcm.debug_b {
+        %W["tsv_fname=#{@tsv_fname}"
+        "output_dir=#{@output_dir}"
         "cmd=#{@cmd}"
-      ] }
+        ]
+      }
     end
 
     def show_usage_and_exit(opt, message)
-      Loggerxcm.debug_b{ [
-        message,
-        opt.banner,
-        Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR,
-      ] }
+      Loggerxcm.debug_b{
+        %W[message
+        opt.banner
+        Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR
+        ] }
     end
 
     def initialize(argv)
-
       @cmd = 'detect'
       opt = OptionParser.new
       opt.banner = "ruby #{$PROGRAM_NAME} -d dir -t tsv_fname -c (detect|all|partial) -s char -l limit"
@@ -39,10 +39,10 @@ module Erubyx
       show_usage_and_exit(opt, 'E') unless @limit
 
       @content_name_of_make_arg = Erubyx::MAKE_ARG
-      @config = Config.new(SPEC_PN,  @output_dir)
+      @config = Config.new(SPEC_PN,  @output_dir).setup
       @tsv_path = Pathname.new(@tsv_fname)
 
-      @tsv_path = @config.make_path_under_setting_dir(@tsv_path) unless @tsv_path.exist?
+      @tsv_path = @config.make_path_under_misc_dir(@tsv_path) unless @tsv_path.exist?
 
       @tsg = Erubyx::TestScriptGroup.new(@tsv_path, @start_char, @limit, @content_name_of_make_arg)
       @tsg.setup
@@ -60,14 +60,15 @@ module Erubyx
       true
     end
 
-    def process_detect(_tsg, _make_arg)
+    def process_detect()
       @tsg.testscripts.map do |testscript|
         testscript.test_groups.map do |test_group|
-          Loggerxcm.debug_b{[
-            '== test_group',
-            test_group.name,
+          Loggerxcm.debug_b{
+            %W[
+            '== test_group'
+            test_group.name
             '  === test_case'
-          ]}
+            ]}
           test_group.test_cases.map do |test_case|
             Loggerxcm.debug test_case.name
           end
@@ -77,9 +78,7 @@ module Erubyx
     end
 
     def process_all(tsg, config,  func_name_of_make_arg)
-      #puts "process_all make_arg=#{func_name_of_make_arg}"
       array = tsg.testscripts.map do |testscript|
-        #puts "process_all setting func_name_of_make_arg=#{func_name_of_make_arg}"
         setting = Erubyx::Setting.new(testscript, config, func_name_of_make_arg)
         setting.setup('tecsgen command')
 
@@ -99,8 +98,16 @@ module Erubyx
         str = Erubyx::Root.new(data_yaml_path, config).result
         spec_pn = config.make_path_under_script_dir(%(#{testscript.name}_spec.rb))
         spec_pn.parent.mkdir unless spec_pn.parent.exist?
+
+        begin
+          str2 = Mkscript.format(str)
+        rescue => ex
+          Loggerxcm.error("Can't convert for #{spec_pn}")
+          str2 = str
+        end
+
         File.open(spec_pn.to_s, 'w') do |file|
-          file.write(str)
+          file.write(str2)
         end
       end
     end
@@ -117,6 +124,10 @@ module Erubyx
         data_yaml_path = setting.data_yaml_path
         Erubyx::Root.new(data_yaml_path, config).result
       end
+    end
+
+    def self.format(code)
+      Rufo::Formatter.format(code, {})
     end
   end
 end
