@@ -5,7 +5,6 @@ module Erubyx
 
   class Root
     def initialize(yml_fname, config)
-
       yml_pn = Pathname.new(yml_fname)
       yml_pn = config.make_path_under_misc_dir(yml_pn) if yml_pn.exist?
       Loggerxcm.debug("yaml_lod yml_pn=#{yml_pn}")
@@ -22,7 +21,7 @@ module Erubyx
         if v.instance_of?(Hash)
           content_path = v['path']
           yaml_path = nil
-          item = Item.new(@level, 0, k,  v, content_path, yaml_path, @config)
+          item = Item.new(@level, 0, k, v, content_path, yaml_path, @config)
           hash[k] = item.result
         else
           hash[k] = v

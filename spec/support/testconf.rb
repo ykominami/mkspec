@@ -31,64 +31,91 @@ module TestConf
       o.top_dir_pn = o.spec_pn.parent
       o.top_dir = o.top_dir_pn.to_s
 
-      o.test_root_dir_pn = o.top_dir_pn + 'test_auto'
+      o.target_cmd_1 = target_cmd_1 #'make_script'
+      o.target_cmd_2 = target_cmd_2 #''
+      pn = o.top_dir_pn.join("bin")
+      if pn.exist?
+        o.bin_dir_pn = pn
+        pn2 = o.bin_dir_pn.join(o.target_cmd_1)
+        o.target_cmd_1_pn = pn2
+        pn2 = o.bin_dir_pn.join(o.target_cmd_2)
+        o.target_cmd_2_pn = pn2
+      end
+      pn3 = o.top_dir_pn.join("exe")
+      if pn3.exist?
+        o.exe_dir_pn = pn3
+        if o.target_cmd_1_pn
+          pn4 = o.exe_dir_pn.join(o.target_cmd_1)
+          if pn4.exist?
+            o.target_cmd_1_pn = pn4
+          end
+        end
+        if o.target_cmd_2_pn
+          pn5 = o.exe_dir_pn.join(o.target_cmd_2)
+          if pn5.exist?
+            o.target_cmd_2_pn = pn5
+          end
+        end
+      end
+      o.make_arg_basename = 'make_cmdline_1'
+
+      o.test_root_dir_pn = o.top_dir_pn.join('test_auto')
       o.test_root_dir = o.test_root_dir_pn.to_s
 
       if original_output_dir != nil
-        o.target_parent_dir_pn = o.test_root_dir_pn + original_output_dir
+        o.target_parent_dir_pn = o.test_root_dir_pn.join(original_output_dir)
       else
-        o.target_parent_dir_pn = o.test_root_dir_pn + 'test_data2' + 'test_case'
+        o.target_parent_dir_pn = o.test_root_dir_pn.join('test_data2' ,'test_case')
       end
       o.target_parent_dir = o.target_parent_dir_pn
       o.result = 'result.txt'
-      o._test_data_dir_pn = o.test_root_dir_pn + '_test_data'
-      o.misc_dir_pn = o.test_root_dir_pn + 'misc'
+      o._test_data_dir_pn = o.test_root_dir_pn.join('_test_data')
+      o.misc_dir_pn = o.test_root_dir_pn.join('misc')
       o.tsv_fname = 'testlist-x.txt'
-      o.misc_tsv_fname = o.misc_dir_pn + o.tsv_fname
+      o.misc_tsv_fname = o.misc_dir_pn.join(o.tsv_fname)
 
       #
       o.output_dir_pn = o.target_parent_dir_pn
       o.output_dir = o.output_dir_pn.to_s
       #
-      o.output_template_and_data_dir_pn = o.output_dir_pn + "template_and_data"
+      o.output_template_and_data_dir_pn = o.output_dir_pn.join("template_and_data")
       o.output_template_and_data_dir = o.output_template_and_data_dir_pn.to_s
-      o.output_script_dir_pn = o.output_dir_pn + "script"
+      o.output_script_dir_pn = o.output_dir_pn.join("script")
       o.output_script_dir = o.output_script_dir_pn.to_s
-      o.output_test_case_root_dir_pn = o.output_dir_pn + "test_case"
+      o.output_test_case_root_dir_pn = o.output_dir_pn.join("test_case")
       o.output_test_case_root_dir = o.output_test_case_root_dir_pn.to_s
 
-      o.template_and_data_dir_pn = o.target_parent_dir_pn + "template_and_data"
+      o.template_and_data_dir_pn = o.target_parent_dir_pn.join("template_and_data")
       o.target_parent_dir_pn
-      o._output_dir_pn = o.test_root_dir_pn + '_output'
+      o._output_dir_pn = o.test_root_dir_pn.join('_output')
       o._output_dir = o._output_dir_pn.to_s
-      o._test_case_dir_pn = o._output_dir_pn + "test_case"
+      o._test_case_dir_pn = o._output_dir_pn.join("test_case")
       o._test_case_dir = o._test_case_dir_pn.to_s
-      o._template_and_data_dir_pn = o._output_dir_pn + "template_and_data"
+      o._template_and_data_dir_pn = o._output_dir_pn.join("template_and_data")
       o._template_and_data_dir = o._template_and_data_dir_pn.to_s
-      o._script_dir_pn = o._output_dir_pn + "script"
+      o._script_dir_pn = o._output_dir_pn.join("script")
       o._script_dir = o._script_dir_pn.to_s
       o.content_fname = 'content.txt'
       o.testdata_fname = 'testdata.txt'
       o.yaml_fname = 'a.yml'
       o._yaml_fname = 'a.yml'
       o._config = Erubyx::Config.new(o.spec_dir, o._output_dir)
-      o._data_dir_pn = o._template_and_data_dir_pn + 'a'
+      o._data_dir_pn = o._template_and_data_dir_pn.join('a')
     #
-      o.data_dir_pn = o.output_template_and_data_dir_pn + 'a'
+      o.data_dir_pn = o.output_template_and_data_dir_pn.join('a')
     #
-    #  o.config_0 = Erubyx::Config.new(o.spec_dir, o.output_dir).setup
-      o.asp_dir = o.test_root_dir_pn+ "asp" + "tecs"
-      o.asp3_dir = o.test_root_dir_pn + "asp3"
-      o.target_cmd_1 = target_cmd_1 #'make_script'
-      o.target_cmd_2 = target_cmd_2 #''
+      o.config_0 = Erubyx::Config.new(o.spec_dir, o.output_dir).setup
+      o.asp_dir = o.test_root_dir_pn.join("asp" , "tecs")
+      o.asp3_dir = o.test_root_dir_pn.join("asp3")
       o.start_char = 'a'
       o.limit = 6
-      #config, test_cmd, target_cmd_1, target_cmd_2
-      o.conf = UtilHelper.make_conf(o.config_0, o.test_cmd_pn, o.target_cmd_1, o.target_cmd_2)
       o.test_1 = 'test_1'
       o.test_2 = 'test_2'
       o.format_fname = 'format.txt'
-      o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1)
+      o.tsv_lines = 59
+      o.tgroup_0_name = 'mruby-MrubyBridge'
+      o.tgroup_0_name_normalize = 'mruby_MrubyBridge'
+      o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
       @o = o
     end
 
@@ -113,7 +140,7 @@ module TestConf
       if target_dir
         target_pn = Pathname.new(target_dir)
         ret = if result
-                target_pn + result
+                target_pn.join(result)
               else
                 target_pn
               end
@@ -138,7 +165,7 @@ module TestConf
 
     def create_instance_of_root
       Erubyx::Loggerxcm.debug("output_dir=#{@o.output_dir}")
-      yml_path = @o.config_0.make_path_under_template_and_data_dir( Pathname.new('a') + @o.yaml_fname)
+      yml_path = @o.config_0.make_path_under_template_and_data_dir( Pathname.new('a').join(@o.yaml_fname))
       Erubyx::Loggerxcm.debug("yml_path=#{yml_path}")
       Erubyx::Root.new(yml_path, @o.config_0)
     end
@@ -155,13 +182,13 @@ module TestConf
     def create_instance_of_setting
       testscript = create_instance_of_testscript
       config = create_instance_of_config
-      func_name_of_make_arg = 'make_arg'
+      func_name_of_make_arg = o.make_arg_basename
       Erubyx::Setting.new(testscript, config, func_name_of_make_arg)
     end
 
     def create_instance_of_testscript
-      name = 'f'
-      limit = 5
+      name = o.start_char
+      limit = o.limit
       Erubyx::TestScript.new(name, limit)
     end
 
@@ -171,14 +198,14 @@ module TestConf
     end
 
     def create_instance_of_testgroup_0
-      make_arg_basename = 'make_arg'
-      tgroup_0 = 'mruby-MrubyBridge'
+      make_arg_basename = o.make_arg_basename
+      tgroup_0 = o.tgroup_0_name
       tgroup = tgroup_0.tr('-', '_').tr('.', '_')
       Erubyx::TestGroup.new(tgroup, make_arg_basename)
     end
 
     def create_instance_of_testcase
-      make_arg_basename = 'make_arg'
+      make_arg_basename = o.make_arg_basename
       tgroup_0 = 'mruby-MrubyBridge'
       tgroup = tgroup_0.tr('-', '_').tr('.', '_')
       test_group = create_instance_of_testgroup(tgroup, make_arg_basename)
@@ -197,22 +224,22 @@ module TestConf
     end
 
     def create_instance_of_testscript
-      name = 'f'
-      limit = 5
+      name = o.start_char
+      limit = o.limit
       Erubyx::TestScript.new(name, limit)
     end
 
     def create_instance_of_testscriptgroup
       fname = @o.misc_tsv_fname
-      start_char = 'f'
-      limit = 5
-      make_arg_basename = 'make_arg'
+      start_char = o.start_char
+      limit = o.limit
+      make_arg_basename = o.make_arg_basename
       Erubyx::TestScriptGroup.new(fname, start_char, limit, make_arg_basename)
     end
 
     def create_instance_of_testscript
-      name = 'f'
-      limit = 5
+      name = o.start_char
+      limit = o.limit
       Erubyx::TestScript.new(name, limit)
     end
 

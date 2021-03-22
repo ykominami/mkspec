@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'pp'
 
 module Erubyx
@@ -6,8 +7,7 @@ module Erubyx
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
 
     def initialize(testscript, config, func_name_of_make_arg)
-
-      Loggerxcm.debug( "Setting.initialize func_name_of_make_arg=#{func_name_of_make_arg}" )
+      Loggerxcm.debug("Setting.initialize func_name_of_make_arg=#{func_name_of_make_arg}")
       @testscript = testscript
       @hash = {}
 
@@ -18,7 +18,7 @@ module Erubyx
       @path_value = @template_path.relative_path_from(data_sub_pn.parent)
 
       @data_yaml_path = data_sub_pn + %(#{@testscript.name}.yml)
-      if func_name_of_make_arg == nil || func_name_of_make_arg =~ /^\s*$/
+      if func_name_of_make_arg.nil? || func_name_of_make_arg =~ /^\s*$/
         Loggerxcm.debug("Setting testscript.name=#{testscript.name}")
         Loggerxcm.debug("Setting func_name_of_make_arg=|#{func_name_of_make_arg}|")
         raise
@@ -34,47 +34,30 @@ module Erubyx
       @hash['rspec_describe_context_end'] = { 'path' => 'rspec_describe_context_end/content.txt' }
       @testscript.test_groups.map do |test_group|
         make_context(test_group.name)
-        begin
-          make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
-        rescue => err
-          Loggerxcm.debug_b{
-            ["1 test_group.name=#{test_group.name}",
-            err.to_s,
-            "1 Fail make_make_arg",
-            "test_group.content_name_of_make_arg=#{test_group.content_name_of_make_arg}",
-            "@func_name_of_make_arg=#{@func_name_of_make_arg}"]
-          }
-          exit 100
-        end
-        test_group.test_cases.map do |test_case|
-          func_name = @func_name_of_make_arg
-          if test_case.extra
-            func_name = test_case.extra
-          end
-          begin
-            make_make_arg(test_group.content_name_of_make_arg, func_name)
-          rescue => err
-            Loggerxcm.debug_b {
-              ["2 test_group.name=#{test_group.name}",
-              "2 test_case.name=#{test_case.name}",
-              err.to_s,
-              "2 test_group.content_name_of_make_arg=#{test_group.content_name_of_make_arg}",
-              "2 Fail make_make_arg"]
-             }
-            exit 200
-          end
-            make_context_context(test_case.name, test_group.name, test_case.dir, 
-                                  test_case.test_1, test_case.test_1_value, 
-                                  test_case.test_2, test_case.test_2_value, 
-                                  func_name)
-        end
+        ret = make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
+        ret = setup_test_cases(test_group) if ret
       end
     end
 
-    def output_data_yamlfile
-      File.open(@data_yaml_path, 'w') do |file|
-        file.write(YAML.dump(@hash))
+    def setup_test_cases(test_group)
+      error_count = 0
+      test_group.test_cases.map do |test_case|
+        func_name = @func_name_of_make_arg
+        func_name = test_case.extra if test_case.extra
+        ret = make_make_arg(test_group, func_name)
+        if ret
+          make_context_context(test_case.name, test_group.name, test_case.dir,
+                               test_case.test_1, test_case.test_1_value,
+                               test_case.test_2, test_case.test_2_value,
+                               func_name)
+        end
+        error_count += 1 unless ret
       end
+      error_count.zero?
+    end
+
+    def output_data_yamlfile
+      File.open(@data_yaml_path, 'w') { |file| file.write(YAML.dump(@hash)) }
     end
 
     def make_context(test_group)
@@ -85,15 +68,17 @@ module Erubyx
     end
 
     def make_make_arg(content_name, func_name, option_list = [])
-      if func_name == nil or func_name =~ /^\s*$/
+      ret = true
+      if func_name.nil? || func_name =~ /^\s*$/
         Loggerxcm.debug "make_make_arg func_name=#{func_name}|"
-        raise
+        ret = false
       end
       @hash[content_name] = {
         'path' => 'make_arg/content.txt',
         'func_name' => func_name,
         'option_list' => option_list
       }
+      ret
     end
 
     def make_context_context(test_case, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)

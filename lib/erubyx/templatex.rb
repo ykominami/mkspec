@@ -3,7 +3,6 @@
 module Erubyx
   class Templatex
     def initialize(setting)
-
       @setting = setting
       @template_path = @setting.template_path
       pn = Pathname.new(@template_path)

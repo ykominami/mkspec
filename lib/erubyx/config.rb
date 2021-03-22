@@ -5,9 +5,9 @@ require 'fileutils'
 
 module Erubyx
   class Config
-    attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn, 
-    :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
-    :archive_dir_pn
+    attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn,
+                :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
+                :archive_dir_pn
 
     # spec
     #     /test
@@ -24,7 +24,6 @@ module Erubyx
     TEST_ARCHIVE_DIR = '_test_archive'
     MISC_DIR = 'misc'
 
-#    ROOT_OUTPUT_DIR = 'output'
     ROOT_OUTPUT_DIR = 'test_output'
     OUTPUT_SCRIPT_DIR = 'script'
     OUTPUT_TEST_CASE_DIR = 'test_case'
@@ -34,18 +33,19 @@ module Erubyx
       @setup_count = 0
       @spec_dir_pn = Pathname.new(spec_dir)
 
-      @test_dir_pn = @spec_dir_pn + TEST_DIR
+      @test_dir_pn = @spec_dir_pn.join(TEST_DIR)
 
-      @misc_dir_pn = @test_dir_pn + MISC_DIR
-      top_pn = @spec_dir_pn + ".."
-      @root_output_dir_pn = top_pn + ROOT_OUTPUT_DIR
+      @misc_dir_pn = @test_dir_pn.join(MISC_DIR)
+      top_pn = @spec_dir_pn.parent
+      @root_output_dir_pn = top_pn.join(ROOT_OUTPUT_DIR)
       @output_dir = output_dir
       @test_case_dir = test_case_dir
     end
 
     def setup
-      return self if @setup_count > 0
-      pn = @root_output_dir_pn + @output_dir
+      return self if @setup_count.positive?
+
+      pn = @root_output_dir_pn.join(@output_dir)
       pn.mkpath unless pn.exist?
       @output_dir_pn = pn
 
@@ -59,7 +59,7 @@ module Erubyx
         @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
       end
 
-      @archive_dir_pn = @test_dir_pn + TEST_ARCHIVE_DIR
+      @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
       setup_archive_dir
       @setup_count += 1
 
@@ -69,13 +69,13 @@ module Erubyx
     def initialize_0(spec_dir, output_dir, test_case_dir = nil)
       @spec_dir_pn = Pathname.new(spec_dir)
 
-      @test_dir_pn = @spec_dir_pn + TEST_DIR
+      @test_dir_pn = @spec_dir_pn.join(TEST_DIR)
 
-      @misc_dir_pn = @test_dir_pn + MISC_DIR
-      top_pn = @spec_dir_pn + ".."
-      @root_output_dir_pn = top_pn + ROOT_OUTPUT_DIR
+      @misc_dir_pn = @test_dir_pn.join(MISC_DIR)
+      top_pn = @spec_dir_pn.parent
+      @root_output_dir_pn = top_pn.join(ROOT_OUTPUT_DIR)
 
-      pn = @root_output_dir_pn + output_dir
+      pn = @root_output_dir_pn.join(output_dir)
       pn.mkpath unless pn.exist?
       @output_dir_pn = pn
 
@@ -89,7 +89,7 @@ module Erubyx
         @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
       end
 
-      @archive_dir_pn = @test_dir_pn + TEST_ARCHIVE_DIR
+      @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
       setup_archive_dir
     end
 
@@ -104,19 +104,19 @@ module Erubyx
     end
 
     def make_path_under_misc_dir(fname)
-      @misc_dir_pn + fname
+      @misc_dir_pn.join(fname)
     end
 
     def make_path_under_template_and_data_dir(fname)
-      @output_template_and_data_dir_pn + fname
+      @output_template_and_data_dir_pn.join(fname)
     end
 
     def make_path_under_script_dir(fname)
-      @output_script_dir_pn + fname
+      @output_script_dir_pn.join(fname)
     end
 
     def make_path_under_test_case_dir(fname)
-      @output_test_case_dir_pn + fname
+      @output_test_case_dir_pn.join(fname)
     end
   end
 end
