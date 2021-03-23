@@ -7,6 +7,38 @@ module Erubyx
     def initialize(argv)
       check_cli_options(argv)
       init
+    def print_debug
+      Loggerxcm.debug_b do
+        %W[
+          "tsv_fname=#{@tsv_fname}"
+          "output_dir=#{@output_dir}"
+          "cmd=#{@cmd}"
+        ]
+      end
+      Loggerxcm.debug_b do
+        %W[
+          "tsv_fname=#{@tsv_fname}",
+          "output_dir=#{@output_dir}",
+          "cmd=#{@cmd}"
+        ]
+      end
+    end
+
+    def show_usage_and_exit(opt, message)
+      Loggerxcm.debug_b do
+        %w[
+          message
+          opt.banner
+          Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR
+        ]
+      end
+      Loggerxcm.debug_b do
+        [
+          message,
+          opt.banner,
+          Erubyx::EXIT_CODE_OF_CMDLINE_OPTION_ERROR
+        ]
+      end
     end
 
     def check_cli_options(argv)
