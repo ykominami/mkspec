@@ -15,4 +15,4 @@ require 'erubyx'
 # IRB.start(__FILE__)
 
 mkscript = Erubyx::Mkscript.new(ARGV)
-mkscript.do_process
+mkscript.create_files

@@ -3,7 +3,6 @@
 module Erubyx
   class Templatex
     def initialize(setting)
-
       @setting = setting
       @template_path = @setting.template_path
       pn = Pathname.new(@template_path)
@@ -21,6 +20,7 @@ module Erubyx
     end
 
     def setup
+      ret = true
       lines = []
       str = %(
 # frozen_string_literal: true
@@ -45,12 +45,27 @@ RSpec.describe '<%= desc %>', type: :aruba do
       lines << str_end
 
       @content = lines.join("\n")
+      ret
     end
 
     def output
-      File.open(@template_path, 'w') do |file|
-        file.write(@content)
+      ret = true
+      begin
+        File.open(@template_path, 'w') do |file|
+          file.write(@content)
+        end
+      rescue StandardError => e
+        Loggerxcm.error_b do
+          Loggerxcm.error_b do
+            %w[
+              e.message
+              e.backtrace
+            ]
+            ret = false
+          end
+        end
       end
+      ret
     end
   end
 end
