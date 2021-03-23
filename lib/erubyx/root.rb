@@ -15,8 +15,7 @@ module Erubyx
       @level = 1
     end
 
-    def result
-      hash = {}
+    def extract_in_hash(hash)
       @setting_hash.each do |k, v|
         if v.instance_of?(Hash)
           content_path = v['path']
@@ -27,8 +26,17 @@ module Erubyx
           hash[k] = v
         end
       end
+    end
+
+    def make_item(hash)
+      extract_in_hash(hash)
       yaml_path = nil
-      item = Item.new(@level, 0, :root, hash, @content_pn, yaml_path, @config)
+      Item.new(@level, 0, :root, hash, @content_pn, yaml_path, @config)
+    end
+
+    def result
+      hash = {}
+      item = make_item(hash)
       content = item.result
       eruby = PrefixedLineEruby.new(content)
       eruby.result(hash)

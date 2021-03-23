@@ -99,12 +99,14 @@ module TestConf
       o.testdata_fname = 'testdata.txt'
       o.yaml_fname = 'a.yml'
       o._yaml_fname = 'a.yml'
-      o._config = Erubyx::Config.new(o.spec_dir, o._output_dir)
+      o._config = Erubyx::Config.new(o.spec_dir, o._output_dir, nil, nil)
       o._data_dir_pn = o._template_and_data_dir_pn.join('a')
     #
       o.data_dir_pn = o.output_template_and_data_dir_pn.join('a')
+      o.tad_2_dir = "template_and_data_2"
+      o.script_3_dir = "script_3"
     #
-      o.config_0 = Erubyx::Config.new(o.spec_dir, o.output_dir).setup
+      o.config_0 = Erubyx::Config.new(o.spec_dir, o.output_dir, nil, nil).setup
       o.asp_dir = o.test_root_dir_pn.join("asp" , "tecs")
       o.asp3_dir = o.test_root_dir_pn.join("asp3")
       o.start_char = 'a'
@@ -112,11 +114,17 @@ module TestConf
       o.test_1 = 'test_1'
       o.test_2 = 'test_2'
       o.format_fname = 'format.txt'
-      o.tsv_lines = 59
+      o.number_of_testgroup = 59
+      o.number_of_testscript = 19
+      o.number_of_testgroup_of_first_testscript = 3
       o.tgroup_0_name = 'mruby-MrubyBridge'
       o.tgroup_0_name_normalize = 'mruby_MrubyBridge'
       o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
       @o = o
+    end
+
+    def make_script_name(name)
+      %(#{name}_spec.rb)
     end
 
     def make_absolute_target_dir(target_parent_dir, test_case_dir = nil)
@@ -124,7 +132,7 @@ module TestConf
       if target_parent_dir
         target_parent_pn = Pathname.new(target_parent_dir)
         absolute_path = if test_case_dir && test_case_dir !~ /^\s*$/
-                target_parent_pn + test_case_dir.to_s
+                target_parent_pn.join(test_case_dir.to_s)
               else
                 target_parent_pn
               end
@@ -160,7 +168,7 @@ module TestConf
     end
 
     def create_instance_of_config
-      Erubyx::Config.new(@o.spec_dir, @o.output_dir).setup
+      Erubyx::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
     end
 
     def create_instance_of_root

@@ -69,9 +69,9 @@ RSpec.describe Erubyx do
     end
 
     it 'call grouping 4' , xcmd:4 do
-      ret_0 = @ts_0.grouping(@tg_2)
+      ret_0 = @ts_0.grouping(@tg_3)
       ret_1 = @ts_0.grouping(@tg_4)
-      expect(@ts_0.total_test_cases).to eq(@size_3 + @size_5)
+      expect(@ts_0.total_test_cases).to eq(@size_4 + @size_5)
       expect(@ts_0.test_groups.size).to eq(2)
     end
   end

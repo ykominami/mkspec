@@ -9,6 +9,7 @@ module Erubyx
 
     def initialize(tsv_path, start_char, limit, make_arg_basename)
       @tsv_path = tsv_path
+      raise unless start_char.instance_of?(String)
       @name = start_char
       @limit = limit
       @make_arg_basename = make_arg_basename

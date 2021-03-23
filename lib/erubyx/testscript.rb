@@ -5,15 +5,16 @@ module Erubyx
     attr_reader :name, :script_name, :test_groups, :total_test_cases, :inner_result
 
     def initialize(name, limit)
+      raise unless name.instance_of?(String)
       @name = name
-      @script_name = %(#{name}_spec.rb)
+      @script_name = Util.make_spec_filename(name)
       @limit = limit
       @test_groups = []
       @total_test_cases = 0
     end
 
     def print
-      Loggerxcm.debug %(#{@script_name} #{@test_groups.size})
+      Loggerxcm.debug(%(#{@script_name} #{@test_groups.size}))
       @test_groups.map(&:print)
     end
 

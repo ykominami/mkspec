@@ -15,29 +15,59 @@ RSpec.describe Erubyx do
   let(:tsv_lines) { o.tsv_lines }
 #
   context 'make script' do
-    context 'Mkscript-a' do
+    context 'Mkscript-all' do
       before(:each) do
         tsv_fname = o.misc_tsv_fname
-        argv = %W[-d #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
-        @mkscript = conf.create_instance_of_mkscript(argv)
-
-        @ret = @mkscript.create_files
       end
-      it 'create instance' , ms:1 do
-        expect(@ret).to eq true
+
+      # test_auto/_DATA/hier9
+      #                      /test_case(生成したspecファイルを実行するときに参照)
+      #                      /template_and_data(出力先)
+      #                      /script(出力先)
+      it 'create all files' , ms:1 do
+        argv = %W[-o #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
+        mkscript = conf.create_instance_of_mkscript(argv)
+        ret = mkscript.create_files
+
+        expect(ret).to eq true
       end
     end
 
-    context 'Mkscript-notemp' do
+    context 'Mkscript-tad' do
       before(:each) do
         tsv_fname = o.misc_tsv_fname
-        argv = %W[-d #{o.output_dir} -t #{o.tsv_fname} -c notemp -s #{o.start_char} -l #{o.limit}]
+        argv = %W[-o #{o.output_dir} -i #{o.tad_2_dir} -t #{o.tsv_fname} -c tad -s #{o.start_char} -l #{o.limit}]
+        @mkscript = conf.create_instance_of_mkscript(argv)
+      end
+      # test_auto/_DATA/hier9
+      #                      /test_case(生成したspecファイルを実行するときに参照)
+      #                      #/template_and_data(出力先)
+      #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
+      #                      /script(出力先)
+      it 'create template and data' , ms:2 do
+        ret = @mkscript.create_files
+
+        expect(ret).to eq(true)
+      end
+    end
+
+    context 'Mkscript-script' do
+      before(:each) do
+        tsv_fname = o.misc_tsv_fname
+        argv = %W[-o #{o.output_dir} -i #{o.tad_2_dir} -d #{o.script_3_dir} -t #{o.tsv_fname} -c spec -s #{o.start_char} -l #{o.limit}]
         @mkscript = conf.create_instance_of_mkscript(argv)
 
-        @ret = @mkscript.create_files
       end
-      it 'create instance' ,ms:2 do
-        expect(@ret).to eq true
+      # test_auto/_DATA/hier9
+      #                      /test_case(生成したspecファイルを実行するときに参照)
+      #                      #/template_and_data(出力先)
+      #                      /template_and_data_2(今回の参照先)　ここは参照するだけ
+      #                      #/script(出力先)
+      #                      /script_3 (今回の出力先)　ここに出力するだけ
+      it 'create spec files from files under template_and_data_2' ,ms:3 do
+        ret = @mkscript.create_files
+
+        expect(ret).to eq(true)
       end
     end
   end
