@@ -31,14 +31,15 @@ RSpec.describe Erubyx do
 
 #      expect(ret).to eq(nil)
 #      expect(ret).to eq(answer)
-      expect(ret.instance_of?(Erubyx::TestCaseGroup)).to eq(true)
+      expect(ret.instance_of?(Erubyx::TestScriptGroup)).to eq(true)
 #      expect(ret).to_not eq(nil)
 #      expect(hash).to eq(nil)
     end
 
     it 'call setup_from_tsv' , xcmd:2 do
       ret = @tsg.setup_from_tsv
-      expect(ret.size).to eq(o.tsv_lines)
+      expect(ret.size).to eq(o.number_of_testgroup)
+      expect(ret.instance_of?(Hash)).to eq(true)
     end
 
     it 'call setup' , xcmd:3 do
@@ -52,34 +53,40 @@ RSpec.describe Erubyx do
       expect(ret).to eq(answer)
     end
 
-    it 'call result(array of instance of TestScript' , xcmd:5 do
-      ret = @tsg.result
-      expect(ret.size).to eq(0)
-    end
+    context 'call result after calling setup' do
+      before(:each) do
+        @number_of_testscript = o.number_of_testscript
+        @start_char = o.start_char
+        @tsg = conf.create_instance_of_testscriptgroup
+        @first_script_name = conf.make_script_name(@start_char)
+        @number_of_testgroup_of_first_testscript = o.number_of_testgroup_of_first_testscript
+        @tsg.setup
+        @ret = @tsg.result
+      end
 
-    it 'call result 2' , xcmd:6 do
-      ret = @tsg.result
-      expect(ret[0].instance_of?(Erubyx::TestScript)).to eq(true)
-    end
+      it 'call result(array of instance of TestScript' , xcmd:5 do
+        expect(@ret.size).to eq(@number_of_testscript)
+      end
 
-    it 'call result 3' , xcmd:7 do
-      ret = @tsg.result
-      expect(ret[0].name).to eq(nil)
-    end
+      it 'call result 2' , xcmd:6 do
+        expect(@ret[0].instance_of?(Erubyx::TestScript)).to eq(true)
+      end
 
-    it 'call result 4' , xcmd:8 do
-      ret = @tsg.result
-      expect(ret[0].script_name).to eq(nil)
-    end
+      it 'call result 3' , xcmd:7 do
+        expect(@ret[0].name).to eq(@start_char)
+      end
 
-    it 'call result 5' , xcmd:9 do
-      ret = @tsg.result
-      expect(ret[0].test_groups.size).to eq(nil)
-    end
+      it 'call result 4' , xcmd:8 do
+        expect(@ret[0].script_name).to eq(@first_script_name)
+      end
 
-    it 'call result 6' , xcmd:9 do
-      ret = @tsg.result
-      expect(ret[0].test_groups[0]).to eq(nil)
+      it 'call result 5' , xcmd:9 do
+        expect(@ret[0].test_groups.size).to eq(@number_of_testgroup_of_first_testscript)
+      end
+
+      it 'call result 6' , xcmd:10 do
+        expect(@ret[0].test_groups[0].instance_of?(Erubyx::TestGroup)).to eq(true)
+      end
     end
   end
 end

@@ -12,11 +12,6 @@ RSpec.describe 'command-line', type: :aruba do
   let(:conf) { TestConf::TestConf.new( 'make_script', '', __FILE__, original_output_dir) }
   let(:o) { conf.o }
 
-  let(:original_output_dir_2_pn) { Pathname.new('_DATA').join('hier6') }
-  let(:original_output_dir_2) { original_output_dir_2_pn.to_s }
-  let(:conf2) { TestConf::TestConf.new( 'make_script', '', __FILE__, original_output_dir_2) }
-  let(:o2) { conf2.o }
-
   context 'make script' do
     before(:each) do
       tsv_fname = o.misc_tsv_fname
@@ -28,30 +23,61 @@ RSpec.describe 'command-line', type: :aruba do
       o.cmdline_0.make_cmdline_1(test_case_dir, o.result, option_extra.join(' '), file_list)
     end
 
-    context 'make_script-1' do
+    # test_auto/_DATA/hier5
+    #                      /test_case(生成したspecファイルを実行するときに参照)
+    #                      /template_and_data(出力先)
+    #                      /script(出力先)
+    context 'create all files' do
       before(:each) do
-        puts("o.target_parent_dir=#{o.target_parent_dir}")
         test_case_dir = 1
-        cmdline = make_cmdline_1(test_case_dir, ['-d', o.target_parent_dir, '-t', o.misc_tsv_fname, '-c', 'all', '-s', o.start_char, '-l', o.limit])
-        # pry
+        tsv_fname = o.misc_tsv_fname
+        argv = %W[-o #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
+        cmdline = make_cmdline_1(test_case_dir, argv)
+
         run_command("bash #{cmdline}")
       end
       it '', test_normal_sh:true, cmd:0 do expect(last_command_started).to be_successfully_executed end
       it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
-#      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
+  #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
     end
 
-    context 'make_script-2' do
+    # test_auto/_DATA/hier5
+    #                      /test_case(生成したspecファイルを実行するときに参照)
+    #                      #/template_and_data(出力先)
+    #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
+    #                      /script(出力先)
+    context 'create files under template_and_data_2 directory' do
       before(:each) do
-        puts("o2.target_parent_dir=#{o2.target_parent_dir}")
-        test_case_dir = 2
-        cmdline = make_cmdline_1(test_case_dir, ['-d', o2.target_parent_dir, '-t', o2.misc_tsv_fname, '-c', 'no_create', '-s', o2.start_char, '-l', o2.limit])
-        # pry
+        test_case_dir = 1
+        tsv_fname = o.misc_tsv_fname
+        argv = %W[-o #{o.output_dir} -i #{o.tad_2_dir} -t #{o.tsv_fname} -c tad -s #{o.start_char} -l #{o.limit}]
+        cmdline = make_cmdline_1(test_case_dir, argv)
+
         run_command("bash #{cmdline}")
       end
       it '', test_normal_sh:true, cmd:2 do expect(last_command_started).to be_successfully_executed end
       it '', test_normal_sh_out:true, cmd:3 do expect(last_command_started).not_to have_output(/error:/) end
-#      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
+  #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
+    end
+
+    # test_auto/_DATA/hier9
+    #                      /test_case(生成したspecファイルを実行するときに参照)
+    #                      #/template_and_data(出力先)
+    #                      /template_and_data_2(今回の参照先)　ここは参照するだけ
+    #                      #/script(出力先)
+    #                      /script_3 (今回の出力先)　ここに出力するだけ
+    context 'create spec files from files under templaet_and_data_2 to script_3 directory' do
+      before(:each) do
+        test_case_dir = 1
+        tsv_fname = o.misc_tsv_fname
+        argv = %W[-o #{o.output_dir} -i #{o.tad_2_dir} -d #{o.script_3_dir} -t #{o.tsv_fname} -c spec -s #{o.start_char} -l #{o.limit}]
+        cmdline = make_cmdline_1(test_case_dir, argv)
+
+        run_command("bash #{cmdline}")
+      end
+      it '', test_normal_sh:true, cmd:4 do expect(last_command_started).to be_successfully_executed end
+      it '', test_normal_sh_out:true, cmd:5 do expect(last_command_started).not_to have_output(/error:/) end
+      # it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
     end
   end
 end

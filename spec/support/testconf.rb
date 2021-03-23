@@ -112,11 +112,17 @@ module TestConf
       o.test_1 = 'test_1'
       o.test_2 = 'test_2'
       o.format_fname = 'format.txt'
-      o.tsv_lines = 59
+      o.number_of_testgroup = 59
+      o.number_of_testscript = 19
+      o.number_of_testgroup_of_first_testscript = 3
       o.tgroup_0_name = 'mruby-MrubyBridge'
       o.tgroup_0_name_normalize = 'mruby_MrubyBridge'
       o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
       @o = o
+    end
+
+    def make_script_name(name)
+      %(#{name}_spec.rb)
     end
 
     def make_absolute_target_dir(target_parent_dir, test_case_dir = nil)
@@ -124,7 +130,7 @@ module TestConf
       if target_parent_dir
         target_parent_pn = Pathname.new(target_parent_dir)
         absolute_path = if test_case_dir && test_case_dir !~ /^\s*$/
-                target_parent_pn + test_case_dir.to_s
+                target_parent_pn.join(test_case_dir.to_s)
               else
                 target_parent_pn
               end

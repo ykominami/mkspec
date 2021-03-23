@@ -56,9 +56,6 @@ module Erubyx
     end
 
     def setup
-      Erubyx::Loggerxcm.debug("@yaml_pn=#{@yaml_pn}")
-      Erubyx::Loggerxcm.debug("@content_pn=#{@content_pn}")
-      Erubyx::Loggerxcm.debug("@outer_hash=#{@outer_hash}")
       # @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn && @yaml_pn.exist?
       @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn&.exist?
       raise if @content_pn.nil? || !@content_pn.exist?
@@ -133,15 +130,6 @@ module Erubyx
 
     def replace_tag(content, hash)
       eruby = PrefixedLineEruby.new(content)
-      Loggerxcm.debug_b do
-        %W[
-          "----"
-          "content=#{content}"
-          "---- END"
-          "hash=#{hash}"
-          "---- END END"
-        ]
-      end
       begin
         @extracted = eruby.result(hash)
         @extract_count += 1
@@ -157,5 +145,24 @@ module Erubyx
       end
       @extracted
     end
+
+    def print
+      Loggerxcm.debug(%(@indent_level=#{@indent_level}))
+      Loggerxcm.debug_b do
+        %W[
+          @indent_level=#{@indent_level}
+          @extra_indent=#{@extra_indent}
+          @name=#{@name}
+          @outer_hash=#{@outer_hash}
+          @local_hash=#{@local_hash}
+          @content_pn=#{@content_pn}
+          @yaml_pn=#{@yaml_pn}
+          @children=#{@children}
+          @extracted=#{@extracted}
+          @extract_count=#{@extract_count}
+        ]
+      end
+    end
+
   end
 end

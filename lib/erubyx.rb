@@ -11,7 +11,7 @@ require 'clitest'
 module Erubyx
 
   #MAKE_ARG = 'make_arg'
-  MAKE_ARG = 'make_cmdline'
+  MAKE_ARG = 'make_cmdline_1'
 
   EXIT_CODE_OF_CMDLINE_OPTION_ERROR = 10
 
@@ -40,5 +40,5 @@ require_relative 'erubyx/testscriptgroup'
 require_relative 'erubyx/mkscript'
 require_relative 'erubyx/config'
 require_relative 'erubyx/loggerxcm'
-
 require_relative 'erubyx/item'
+require_relative 'erubyx/util'
