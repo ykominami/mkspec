@@ -1,0 +1,9 @@
+context '<%= context %>' do
+  before(:each) {
+    cmdline = <%= func_name %>('<%= dir %>', "<%= cdlfile %>")
+
+    run_command("bash #{cmdline}")
+  }
+  it 'execute successfully', test_normal_sh:true do expect(last_command_started).<%= test_1 %> <%= test_1_value %> end
+  it "don't have error in output", test_normal_sh_out:true do expect(last_command_started).<%= test_2 %> <%= test_2_value %> end
+end
