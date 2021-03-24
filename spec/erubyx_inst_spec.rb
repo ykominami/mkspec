@@ -6,13 +6,13 @@ RSpec.describe Erubyx do
   include UtilHelper
   include TestConf
 
-#  let(:original_spec_pn) { Pathname.new(__FILE__).parent }
-#  let(:original_spec_dir) { original_spec_pn.to_s }
   let(:original_output_dir_pn) { Pathname.new('_DATA') + 'hier9' }
   let(:original_output_dir) { original_output_dir_pn.to_s }
-#  let(:conf) { TestConf::TestConf.new( original_spec_dir, original_output_dir) }
-  let(:conf) { TestConf::TestConf.new( __FILE__, original_output_dir) }
+  let(:target_cmd_1) { 'tecsgen' }
+  let(:target_cmd_2) { 'tecsmerge' }
+  let(:conf) { TestConf::TestConf.new( target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
   let(:o) { conf.o }
+  let(:tsv_lines) { o.tsv_lines }
 #
   context 'format' do
     before(:each) do
@@ -129,34 +129,6 @@ EOS
       end
       it 'create instance' , ci:10 do
         expect(@mkscript).not_to eq(nil)
-      end
-    end
-  end
-
-  context 'make script' do
-    context 'Mkscript-a' do
-      before(:each) do
-        tsv_fname = o.misc_tsv_fname
-        argv = %W[-d #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
-        @mkscript = conf.create_instance_of_mkscript(argv)
-
-        @ret = @mkscript.do_process
-      end
-      it 'create instance' , ms:1 do
-        expect(@ret).to eq true
-      end
-    end
-
-    context 'Mkscript-p' do
-      before(:each) do
-        tsv_fname = o.misc_tsv_fname
-        argv = %W[-d #{o.output_dir} -t #{o.tsv_fname} -c partial -s #{o.start_char} -l #{o.limit}]
-        @mkscript = conf.create_instance_of_mkscript(argv)
-
-        @ret = @mkscript.do_process
-      end
-      it 'create instance' ,ms:2 do
-        expect(@ret).to eq true
       end
     end
   end
