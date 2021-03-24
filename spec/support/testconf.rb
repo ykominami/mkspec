@@ -8,8 +8,16 @@ module TestConf
   class TestConf
     attr_reader :o
 
-    def initialize(target_cmd_1, target_cmd_2, original_spec_file_path, original_output_dir = nil)
+    def initialize(global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, original_output_dir = nil)
+      global_yaml_pn = Pathname.new(global_yaml)
+      global_hash = Erubyx::Util.extract_yaml(global_yaml_pn)
+      global_hash[Erubyx::GLOBAL_YAML_FNAME] = global_yaml_pn.to_s
+      global_hash['original_output_dir'] = original_output_dir
+
+
       o = OpenStruct.new
+      o.original_output_dir = original_output_dir
+
       pn = Pathname.new(original_spec_file_path)
       if pn.dirname == "spec"
         spec_pn = pn.parent
@@ -31,33 +39,10 @@ module TestConf
       o.top_dir_pn = o.spec_pn.parent
       o.top_dir = o.top_dir_pn.to_s
 
-      o.target_cmd_1 = target_cmd_1 #'make_script'
-      o.target_cmd_2 = target_cmd_2 #''
-      pn = o.top_dir_pn.join("bin")
-      if pn.exist?
-        o.bin_dir_pn = pn
-        pn2 = o.bin_dir_pn.join(o.target_cmd_1)
-        o.target_cmd_1_pn = pn2
-        pn2 = o.bin_dir_pn.join(o.target_cmd_2)
-        o.target_cmd_2_pn = pn2
-      end
-      pn3 = o.top_dir_pn.join("exe")
-      if pn3.exist?
-        o.exe_dir_pn = pn3
-        if o.target_cmd_1_pn
-          pn4 = o.exe_dir_pn.join(o.target_cmd_1)
-          if pn4.exist?
-            o.target_cmd_1_pn = pn4
-          end
-        end
-        if o.target_cmd_2_pn
-          pn5 = o.exe_dir_pn.join(o.target_cmd_2)
-          if pn5.exist?
-            o.target_cmd_2_pn = pn5
-          end
-        end
-      end
-      o.make_arg_basename = 'make_cmdline_1'
+      _tmp, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, '.', target_cmd_1, target_cmd_2)
+      o.bin_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, 'bin', target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
+      o.exe_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, 'exe', target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
+      #o.make_arg_basename = 'make_cmdline_1'
 
       o.test_root_dir_pn = o.top_dir_pn.join('test_auto')
       o.test_root_dir = o.test_root_dir_pn.to_s
@@ -72,7 +57,9 @@ module TestConf
       o._test_data_dir_pn = o.test_root_dir_pn.join('_test_data')
       o.misc_dir_pn = o.test_root_dir_pn.join('misc')
       o.tsv_fname = 'testlist-x.txt'
+      o.tsv_fname_2 = 't.txt'
       o.misc_tsv_fname = o.misc_dir_pn.join(o.tsv_fname)
+      o.misc_tsv_fname_2 = o.misc_dir_pn.join(o.tsv_fname_2)
 
       #
       o.output_dir_pn = o.target_parent_dir_pn
@@ -107,8 +94,6 @@ module TestConf
       o.script_3_dir = "script_3"
     #
       o.config_0 = Erubyx::Config.new(o.spec_dir, o.output_dir, nil, nil).setup
-      o.asp_dir = o.test_root_dir_pn.join("asp" , "tecs")
-      o.asp3_dir = o.test_root_dir_pn.join("asp3")
       o.start_char = 'a'
       o.limit = 6
       o.test_1 = 'test_1'
@@ -120,7 +105,34 @@ module TestConf
       o.tgroup_0_name = 'mruby-MrubyBridge'
       o.tgroup_0_name_normalize = 'mruby_MrubyBridge'
       o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
+      #
+      global_hash.map { |x| o[x[0]] = x[1] if o[x[0]] == nil || o[x[0]] =~ /^\s*$/  }
+      #
       @o = o
+    end
+
+    def get_path(parent_dir_pn, dir , cmd_1, cmd_2)
+      pn_0 = parent_dir_pn.join(dir)
+      if pn_0.exist?
+        dir_pn = pn_0.realpath
+
+        if cmd_1
+          pn_1 = dir_pn.join(cmd_1)
+          pn_cmd_1 = pn_1.exist? ? pn_1 : nil
+        else
+          pn_cmd_1 = nil
+        end
+
+        if cmd_2
+          pn_2 = dir_pn.join(cmd_2)
+          pn_cmd_2 = pn_2.exist? ? pn_2 : nil
+        else
+          pn_cmd_2 = nil
+        end
+        [dir_pn, pn_cmd_1, pn_cmd_2]
+      else
+        [nil, nil, nil]
+      end
     end
 
     def make_script_name(name)
@@ -132,12 +144,12 @@ module TestConf
       if target_parent_dir
         target_parent_pn = Pathname.new(target_parent_dir)
         absolute_path = if test_case_dir && test_case_dir !~ /^\s*$/
-                target_parent_pn.join(test_case_dir.to_s)
-              else
-                target_parent_pn
-              end
+                          target_parent_pn.join(test_case_dir).realpath
+                        else
+                          target_parent_pn.realpath
+                        end
       elsif test_case_dir && test_case_dir !~ /^\s*$/
-        absolute_path = Pathname.new(test_case_dir.to_s)
+        absolute_path = Pathname.new(test_case_dir.to_s).realpath
       end
 
       absolute_path.to_s
@@ -249,10 +261,6 @@ module TestConf
       name = o.start_char
       limit = o.limit
       Erubyx::TestScript.new(name, limit)
-    end
-
-    def create_instance_of_mkscript(argv)
-      Erubyx::Mkscript.new(argv)
     end
 
     def create_instance_of_mkscript(argv)

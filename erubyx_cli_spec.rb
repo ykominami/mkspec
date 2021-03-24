@@ -9,7 +9,7 @@ RSpec.describe 'command-line', type: :aruba do
 
   let(:original_output_dir_pn) { Pathname.new('_DATA').join('hier5') }
   let(:original_output_dir) { original_output_dir_pn.to_s }
-  let(:conf) { TestConf::TestConf.new( 'make_script', '', __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new('global.yml', 'make_script', '', __FILE__, original_output_dir) }
   let(:o) { conf.o }
 
   context 'make script' do
@@ -30,8 +30,8 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files' do
       before(:each) do
         test_case_dir = 1
-        tsv_fname = o.misc_tsv_fname
-        argv = %W[-o #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
+        argv = %W[-g #{o[Erubyx::GLOBAL_YAML_FNAME]} -o #{o.output_dir} -t #{o.misc_tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
+#        argv = %W[-o #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
         cmdline = make_cmdline_1(test_case_dir, argv)
 
         run_command("bash #{cmdline}")

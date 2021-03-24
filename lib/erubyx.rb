@@ -9,11 +9,20 @@ require 'rufo'
 require 'clitest'
 
 module Erubyx
+  SUCCESS = 0
+  CMDLINE_OPTION_ERROR = 10
+  CANNOT_WRITE_SPEC_FILE = 20
+  CANNOT_FIND_DATA_YAML_FILE = 30
+  CANNOT_CONVERT_WITH_RUBO = 40
+  CANNOT_WRITE_YAML_FILE = 50
 
-  #MAKE_ARG = 'make_arg'
+  GLOBAL_YAML_FNAME = 'global_yaml_fname'
+  ORIGINAL_OUTPUT_DIR = 'original_output_dir'
+  TARGET_CMD_1_PN = 'target_cmd_1_pn'
+  TARGET_CMD_2_PN = 'target_cmd_2_pn'
   MAKE_ARG = 'make_cmdline_1'
-
-  EXIT_CODE_OF_CMDLINE_OPTION_ERROR = 10
+  MAKE_ARG_X = 'make_arg'
+  TEST_CASE_DIR = 'test_case_dir'
 
   SPEC_DIR = "spec"
   SPEC_PN = Pathname.new(__FILE__).parent.parent + SPEC_DIR
@@ -42,3 +51,5 @@ require_relative 'erubyx/config'
 require_relative 'erubyx/loggerxcm'
 require_relative 'erubyx/item'
 require_relative 'erubyx/util'
+
+require_relative 'erubyx/state'

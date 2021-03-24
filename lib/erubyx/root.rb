@@ -22,6 +22,7 @@ module Erubyx
           yaml_path = nil
           item = Item.new(@level, 0, k, v, content_path, yaml_path, @config)
           hash[k] = item.result
+          return unless STATE.success?
         else
           hash[k] = v
         end
@@ -38,8 +39,22 @@ module Erubyx
       hash = {}
       item = make_item(hash)
       content = item.result
+      return unless STATE.success?
       eruby = PrefixedLineEruby.new(content)
-      eruby.result(hash)
+      begin
+        eruby.result(hash)
+      rescue StandardError => e
+        message = %W[
+          "3 Item.to_s"
+          #{e.to_s}
+          "@content=#{@content_pn}"
+          "content=#{content}"
+        ]
+        Loggerxcm.error_b do
+          #{ message }
+        end
+        return STATE.change(CANNOT_GET_RESULT_WITH_ERUBY)
+      end
     end
   end
 end

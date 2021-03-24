@@ -7,7 +7,7 @@ module Erubyx
       @template_path = @setting.template_path
       pn = Pathname.new(@template_path)
       pn.parent.mkdir unless pn.parent.exist?
-      @content = ''
+      @content = ""
       @func_name_of_make_arg = @setting.func_name_of_make_arg
     end
 
@@ -39,9 +39,9 @@ RSpec.describe '<%= desc %>', type: :aruba do
           lines << make_line_2(test_case.extra) if test_case.extra
           lines << make_line_2(test_case.name)
         end
-        lines << '  <%= rspec_describe_context_end %>'
+        lines << "  <%= rspec_describe_context_end %>"
       end
-      str_end = '<%= rspec_describe_end %>'
+      str_end = "<%= rspec_describe_end %>"
       lines << str_end
 
       @content = lines.join("\n")
@@ -51,19 +51,18 @@ RSpec.describe '<%= desc %>', type: :aruba do
     def output
       ret = true
       begin
-        File.open(@template_path, 'w') do |file|
+        File.open(@template_path, "w") do |file|
           file.write(@content)
         end
       rescue StandardError => e
+        message = %w[
+          #{e.message}
+          #{e.backtrace}
+        ]
         Loggerxcm.error_b do
-          Loggerxcm.error_b do
-            %w[
-              e.message
-              e.backtrace
-            ]
-            ret = false
-          end
+          #{message}
         end
+        ret = false
       end
       ret
     end

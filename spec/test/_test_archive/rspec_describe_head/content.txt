@@ -1,14 +1,12 @@
 include UtilHelper
 include TestConf
 
-let(:original_output_dir_pn) { Pathname.new('_DATA').join('hier0') }
-let(:original_output_dir) { original_output_dir_pn.to_s }
-let(:conf) { TestConf::TestConf.new( 'tecsgen', 'tecsmerge', __FILE__, original_output_dir) }
+let(:original_output_dir) { '<%= original_output_dir %>' }
+let(:test_case_parent_dir) { '<%= test_case_dir %>' }
+let(:conf) { TestConf::TestConf.new( '<%= global_yaml_fname %>', '<%= target_cmd_1_pn %>', '<%= target_cmd_2_pn %>', __FILE__, original_output_dir) }
 let(:o) { conf.o }
 
 before(:each) {
-  @tecspath = o.top_dir_pn.join("/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen")
-
-  ENV["TECSPATH"] = @tecspath.to_s
-  ENV['PATH']="/home/ykominami/repo/ns3-tecsgen/tecsgen:#{ENV['PATH']}"
+  ENV['TECSPATH'] = '<%= tecspath %>'
+  ENV['PATH'] = ['<%= tecsgen_cmd_path %>', ENV['PATH']].join(':')
 }

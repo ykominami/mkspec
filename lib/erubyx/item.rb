@@ -3,7 +3,7 @@
 module Erubyx
   class Item
     attr_reader :state, :content_lines, :content_path, :name, :outer_hash, :tag_table,
-                :extract_count
+                :extract_count, :local_hash, :yaml_path
 
     INDENT_UNIT_SIZE = 2
 
@@ -59,13 +59,16 @@ module Erubyx
       # @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn && @yaml_pn.exist?
       @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn&.exist?
       raise if @content_pn.nil? || !@content_pn.exist?
-
+p "@local_hash=#{@local_hash}"
+p "@yaml_pn=#{@yaml_pn}"
       @content_lines = File.readlines(@content_pn).map(&:chomp)
       @tag_table = analyze(@content_lines)
       @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
       @children = make_children(@tag_table, @hash)
+      error_count = 0
       @children.each do |k, v|
         @hash[k] = v.result
+        return less STATE.success?
       end
     end
 
@@ -90,7 +93,7 @@ module Erubyx
           if l.size.positiv?
             indent + l
           else
-            ''
+            ""
           end
         end
         hash[key] = content_lines.join("\n")
@@ -112,10 +115,10 @@ module Erubyx
       tag_table.each do |tag, extra_indent|
         Erubyx::Loggerxcm.debug("-Y tag=#{tag}|")
         case hash[tag].class
-        when  ::Hash
+        when ::Hash
           hs = @hash[tag]
-          content_path = hs['path']
-          yaml_path = hs['setting_path']
+          content_path = hs["path"]
+          yaml_path = hs["setting_path"]
           Erubyx::Loggerxcm.debug("-X hs.class=#{hs.class}|")
           Erubyx::Loggerxcm.debug("-X hs=#{hs}|")
           children[tag] = Item.new(@indent_level + 1, extra_indent, tag, hs, content_path, yaml_path, @config)
@@ -132,16 +135,20 @@ module Erubyx
       eruby = PrefixedLineEruby.new(content)
       begin
         @extracted = eruby.result(hash)
+        return unless STATE.success?
         @extract_count += 1
       rescue StandardError => e
-        Loggerxcm.debug_b do
-          %W[
-            "3 Item.to_s"
-            e.to_s
-            "@content=#{@content_pn}"
-            "content=#{content}"
-          ]
+        message = %W[
+          "3 Item.to_s"
+          #{e.to_s}
+          "@content=#{@content_pn}"
+          "content=#{content}"
+        ]
+        Loggerxcm.error_b do
+          #{message}
         end
+        binding.pry
+        STATE.change(CANNOT_WRITE_YAML_FILE, message)
       end
       @extracted
     end
@@ -163,6 +170,5 @@ module Erubyx
         ]
       end
     end
-
   end
 end

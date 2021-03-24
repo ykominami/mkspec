@@ -16,3 +16,4 @@ require 'erubyx'
 
 mkscript = Erubyx::Mkscript.new(ARGV)
 mkscript.create_files
+exit(Erubyx::STATE.exit_code)

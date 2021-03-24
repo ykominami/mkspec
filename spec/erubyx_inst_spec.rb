@@ -10,7 +10,7 @@ RSpec.describe Erubyx do
   let(:original_output_dir) { original_output_dir_pn.to_s }
   let(:target_cmd_1) { 'tecsgen' }
   let(:target_cmd_2) { 'tecsmerge' }
-  let(:conf) { TestConf::TestConf.new( target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new( 'global.yml', target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
   let(:o) { conf.o }
   let(:tsv_lines) { o.tsv_lines }
 #
@@ -124,7 +124,7 @@ EOS
     context 'Mkscript' do
       before(:each) do
         tsv_fname = o.misc_tsv_fname
-        argv = %W[-d #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
+        argv = %W[-o #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char} -l #{o.limit}]
         @mkscript = conf.create_instance_of_mkscript(argv)
       end
       it 'create instance' , ci:10 do
