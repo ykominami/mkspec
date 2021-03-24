@@ -48,7 +48,7 @@ allocator	2
 allocator	CB
 romram	normal
 romram	r
-romram	ram-initializer_1
+romram	ram-initializer	1
 composite_alloc	1
 composite_alloc	3
 require	1

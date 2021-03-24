@@ -13,27 +13,16 @@ RSpec.describe Erubyx do
   let(:conf) { TestConf::TestConf.new( 'global.yml', target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
   let(:o) { conf.o }
 #
-  context 'call method of TestScriptGroup class' do
+  context 'call method of TestConf class' do
     before(:each) do
-      @tsg = conf.create_instance_of_testscriptgroup
-    end
-    it 'call setup_test_group' , xcmd:1 do
-#      l = ""
-#      l = "data-normal"
-#      l = "data-normal	com.1"
-#      l = "data-normal	com.1 to  be_successfully_executeds_y not_to  have_output(/error:/)x"
-#      l = "data-normal\tcom.1\tto\tbe_successfully_executeds_y\tnot_to\thave_output(/error:/)x"
-#      l = "data-normal\tcom.1\ttest_1\t :to s\ttest_2\t:not_to xyz\te1\tre5"
-      l = "data-normal\tcom.1\ttest_1"
-      hash = {}
-      ret = @tsg.setup_test_group(l, hash)
-#      answer = "data_normal"
 
-#      expect(ret).to eq(nil)
-#      expect(ret).to eq(answer)
-      expect(ret.instance_of?(Erubyx::TestScriptGroup)).to eq(true)
-#      expect(ret).to_not eq(nil)
-#      expect(hash).to eq(nil)
+    end
+    it 'call get_path' , xcmd:1 do
+      target_cmd_1 = 'tecsgen'
+      target_cmd_2 = nil
+      _tmp, target_cmd_1_pn, target_cmd_2_pn = conf.get_path(o.top_dir_pn, '.', target_cmd_1, target_cmd_2)
+      expect(o.top_dir_pn).to_not eq(nil)
+      expect(target_cmd_1_pn).to_not eq(nil)
     end
 
     it 'call setup_from_tsv' , xcmd:2 do

@@ -1,39 +1,49 @@
 # frozen_string_literal: true
 
-require 'pp'
+require "pp"
 
 module Erubyx
   class Setting
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
 
-    def initialize(testscript, config, func_name_of_make_arg)
-      Loggerxcm.debug("Setting.initialize func_name_of_make_arg=#{func_name_of_make_arg}")
+    def initialize(global_hash, testscript, config)
+      @global_hash = global_hash
+      Loggerxcm.debug("Setting.initialize make_arg=#{@global_hash["make_arg"]}")
       @testscript = testscript
       @hash = {}
       name = @testscript.name
       raise unless name.instance_of?(String)
       data_sub_pn = config.make_path_under_template_and_data_dir(name)
       data_sub_pn.mkdir unless data_sub_pn.exist?
-      @template_path = data_sub_pn.join('content.txt')
+      @template_path = data_sub_pn.join("content.txt")
 
       @path_value = @template_path.relative_path_from(data_sub_pn.parent)
       name_2 = @testscript.name
       raise unless name_2.instance_of?(String)
       @data_yaml_path = data_sub_pn.join(%(#{name_2}.yml))
-      if func_name_of_make_arg.nil? || func_name_of_make_arg =~ /^\s*$/
+      if @global_hash["make_arg"].nil? || @global_hash["make_arg"] =~ /^\s*$/
         Loggerxcm.debug("Setting testscript.name=#{name_2}")
-        Loggerxcm.debug("Setting func_name_of_make_arg=|#{func_name_of_make_arg}|")
+        Loggerxcm.debug("Setting make_arg=|#{@global_hash["make_arg"]}|")
         raise
       end
-      @func_name_of_make_arg = func_name_of_make_arg
+      @func_name_of_make_arg = global_hash["make_arg"]
     end
 
     def setup(desc)
-      @hash['path'] = @path_value.to_s
-      @hash['desc'] = desc
-      @hash['rspec_describe_head'] = { 'path' => 'rspec_describe_head/content.txt' }
-      @hash['rspec_describe_end'] = { 'path' => 'rspec_describe_end/content.txt' }
-      @hash['rspec_describe_context_end'] = { 'path' => 'rspec_describe_context_end/content.txt' }
+      @hash["path"] = @path_value.to_s
+      @hash["desc"] = desc
+      @hash["rspec_describe_head"] = {
+        "path" => "rspec_describe_head/content.txt",
+        ORIGINAL_OUTPUT_DIR => @global_hash[ORIGINAL_OUTPUT_DIR],
+        TARGET_CMD_1_PN => @global_hash[TARGET_CMD_1_PN],
+        TARGET_CMD_2_PN => @hash[TARGET_CMD_2_PN],
+        "tecspath" => @global_hash["tecspath"],
+        "tecsgen_cmd_path" => @global_hash["tecsgen_cmd_path"],
+        GLOBAL_YAML_FNAME => @global_hash[GLOBAL_YAML_FNAME],
+        TEST_CASE_DIR => @global_hash[TEST_CASE_DIR],
+      }
+      @hash["rspec_describe_end"] = { "path" => "rspec_describe_end/content.txt" }
+      @hash["rspec_describe_context_end"] = { "path" => "rspec_describe_context_end/content.txt" }
       error_count = 0
       @testscript.test_groups.map do |test_group|
         name = test_group.name
@@ -68,14 +78,16 @@ module Erubyx
     def output_data_yamlfile
       ret = true
       begin
-        File.open(@data_yaml_path, 'w') { |file| file.write(YAML.dump(@hash)) }
+        File.open(@data_yaml_path, "w") { |file| file.write(YAML.dump(@hash)) }
       rescue StandardError => e
+        message = %w[
+          #{e.to_s}
+          #{e.backtrace}
+        ]
         Loggerxcm.error_b do
-          %w[
-            e.to_s
-            e.backtrace
-          ]
+          #{message}
         end
+        STATE.change(CANNOT_WRITE_YAML_FILE)
         ret = false
       end
       ret
@@ -85,8 +97,9 @@ module Erubyx
       raise unless test_group_name.instance_of?(String)
       raise if @hash[test_group_name]
       @hash[test_group_name] = {
-        'path' => 'rspec_describe_context/content.txt',
-        'context' => test_group_name
+        "path" => "rspec_describe_context/content.txt",
+        "context" => test_group_name,
+        "tecsgen_cmd" => @global_hash['tecsgen_cmd']
       }
     end
 
@@ -103,9 +116,9 @@ module Erubyx
       end
 
       @hash[content_name] = {
-        'path' => 'make_arg/content.txt',
-        'func_name' => func_name,
-        'option_list' => option_list
+        "path" => "make_arg/content.txt",
+        "func_name" => func_name,
+        "option_list" => option_list,
       }
       ret
     end
@@ -113,15 +126,15 @@ module Erubyx
     def make_context_context(test_case_name, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)
       raise unless test_case_name.instance_of?(String)
       @hash[test_case_name] = {
-        'path' => 'rspec_describe_context_context/content.txt',
-        'context' => test_case_name,
-        'dir' => dir,
-        'cdlfile' => %(#{test_group}.cdl),
-        'test_1' => test_1,
-        'test_1_value' => test_1_value,
-        'test_2' => test_2,
-        'test_2_value' => test_2_value,
-        'func_name' => func_name
+        "path" => "rspec_describe_context_context/content.txt",
+        "context" => test_case_name,
+        "dir" => dir,
+        "cdlfile" => %(#{test_group}.cdl),
+        "test_1" => test_1,
+        "test_1_value" => test_1_value,
+        "test_2" => test_2,
+        "test_2_value" => test_2_value,
+        "func_name" => func_name,
       }
     end
   end

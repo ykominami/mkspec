@@ -10,7 +10,7 @@ RSpec.describe Erubyx do
   let(:original_output_dir) { original_output_dir_pn.to_s }
   let(:target_cmd_1) { 'tecsgen' }
   let(:target_cmd_2) { 'tecsmerge' }
-  let(:conf) { TestConf::TestConf.new( target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new( 'global.yml', target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
   let(:o) { conf.o }
 
   context 'call methods of TestGroup class' do

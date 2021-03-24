@@ -1,5 +1,5 @@
 context '<%= context %>' do
   before(:each) {
     test_case_parent_dir = o.output_test_case_root_dir_pn.join('<%= context %>')
-    @cmdline = Clitest::Cmdline.new(nil, nil, test_case_parent_dir, o.target_cmd_1)
+    @cmdline = Clitest::Cmdline.new(nil, nil, test_case_parent_dir, '<%= tecsgen_cmd %>')
   }
