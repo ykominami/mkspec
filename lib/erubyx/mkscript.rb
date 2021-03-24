@@ -7,6 +7,8 @@ module Erubyx
     def initialize(argv)
       check_cli_options(argv)
       init
+    end
+
     def print_debug
       Loggerxcm.debug_b do
         %W[
