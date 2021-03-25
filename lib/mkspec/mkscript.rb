@@ -10,23 +10,6 @@ module Mkspec
       init if STATE.success?
     end
 
-    def print_debug
-      Loggerxcm.debug_b do
-        %W[
-          "tsv_fname=#{@tsv_fname}"
-          "output_dir=#{@output_dir}"
-          "cmd=#{@cmd}"
-        ]
-      end
-      Loggerxcm.debug_b do
-        %W[
-          "tsv_fname=#{@tsv_fname}",
-          "output_dir=#{@output_dir}",
-          "cmd=#{@cmd}"
-        ]
-      end
-    end
-
     def check_cli_options(argv)
       command_options = %w[ spec tad all ]
       command_options_str = command_options.join(" ")
@@ -71,13 +54,11 @@ module Mkspec
     end
 
     def init
-      @latest_testcase_id = -1
+      @lt_id = -1
 
       @global_hash = Mkspec::Util.extract_yaml(@global_yaml_pn)
       @global_hash[GLOBAL_YAML_FNAME] = @global_yaml_pn.realpath.to_s
       @global_hash[ORIGINAL_OUTPUT_DIR] = @original_output_dir
-#      @global_hash[TARGET_CMD_1_PN] = Pathname.new(@target_cmd1).realpath.to_s
-#      @global_hash[TARGET_CMD_2_PN] = Pathname.new(@target_cmd2).realpath.to_s
       @global_hash[TARGET_CMD_1_PN] = Pathname.new(@target_cmd1).realpath.to_s
       @global_hash[TARGET_CMD_2_PN] = Pathname.new(@target_cmd2).realpath.to_s
 
@@ -91,14 +72,16 @@ module Mkspec
     end
 
     def make_array_of_setting_and_testscript(tsg, config)
+      lt_id = -1
       tsg.testscripts.map do |testscript|
-        setting = create_setting_instance(testscript, config)
+        setting = create_setting_instance(testscript, config, lt_id)
+        lt_id = setting.lt_id
         [setting, testscript]
       end
     end
 
-    def create_setting_instance(testscript, config)
-      setting = Mkspec::Setting.new(@global_hash, testscript, config)
+    def create_setting_instance(testscript, config, initail_testcase_id)
+      setting = Mkspec::Setting.new(@global_hash, testscript, config, initail_testcase_id)
       setting.setup("tecsgen command")
       setting
     end
@@ -123,10 +106,8 @@ module Mkspec
       error_count = 0
       array.map do |x|
         setting, _tmp = x
-        setting.latest_testcase_id = @latest_testcase_id
         ret = make_template_and_data(setting)
         error_count += 1 unless ret
-        @latest_testcase_id = setting.latest_testcase_id
       end
       error_count.zero?
     end
@@ -185,23 +166,6 @@ module Mkspec
 
     def self.format(code)
       Rufo::Formatter.format(code, {})
-    end
-
-    def print_debug
-      Loggerxcm.debug_b do
-        %W[
-          "tsv_fname=#{@tsv_fname}"
-          "output_dir=#{@output_dir}"
-          "cmd=#{@cmd}"
-        ]
-      end
-      Loggerxcm.debug_b do
-        %W[
-          "tsv_fname=#{@tsv_fname}"
-          "output_dir=#{@output_dir}"
-          "cmd=#{@cmd}"
-        ]
-      end
     end
   end
 end

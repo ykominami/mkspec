@@ -5,9 +5,9 @@ require "pp"
 module Mkspec
   class Setting
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
-    attr_accessor :latest_testcase_id
+    attr_reader :lt_id
 
-    def initialize(global_hash, testscript, config)
+    def initialize(global_hash, testscript, config, initail_testcase_id)
       @global_hash = global_hash
       Loggerxcm.debug("Setting.initialize make_arg=#{@global_hash["make_arg"]}")
       @testscript = testscript
@@ -29,11 +29,11 @@ module Mkspec
       end
       @func_name_of_make_arg = global_hash["make_arg"]
 
-      @latest_tastcase_id = 0
+      @lt_id = initail_testcase_id
     end
 
     def next_testcase_id
-      @latest_tastcase_id += 1
+      @lt_id += 1
     end
 
     def setup(desc)

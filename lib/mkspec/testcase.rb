@@ -15,9 +15,5 @@ module Mkspec
       @test_2_value = test_2_value
       @extra = extra
     end
-
-    def print
-      Loggerxcm.debug "testcase=#{@name}"
-    end
   end
 end

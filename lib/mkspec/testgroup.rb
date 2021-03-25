@@ -23,11 +23,5 @@ module Mkspec
       @test_cases << v
       v
     end
-
-    def print
-      Loggerxcm.debug '# TestGroup'
-      Loggerxcm.debug @name
-      @test_cases.map(&:print)
-    end
   end
 end

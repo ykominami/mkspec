@@ -59,8 +59,6 @@ module Mkspec
       # @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn && @yaml_pn.exist?
       @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn&.exist?
       raise if @content_pn.nil? || !@content_pn.exist?
-p "@local_hash=#{@local_hash}"
-p "@yaml_pn=#{@yaml_pn}"
       @content_lines = File.readlines(@content_pn).map(&:chomp)
       @tag_table = analyze(@content_lines)
       @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
@@ -151,24 +149,6 @@ p "@yaml_pn=#{@yaml_pn}"
         STATE.change(CANNOT_WRITE_YAML_FILE, message)
       end
       @extracted
-    end
-
-    def print
-      Loggerxcm.debug(%(@indent_level=#{@indent_level}))
-      Loggerxcm.debug_b do
-        %W[
-          @indent_level=#{@indent_level}
-          @extra_indent=#{@extra_indent}
-          @name=#{@name}
-          @outer_hash=#{@outer_hash}
-          @local_hash=#{@local_hash}
-          @content_pn=#{@content_pn}
-          @yaml_pn=#{@yaml_pn}
-          @children=#{@children}
-          @extracted=#{@extracted}
-          @extract_count=#{@extract_count}
-        ]
-      end
     end
   end
 end

@@ -124,7 +124,7 @@ module Mkspec
     #  Loggerxcm.init(:default, true, :error)
     #  Loggerxcm.init(:default, true, :warn)
     #  Loggerxcm.init(:default, true, :info)
-    #  Loggerxcm.init(:default, false, :debug)
-      Loggerxcm.init(:default, true, :debug)
+      Loggerxcm.init(:default, false, :debug)
+    #  Loggerxcm.init(:default, true, :debug)
   end
 end

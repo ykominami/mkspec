@@ -13,11 +13,6 @@ module Mkspec
       @total_test_cases = 0
     end
 
-    def print
-      Loggerxcm.debug(%(#{@script_name} #{@test_groups.size}))
-      @test_groups.map(&:print)
-    end
-
     def grouping(testgroup)
       # TestScriptは1個以上のTestGroupを含む。
       # TestGroupは1個以上のTestCaseを含む。
