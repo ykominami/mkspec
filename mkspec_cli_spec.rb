@@ -131,5 +131,53 @@ RSpec.describe 'command-line', type: :aruba do
       #it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
   #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
     end
+
+
+    context 'create all files to scriptx' do
+      before(:each) do
+        test_case_dir = 1
+        argv = %W[-g #{o[Mkspec::GLOBAL_YAML_FNAME]} -o #{o.output_dir} -i 'tadv' -d 'scriptv' -t #{o.tsv_fname} -c all -s #{o.start_char}
+               -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
+               ]
+        cmdline = make_cmdline_1(test_case_dir, argv)
+
+        run_command("bash #{cmdline}")
+      end
+      it '', test_normal_sh:true, ycmd:0, ycmd:1 do expect(last_command_started).to be_successfully_executed end
+      #it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
+  #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
+    end
+
+    context 'create all files to scripty' do
+      before(:each) do
+        test_case_dir = 1
+        argv = %W[-g #{o[Mkspec::GLOBAL_YAML_FNAME]} -o #{o.output_dir} -i 'tadw' -d 'scriptw' -t #{o.tsv_fname} 
+               -c all -s #{o.start_char}
+               -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
+               ]
+        cmdline = make_cmdline_1(test_case_dir, argv)
+
+        run_command("bash #{cmdline}")
+      end
+      it '', test_normal_sh:true, ycmd:1 do expect(last_command_started).to be_successfully_executed end
+      #it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
+  #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
+    end
+
+    context 'create all files to scripty only' do
+      before(:each) do
+        test_case_dir = 1
+        argv = %W[-g #{o[Mkspec::GLOBAL_YAML_FNAME]} -o #{o.output_dir} -i 'tadw' -d 'scriptw' -t #{o.tsv_fname}
+               -c spec -s #{o.start_char}
+               -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
+               ]
+        cmdline = make_cmdline_1(test_case_dir, argv)
+
+        run_command("bash #{cmdline}")
+      end
+      it '', test_normal_sh:true, ycmd:2 do expect(last_command_started).to be_successfully_executed end
+      #it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
+  #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
+    end
   end
 end

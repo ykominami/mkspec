@@ -1,0 +1,7 @@
+#!/bin/bash
+bin_dir=$(dirname $0)
+top_dir=$(dirname $bin_dir)
+
+bundle exec rspec ${top_dir}/test_auto/_DATA/hier5/scriptv/a_spec.rb $*
+
+
