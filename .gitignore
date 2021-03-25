@@ -1,3 +1,4 @@
+*.log
 global.yml
 *.code-workspace
 rubocop-cof.yml
