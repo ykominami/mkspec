@@ -2,8 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Erubyx do
-  include UtilHelper
+RSpec.describe Mkspec do
   include TestConf
 
   let(:original_output_dir_pn) { Pathname.new('_DATA') + 'hier10' }
@@ -11,7 +10,7 @@ RSpec.describe Erubyx do
   let(:target_cmd_1) { 'tecsgen' }
   let(:target_cmd_2) { 'tecsmerge' }
   #                                     global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, original_output_dir = nil
-  let(:conf) { TestConf::TestConf.new( 'global.yml', target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new( ENV['GLOBAL_YAML'], target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
   let(:o) { conf.o }
   let(:tsv_lines) { o.tsv_lines }
 #
@@ -28,15 +27,15 @@ RSpec.describe Erubyx do
       #                      /template_and_data(出力先)
       #                      /script(出力先)
       it 'create all files' , ms:11 do
-        argv = %W[-g #{@o[Erubyx::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -t #{@o.tsv_fname} -c all -s #{@o.start_char}
+        argv = %W[-g #{@o[Mkspec::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -t #{@o.tsv_fname} -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn}
                ]
         mkscript = @conf.create_instance_of_mkscript(argv)
-        expect(Erubyx::STATE.success?).to eq(true)
+        expect(Mkspec::STATE.success?).to eq(true)
       end
 
       it 'create all files 2' , ms:12 do
-        argv = %W[-g #{@o[Erubyx::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -t #{@o.tsv_fname} -c all -s #{@o.start_char}
+        argv = %W[-g #{@o[Mkspec::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -t #{@o.tsv_fname} -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn}
               ]
         mkscript = @conf.create_instance_of_mkscript(argv)
@@ -58,7 +57,7 @@ RSpec.describe Erubyx do
       #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
       #                      /script(出力先)
       it 'create template and data' , ms:2 do
-        argv = %W[-g #{@o[Erubyx::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -i #{@o.tad_2_dir} -t #{@o.tsv_fname} -c tad
+        argv = %W[-g #{@o[Mkspec::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -i #{@o.tad_2_dir} -t #{@o.tsv_fname} -c tad
                -s #{@o.start_char} -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn}
               ]
         mkscript = @conf.create_instance_of_mkscript(argv)
@@ -81,7 +80,7 @@ RSpec.describe Erubyx do
       #                      #/script(出力先)
       #                      /script_3 (今回の出力先)　ここに出力するだけ
       it 'create spec files from files under template_and_data_2' ,ms:3 do
-        argv = %W[-g #{@o[Erubyx::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -i #{@o.tad_2_dir} -d #{o.script_3_dir}
+        argv = %W[-g #{@o[Mkspec::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -i #{@o.tad_2_dir} -d #{o.script_3_dir}
                -t #{@o.tsv_fname} -c spec -s #{@o.start_char} -l #{@o.limit} -x #{@o.original_output_dir}
                -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn}
               ]
@@ -105,7 +104,7 @@ RSpec.describe Erubyx do
       #                      #/script(出力先)
       #                      /script_3 (今回の出力先)　ここに出力するだけ
       it 'create spec files from files under template_and_data_2' ,ms:4 do
-        argv = %W[-g #{@o[Erubyx::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -i #{@o.tad_2_dir} -d #{o.script_3_dir}
+        argv = %W[-g #{@o[Mkspec::GLOBAL_YAML_FNAME]} -o #{@o.output_dir} -i #{@o.tad_2_dir} -d #{o.script_3_dir}
                -t #{@o.tsv_fname} -c all -s #{@o.start_char} -l #{@o.limit} -x #{@o.original_output_dir}
                -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn}
               ]

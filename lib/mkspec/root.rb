@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   require 'yaml'
 
   class Root

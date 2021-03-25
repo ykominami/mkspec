@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   class Item
     attr_reader :state, :content_lines, :content_path, :name, :outer_hash, :tag_table,
                 :extract_count, :local_hash, :yaml_path
@@ -13,21 +13,21 @@ module Erubyx
       @name = name
       @outer_hash = outer_hash
       @local_hash = {}
-      Erubyx::Loggerxcm.debug("-1 content_path=#{content_path}|")
+      Mkspec::Loggerxcm.debug("-1 content_path=#{content_path}|")
       if content_path.nil?
-        Erubyx::Loggerxcm.debug("0 content_path=#{content_path}|")
+        Mkspec::Loggerxcm.debug("0 content_path=#{content_path}|")
         @content_pn = nil
         raise
       else
-        Erubyx::Loggerxcm.debug("1 content_path=#{content_path}|")
+        Mkspec::Loggerxcm.debug("1 content_path=#{content_path}|")
         pn = Pathname.new(content_path)
         if pn.exist?
           @content_pn = pn
-          Erubyx::Loggerxcm.debug("2 @content_pn=#{@content_pn}|")
+          Mkspec::Loggerxcm.debug("2 @content_pn=#{@content_pn}|")
         else
           @content_pn = config.make_path_under_template_and_data_dir(pn)
           if @content_pn.exist? == false
-            Erubyx::Loggerxcm.debug("3 @content_pn=#{@content_pn}|")
+            Mkspec::Loggerxcm.debug("3 @content_pn=#{@content_pn}|")
             @content_pn = nil
             raise
           end
@@ -113,19 +113,19 @@ p "@yaml_pn=#{@yaml_pn}"
     def make_children(tag_table, hash)
       children = {}
       tag_table.each do |tag, extra_indent|
-        Erubyx::Loggerxcm.debug("-Y tag=#{tag}|")
+        Mkspec::Loggerxcm.debug("-Y tag=#{tag}|")
         case hash[tag].class
         when ::Hash
           hs = @hash[tag]
           content_path = hs["path"]
           yaml_path = hs["setting_path"]
-          Erubyx::Loggerxcm.debug("-X hs.class=#{hs.class}|")
-          Erubyx::Loggerxcm.debug("-X hs=#{hs}|")
+          Mkspec::Loggerxcm.debug("-X hs.class=#{hs.class}|")
+          Mkspec::Loggerxcm.debug("-X hs=#{hs}|")
           children[tag] = Item.new(@indent_level + 1, extra_indent, tag, hs, content_path, yaml_path, @config)
         when ::String
-          Erubyx::Loggerxcm.debug("-V Sring hash[#{tag}]=#{hash[tag]}|")
+          Mkspec::Loggerxcm.debug("-V Sring hash[#{tag}]=#{hash[tag]}|")
         else
-          Erubyx::Loggerxcm.debug("-W else class hash[#{tag}].class=#{hash[tag].class}|")
+          Mkspec::Loggerxcm.debug("-W else class hash[#{tag}].class=#{hash[tag].class}|")
         end
       end
       children

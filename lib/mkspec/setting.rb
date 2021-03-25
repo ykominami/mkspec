@@ -2,7 +2,7 @@
 
 require "pp"
 
-module Erubyx
+module Mkspec
   class Setting
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
     attr_accessor :latest_testcase_id

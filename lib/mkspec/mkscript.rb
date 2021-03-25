@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   class Mkscript
     require "optparse"
 
@@ -53,38 +53,40 @@ module Erubyx
         Loggerxcm.error_b do
           #{message}
         end
-        return STATE.change(CMDLINE_OPTION_ERROR)
+        return STATE.change(CMDLINE_OPTION_ERROR, message)
       end
 
-      return STATE.change(CMDLINE_OPTION_ERROR, "o") unless @output_dir
-      return STATE.change(CMDLINE_OPTION_ERROR, "t") unless @tsv_fname
-      return STATE.change(CMDLINE_OPTION_ERROR, "c") unless @cmd
-      return STATE.change(CMDLINE_OPTION_ERROR, "c") unless command_options.find { |it| @cmd == it }
-      return STATE.change(CMDLINE_OPTION_ERROR, "s") unless @start_char
-      return STATE.change(CMDLINE_OPTION_ERROR, "l") unless @limit
-      return STATE.change(CMDLINE_OPTION_ERROR, "g") unless @global_yaml_fname
+      return STATE.change(CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
+      return STATE.change(CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
+      return STATE.change(CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
+      return STATE.change(CMDLINE_OPTION_ERROR_C, "invalid -c") unless command_options.find { |it| @cmd == it }
+      return STATE.change(CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
+      return STATE.change(CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
+      return STATE.change(CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
       @global_yaml_pn = Pathname.new(@global_yaml_fname)
-      return STATE.change(CMDLINE_OPTION_ERROR, "g") unless @global_yaml_pn.exist?
-      return STATE.change(CMDLINE_OPTION_ERROR, "x") unless @original_output_dir
-      return STATE.change(CMDLINE_OPTION_ERROR, "y") unless @target_cmd1
-      return STATE.change(CMDLINE_OPTION_ERROR, "z") unless @target_cmd2
+      return STATE.change(CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
+      return STATE.change(CMDLINE_OPTION_ERROR_X, "not specified -x") unless @original_output_dir
+      return STATE.change(CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd1
+      return STATE.change(CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd2
     end
 
     def init
       @latest_testcase_id = -1
 
-      @global_hash = Erubyx::Util.extract_yaml(@global_yaml_pn)
+      @global_hash = Mkspec::Util.extract_yaml(@global_yaml_pn)
       @global_hash[GLOBAL_YAML_FNAME] = @global_yaml_pn.realpath.to_s
       @global_hash[ORIGINAL_OUTPUT_DIR] = @original_output_dir
+#      @global_hash[TARGET_CMD_1_PN] = Pathname.new(@target_cmd1).realpath.to_s
+#      @global_hash[TARGET_CMD_2_PN] = Pathname.new(@target_cmd2).realpath.to_s
       @global_hash[TARGET_CMD_1_PN] = Pathname.new(@target_cmd1).realpath.to_s
       @global_hash[TARGET_CMD_2_PN] = Pathname.new(@target_cmd2).realpath.to_s
 
-      @global_hash[MAKE_ARG_X] = Erubyx::MAKE_ARG unless @global_hash[MAKE_ARG_X]
+      @global_hash[MAKE_ARG_X] = Mkspec::MAKE_ARG unless @global_hash[MAKE_ARG_X]
       @config = Config.new(SPEC_PN, @output_dir, @script_dir, @tad_dir).setup
       @tsv_path = Pathname.new(@tsv_fname)
       @tsv_path = @config.make_path_under_misc_dir(@tsv_path) unless @tsv_path.exist?
 
-      @tsg = Erubyx::TestScriptGroup.new(@tsv_path, @start_char, @limit, @global_hash[MAKE_ARG_X]).setup
+      @tsg = Mkspec::TestScriptGroup.new(@tsv_path, @start_char, @limit, @global_hash[MAKE_ARG_X]).setup
       @setting_and_testscript_array = make_array_of_setting_and_testscript(@tsg, @config)
     end
 
@@ -96,7 +98,7 @@ module Erubyx
     end
 
     def create_setting_instance(testscript, config)
-      setting = Erubyx::Setting.new(@global_hash, testscript, config)
+      setting = Mkspec::Setting.new(@global_hash, testscript, config)
       setting.setup("tecsgen command")
       setting
     end
@@ -135,7 +137,7 @@ module Erubyx
     end
 
     def make_template(setting)
-      templatex = Erubyx::Templatex.new(setting)
+      templatex = Mkspec::Templatex.new(setting)
       ret = templatex.setup
       templatex.output if ret
     end

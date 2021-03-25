@@ -10,10 +10,9 @@ module TestConf
 
     def initialize(global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, original_output_dir = nil)
       global_yaml_pn = Pathname.new(global_yaml)
-      global_hash = Erubyx::Util.extract_yaml(global_yaml_pn)
-      global_hash[Erubyx::GLOBAL_YAML_FNAME] = global_yaml_pn.to_s
-      global_hash['original_output_dir'] = original_output_dir
-
+      @global_hash = Mkspec::Util.extract_yaml(global_yaml_pn)
+      @global_hash[Mkspec::GLOBAL_YAML_FNAME] = global_yaml_pn.to_s
+      @global_hash['original_output_dir'] = original_output_dir
 
       o = OpenStruct.new
       o.original_output_dir = original_output_dir
@@ -86,14 +85,14 @@ module TestConf
       o.testdata_fname = 'testdata.txt'
       o.yaml_fname = 'a.yml'
       o._yaml_fname = 'a.yml'
-      o._config = Erubyx::Config.new(o.spec_dir, o._output_dir, nil, nil)
+      o._config = Mkspec::Config.new(o.spec_dir, o._output_dir, nil, nil).setup
       o._data_dir_pn = o._template_and_data_dir_pn.join('a')
     #
       o.data_dir_pn = o.output_template_and_data_dir_pn.join('a')
       o.tad_2_dir = "template_and_data_2"
       o.script_3_dir = "script_3"
     #
-      o.config_0 = Erubyx::Config.new(o.spec_dir, o.output_dir, nil, nil).setup
+      o.config_0 = Mkspec::Config.new(o.spec_dir, o.output_dir, nil, nil).setup
       o.start_char = 'a'
       o.limit = 6
       o.test_1 = 'test_1'
@@ -106,7 +105,7 @@ module TestConf
       o.tgroup_0_name_normalize = 'mruby_MrubyBridge'
       o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
       #
-      global_hash.map { |x| o[x[0]] = x[1] if o[x[0]] == nil || o[x[0]] =~ /^\s*$/  }
+      @global_hash.map { |x| o[x[0]] = x[1] if o[x[0]] == nil || o[x[0]] =~ /^\s*$/  }
       #
       @o = o
     end
@@ -180,14 +179,21 @@ module TestConf
     end
 
     def create_instance_of_config
-      Erubyx::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
+      Mkspec::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
+    end
+
+    def _create_instance_of_config
+      Mkspec::Config.new(@o.spec_dir, @o._output_dir, nil, nil).setup
     end
 
     def create_instance_of_root
-      Erubyx::Loggerxcm.debug("output_dir=#{@o.output_dir}")
       yml_path = @o.config_0.make_path_under_template_and_data_dir( Pathname.new('a').join(@o.yaml_fname))
-      Erubyx::Loggerxcm.debug("yml_path=#{yml_path}")
-      Erubyx::Root.new(yml_path, @o.config_0)
+      Mkspec::Root.new(yml_path, @o.config_0)
+    end
+
+    def _create_instance_of_root
+      yml_path = @o._config.make_path_under_template_and_data_dir( Pathname.new('a').join(@o.yaml_fname))
+      Mkspec::Root.new(yml_path, @o._config)
     end
 
     def create_instance_of_item(content_path, yaml_path)
@@ -196,32 +202,53 @@ module TestConf
       hash = {}
       #              (size,  name, outer_hash,   content_path, yaml_path, config)
       @o._config.setup
-      Erubyx::Item.new(level, 0, tag,  hash,         content_path, yaml_path, @o._config)
+      Mkspec::Item.new(level, 0, tag,  hash,         content_path, yaml_path, @o._config)
+    end
+
+    def _create_instance_of_item(content_path, yaml_path)
+      level = 1
+      tag = 'make_arg_data_flat'
+      hash = {}
+      #              (size,  name, outer_hash,   content_path, yaml_path, config)
+      @o._config.setup
+      Mkspec::Item.new(level, 0, tag,  hash,         content_path, yaml_path, @o._config)
     end
 
     def create_instance_of_setting
       testscript = create_instance_of_testscript
       config = create_instance_of_config
       func_name_of_make_arg = o.make_arg_basename
-      Erubyx::Setting.new(testscript, config, func_name_of_make_arg)
+      Mkspec::Setting.new(testscript, config, func_name_of_make_arg)
+    end
+
+    def _create_instance_of_setting
+      testscript = create_instance_of_testscript
+      _config = _create_instance_of_config
+      func_name_of_make_arg = o.make_arg_basename
+      Mkspec::Setting.new(@global_hash, testscript, _config)
     end
 
     def create_instance_of_testscript
       name = o.start_char
       limit = o.limit
-      Erubyx::TestScript.new(name, limit)
+      Mkspec::TestScript.new(name, limit)
     end
 
     def create_instance_of_templatex
       setting = create_instance_of_setting
-      Erubyx::Templatex.new(setting)
+      Mkspec::Templatex.new(setting)
+    end
+
+    def _create_instance_of_templatex
+      setting = _create_instance_of_setting
+      Mkspec::Templatex.new(setting)
     end
 
     def create_instance_of_testgroup_0
       make_arg_basename = o.make_arg_basename
       tgroup_0 = o.tgroup_0_name
       tgroup = tgroup_0.tr('-', '_').tr('.', '_')
-      Erubyx::TestGroup.new(tgroup, make_arg_basename)
+      Mkspec::TestGroup.new(tgroup, make_arg_basename)
     end
 
     def create_instance_of_testcase
@@ -236,17 +263,17 @@ module TestConf
       test_2 = nil
       test_2_value = nil
       extra = nil
-      Erubyx::TestCase.new(test_group, tcase, test_1, test_1_value, test_2, test_2_value, extra)
+      Mkspec::TestCase.new(test_group, tcase, test_1, test_1_value, test_2, test_2_value, extra)
     end
 
     def create_instance_of_testgroup(tgroup, make_arg_basename)
-      Erubyx::TestGroup.new(tgroup, make_arg_basename)
+      Mkspec::TestGroup.new(tgroup, make_arg_basename)
     end
 
     def create_instance_of_testscript
       name = o.start_char
       limit = o.limit
-      Erubyx::TestScript.new(name, limit)
+      Mkspec::TestScript.new(name, limit)
     end
 
     def create_instance_of_testscriptgroup
@@ -254,17 +281,17 @@ module TestConf
       start_char = o.start_char
       limit = o.limit
       make_arg_basename = o.make_arg_basename
-      Erubyx::TestScriptGroup.new(fname, start_char, limit, make_arg_basename)
+      Mkspec::TestScriptGroup.new(fname, start_char, limit, make_arg_basename)
     end
 
     def create_instance_of_testscript
       name = o.start_char
       limit = o.limit
-      Erubyx::TestScript.new(name, limit)
+      Mkspec::TestScript.new(name, limit)
     end
 
     def create_instance_of_mkscript(argv)
-      Erubyx::Mkscript.new(argv)
+      Mkspec::Mkscript.new(argv)
     end
   end
 end
