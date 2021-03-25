@@ -5,6 +5,7 @@ require "pp"
 module Erubyx
   class Setting
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
+    attr_accessor :latest_testcase_id
 
     def initialize(global_hash, testscript, config)
       @global_hash = global_hash
@@ -27,6 +28,12 @@ module Erubyx
         raise
       end
       @func_name_of_make_arg = global_hash["make_arg"]
+
+      @latest_tastcase_id = 0
+    end
+
+    def next_testcase_id
+      @latest_tastcase_id += 1
     end
 
     def setup(desc)
@@ -125,6 +132,8 @@ module Erubyx
 
     def make_context_context(test_case_name, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)
       raise unless test_case_name.instance_of?(String)
+      tc_0 = next_testcase_id
+      tc_1 = next_testcase_id
       @hash[test_case_name] = {
         "path" => "rspec_describe_context_context/content.txt",
         "context" => test_case_name,
@@ -135,6 +144,8 @@ module Erubyx
         "test_2" => test_2,
         "test_2_value" => test_2_value,
         "func_name" => func_name,
+        "tc_0" => tc_0,
+        "tc_1" => tc_1,
       }
     end
   end
