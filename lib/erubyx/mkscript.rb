@@ -71,6 +71,8 @@ module Erubyx
     end
 
     def init
+      @latest_testcase_id = -1
+
       @global_hash = Erubyx::Util.extract_yaml(@global_yaml_pn)
       @global_hash[GLOBAL_YAML_FNAME] = @global_yaml_pn.realpath.to_s
       @global_hash[ORIGINAL_OUTPUT_DIR] = @original_output_dir
@@ -119,8 +121,10 @@ module Erubyx
       error_count = 0
       array.map do |x|
         setting, _tmp = x
+        setting.latest_testcase_id = @latest_testcase_id
         ret = make_template_and_data(setting)
         error_count += 1 unless ret
+        @latest_testcase_id = setting.latest_testcase_id
       end
       error_count.zero?
     end
