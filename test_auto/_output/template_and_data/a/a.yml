@@ -1,0 +1,136 @@
+---
+path: a/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  original_output_dir: _DATA/hier10
+  target_cmd_1_pn: "/home/ykominami/repo/mkspec"
+  target_cmd_2_pn: 
+  tecspath: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecslib"
+  tecsgen_cmd_path: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
+  test_case_dir: "/home/ykominami/repo/erubyx-4/spec/test/_test_case_archive"
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+data_normal:
+  path: rspec_describe_context/content.txt
+  context: data_normal
+  tecsgen_cmd: tecsgen
+make_cmdline_1_data_normal:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_normal_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_normal_1
+  dir: '1'
+  cdlfile: data_normal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 1
+  tc_1: 2
+data_normal_2:
+  path: rspec_describe_context_context/content.txt
+  context: data_normal_2
+  dir: '2'
+  cdlfile: data_normal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 3
+  tc_1: 4
+data_flat:
+  path: rspec_describe_context/content.txt
+  context: data_flat
+  tecsgen_cmd: tecsgen
+make_cmdline_1_data_flat:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_flat_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_flat_1
+  dir: '1'
+  cdlfile: data_flat.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 5
+  tc_1: 6
+data_abnormal:
+  path: rspec_describe_context/content.txt
+  context: data_abnormal
+  tecsgen_cmd: tecsgen
+make_cmdline_1_data_abnormal:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_abnormal_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_1
+  dir: '1'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 7
+  tc_1: 8
+data_abnormal_2:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_2
+  dir: '2'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 9
+  tc_1: 10
+data_abnormal_3:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_3
+  dir: '3'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 11
+  tc_1: 12
+data_abnormal_4:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_4
+  dir: '4'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 13
+  tc_1: 14
+data_abnormal_5:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_5
+  dir: '5'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 15
+  tc_1: 16

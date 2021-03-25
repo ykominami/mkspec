@@ -2,20 +2,19 @@
 
 require 'spec_helper'
 
-RSpec.describe Erubyx do
-  include UtilHelper
+RSpec.describe Mkspec do
   include TestConf
 
   let(:original_output_dir_pn) { Pathname.new('_DATA') + 'hier9' }
   let(:original_output_dir) { original_output_dir_pn.to_s }
   let(:target_cmd_1) { 'tecsgen' }
   let(:target_cmd_2) { 'tecsmerge' }
-  let(:conf) { TestConf::TestConf.new( 'global.yml', target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new( ENV['GLOBAL_YAML'], target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
   let(:o) { conf.o }
 
   context 'call methods of Root class' do
     before(:each) do
-      @root = conf.create_instance_of_root
+      @root = conf._create_instance_of_root
     end
 
     it 'call result' , xcmd:1 do

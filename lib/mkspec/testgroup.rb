@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   class TestGroup
     attr_reader :name, :test_cases, :size, :content_name_of_make_arg
 

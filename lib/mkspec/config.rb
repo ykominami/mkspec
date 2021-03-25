@@ -3,7 +3,7 @@
 require 'pathname'
 require 'fileutils'
 
-module Erubyx
+module Mkspec
   class Config
     attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn,
                 :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
@@ -88,15 +88,6 @@ module Erubyx
       @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, OUTPUT_SCRIPT_DIR)
       @output_template_and_data_dir_pn = setup_dir(@tad_absolute_dir_pn, @tad_dir, OUTPUT_TEMPLATE_AND_DATA_DIR)
       @output_test_case_dir_pn = setup_dir(@test_case_absolute_dir_pn, @test_case_dir, OUTPUT_TEST_CASE_DIR)
-=begin
-      if @test_case_dir
-        pn = Pathname.new(@test_case_dir)
-        pn.mkpath unless pn.exist?
-        @output_test_case_dir_pn = pn
-      else
-        @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
-      end
-=end
       @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
       setup_archive_dir
       @setup_count += 1

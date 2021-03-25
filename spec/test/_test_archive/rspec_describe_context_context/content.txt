@@ -4,6 +4,6 @@ context '<%= context %>' do
 
     run_command("bash #{cmdline}")
   }
-  it 'execute successfully', test_normal_sh:true , cmd:0 do expect(last_command_started).<%= test_1 %> <%= test_1_value %> end
-  it "don't have error in output", test_normal_sh_out:true , cmd:1 do expect(last_command_started).<%= test_2 %> <%= test_2_value %> end
+  it 'execute successfully', test_normal_sh:true , tc:<%=tc_0 %> do expect(last_command_started).<%= test_1 %> <%= test_1_value %> end
+  it "don't have error in output", test_normal_sh_out:true , tc:<%=tc_1 %> do expect(last_command_started).<%= test_2 %> <%= test_2_value %> end
 end

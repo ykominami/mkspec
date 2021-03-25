@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   class TestCase
     attr_reader :name, :dir, :test_1, :test_1_value, :test_2, :test_2_value, :extra
 

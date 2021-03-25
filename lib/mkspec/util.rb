@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   class Util
     class << self
       def make_spec_filename(name)

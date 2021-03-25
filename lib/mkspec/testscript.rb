@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Erubyx
+module Mkspec
   class TestScript
     attr_reader :name, :script_name, :test_groups, :total_test_cases, :inner_result
 

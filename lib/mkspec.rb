@@ -8,9 +8,19 @@ require 'pry'
 require 'rufo'
 require 'clitest'
 
-module Erubyx
+module Mkspec
   SUCCESS = 0
-  CMDLINE_OPTION_ERROR = 10
+  CMDLINE_OPTION_ERROR = 9
+  CMDLINE_OPTION_ERROR_O = 10
+  CMDLINE_OPTION_ERROR_T = 11
+  CMDLINE_OPTION_ERROR_C = 12
+  CMDLINE_OPTION_ERROR_S = 13
+  CMDLINE_OPTION_ERROR_L = 14
+  CMDLINE_OPTION_ERROR_G = 15
+  CMDLINE_OPTION_ERROR_X = 16
+  CMDLINE_OPTION_ERROR_Y = 17
+  CMDLINE_OPTION_ERROR_Z = 18
+
   CANNOT_WRITE_SPEC_FILE = 20
   CANNOT_FIND_DATA_YAML_FILE = 30
   CANNOT_CONVERT_WITH_RUBO = 40
@@ -38,18 +48,18 @@ module Erubyx
 
 end
 
-require_relative 'erubyx/version'
-require_relative 'erubyx/root'
-require_relative 'erubyx/setting'
-require_relative 'erubyx/templatex'
-require_relative 'erubyx/testcase'
-require_relative 'erubyx/testgroup'
-require_relative 'erubyx/testscript'
-require_relative 'erubyx/testscriptgroup'
-require_relative 'erubyx/mkscript'
-require_relative 'erubyx/config'
-require_relative 'erubyx/loggerxcm'
-require_relative 'erubyx/item'
-require_relative 'erubyx/util'
+require_relative 'mkspec/version'
+require_relative 'mkspec/root'
+require_relative 'mkspec/setting'
+require_relative 'mkspec/templatex'
+require_relative 'mkspec/testcase'
+require_relative 'mkspec/testgroup'
+require_relative 'mkspec/testscript'
+require_relative 'mkspec/testscriptgroup'
+require_relative 'mkspec/mkscript'
+require_relative 'mkspec/config'
+require_relative 'mkspec/loggerxcm'
+require_relative 'mkspec/item'
+require_relative 'mkspec/util'
 
-require_relative 'erubyx/state'
+require_relative 'mkspec/state'

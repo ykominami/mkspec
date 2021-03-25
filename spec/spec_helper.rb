@@ -14,7 +14,7 @@ else
 end
 
 require 'bundler/setup'
-require 'erubyx'
+require 'mkspec'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
