@@ -1,4 +1,0 @@
-do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-normal/2 normal-2.idl
-/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-normal/2 ~
-##### tecsgen normal-2.idl  #####
-~

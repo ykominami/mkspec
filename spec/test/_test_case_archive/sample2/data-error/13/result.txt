@@ -1,7 +1,0 @@
-do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/13 error-13.idl
-/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/13 ~
-##### tecsgen error-13.idl  #####
-error-13.idl:3:1: error: G1016 syntax error near '�'
-error-13.idl:3:4: error: G1016 syntax error near 'int64'
-2 errors
-~

@@ -1,3 +1,0 @@
-/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/attribute/1 ~
-##### tecsgen -I ../../../RUNTIME/tecs-runtime/include -I ../../../RUNTIME/tecs-runtime/target -I ./src -R --gen=gen.ROM attribute.cdl  #####
-~

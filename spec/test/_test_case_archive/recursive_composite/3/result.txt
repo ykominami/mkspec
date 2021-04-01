@@ -1,3 +1,0 @@
-/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/test_case/recursive_composite/3 ~
-##### tecsgen -I ../../../cygwin3 --gen=gen_rec_comp recursive_composite.cdl  #####
-~

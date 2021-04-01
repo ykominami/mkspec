@@ -1,6 +1,0 @@
-do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/5 error-5.idl
-/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-error/5 ~
-##### tecsgen error-5.idl  #####
-error-5.idl:3:8: error: G1016 syntax error near 'int32'
-1 error
-~

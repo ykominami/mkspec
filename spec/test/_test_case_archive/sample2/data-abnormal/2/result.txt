@@ -1,6 +1,0 @@
-do_test tecsgen /home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-abnormal/2 abnormal-2.idl
-/home/ykominami/repo/ns3-tecsgen/tecsgen/test_auto/spec/test_data2/sample2/data-abnormal/2 ~
-##### tecsgen abnormal-2.idl  #####
-abnormal-2.idl:1:18: error: G1016 syntax error near 'int32'
-1 error
-~
