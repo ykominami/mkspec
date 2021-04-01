@@ -1,3 +1,4 @@
+_output/
 result.txt
 *.log
 global.yml
