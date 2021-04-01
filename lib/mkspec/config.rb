@@ -22,6 +22,7 @@ module Mkspec
     TEST_DIR = 'test'
 
     TEST_ARCHIVE_DIR = '_test_archive'
+    TEST_CASE_ARCHIVE_DIR = '_test_case_archive'
     MISC_DIR = 'misc'
 
     ROOT_OUTPUT_DIR = 'test_output'
@@ -45,39 +46,13 @@ module Mkspec
       @test_case_dir = test_case_dir
     end
 
-    def check_absolute_dir( dir )
-      if @script_dir
-        hash = { given: @script_dir, absolute: nil }
-        check_dir(hash)
-        hash[:absolute]
-      else
-        nil
-      end
-    end
-
-    def check_dir( hash )
-      if hash[:given]
-        pn = Pathname.new(hash[:given])
-        hash[:absolute] = pn.absolute? ? pn : pn.realpath if pn.exist?
-      end
-    end
-
-    def setup_dir(absolute_pn, dir, default_dir)
-      if absolute_pn
-        absolute_pn
-      else
-        if dir
-          setup_directory(dir)
-        else
-          setup_directory(default_dir)
-        end
-      end
-    end
-
     def setup
       return self if @setup_count.positive?
-
+      Loggerxcm.error("Config.setup #{@setup_count} self=#{self}")
+#      Loggerxcm.error_b { ["caller=" , caller].join("") }
+      Loggerxcm.error_b { ["caller="].join("") }
       pn = @root_output_dir_pn.join(@output_dir)
+      Loggerxcm.debug("Config.setup pn=#{pn}")
       pn.mkpath unless pn.exist?
       @output_dir_pn = pn
 
@@ -88,46 +63,66 @@ module Mkspec
       @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, OUTPUT_SCRIPT_DIR)
       @output_template_and_data_dir_pn = setup_dir(@tad_absolute_dir_pn, @tad_dir, OUTPUT_TEMPLATE_AND_DATA_DIR)
       @output_test_case_dir_pn = setup_dir(@test_case_absolute_dir_pn, @test_case_dir, OUTPUT_TEST_CASE_DIR)
+
+      @test_case_archive_dir_pn = @test_dir_pn.join(TEST_CASE_ARCHIVE_DIR) 
+      Loggerxcm.debug("@test_case_archive_dir_pn=#{@test_case_archive_dir_pn}")
+      if @output_template_and_data_dir_pn.exist?
+        setup_dir_content(@test_case_archive_dir_pn, @output_test_case_dir_pn)
+      else
+        Loggerxcm.error("Can't find #{@test_case_archive_dir_pn}")
+      end
+
       @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
-      setup_archive_dir
+      if @archive_dir_pn.exist?
+        setup_dir_content(@archive_dir_pn, @output_template_and_data_dir_pn)
+      else
+        Loggerxcm.error("Can't find #{@archive_dir_pn}")
+      end
       @setup_count += 1
 
       self
     end
 
-    def initialize_0(spec_dir, output_dir, test_case_dir = nil)
-      @spec_dir_pn = Pathname.new(spec_dir)
-
-      @test_dir_pn = @spec_dir_pn.join(TEST_DIR)
-
-      @misc_dir_pn = @test_dir_pn.join(MISC_DIR)
-      top_pn = @spec_dir_pn.parent
-      @root_output_dir_pn = top_pn.join(ROOT_OUTPUT_DIR)
-
-      pn = @root_output_dir_pn.join(output_dir)
-      pn.mkpath unless pn.exist?
-      @output_dir_pn = pn
-
-      @output_template_and_data_dir_pn = setup_directory(OUTPUT_TEMPLATE_AND_DATA_DIR)
-      @output_script_dir_pn = setup_directory(OUTPUT_SCRIPT_DIR)
-      if test_case_dir
-        pn = Pathname.new(test_case_dir)
-        pn.mkpath unless pn.exist?
-        @output_test_case_dir_pn = pn
+    def setup_dir(absolute_pn, dir, default_dir)
+      if absolute_pn
+        absolute_pn
       else
-        @output_test_case_dir_pn = setup_directory(OUTPUT_TEST_CASE_DIR)
+        if dir
+          Loggerxcm.debug("setup_dir 1 dir=#{dir}")
+          setup_directory(dir)
+        else
+          Loggerxcm.debug("setup_dir 21 dir=#{dir}")
+          Loggerxcm.debug("setup_dir 22 default_dir=#{default_dir}")
+          setup_directory(default_dir)
+        end
       end
-
-      @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
-      setup_archive_dir
     end
 
-    def setup_archive_dir
-      FileUtils.copy_entry(@archive_dir_pn, @output_template_and_data_dir_pn) if @archive_dir_pn.exist?
+    def check_absolute_dir( dir )
+      if dir
+        hash = { given: dir, absolute: nil }
+        check_dir(hash)
+        hash[:absolute]
+      else
+        nil
+      end
+    end
+
+    def check_dir( hash )
+      given_dir = hash[:given]
+      if given_dir
+        pn = Pathname.new(given_dir)
+        hash[:absolute] = pn.absolute? ? pn : pn.realpath if pn.exist?
+      end
+    end
+
+    def setup_dir_content(src_dir, dest_dir)
+      FileUtils.copy_entry(src_dir, dest_dir)
     end
 
     def setup_directory(dir)
       pn = @output_dir_pn + dir
+      Loggerxcm.debug("setup_directory pn=#{pn}")
       pn.mkpath unless pn.exist?
       pn
     end
