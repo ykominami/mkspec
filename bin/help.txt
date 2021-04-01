@@ -1,0 +1,84 @@
+cmd:0 _DATA/hier5/
+  command: all
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5/
+  script_dir: test_auto/_DATA/hier5/script
+  start_char: a
+  limit: 6
+
+cmd:1 cmd:0と同じ。出力に/error/を含まない
+
+cmd:2
+  command: tad
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5/
+  start_char: a
+  limit: 6
+  input_dir: test_auto/_DATA/hier5/template_and_data_2
+
+cmd:3 cmd:2と同じ。出力に/error/を含まない
+
+cmd:4
+  command: spec
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5
+  script_dir: test_auto/_DATA/hier5/script_3
+  start_char: a
+  limit: 6
+  input_dir: test_auto/_DATA/hier5/template_and_data_2
+
+cmd:5 cmd:4と同じ。出力に/error/を含まない
+
+xcmd:1
+  command: all
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5
+  script_dir: test_auto/_DATA/hier5/scripty
+  start_char: a
+  limit: 6
+  input_dir: test_auto/_DATA/hier5/tady
+
+xcmd:2
+  command: spec
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5
+  script_dir: test_auto/_DATA/hier5/scripty
+  start_char: a
+  limit: 6
+  input_dir: test_auto/_DATA/hier5/tady
+
+ycmd:1
+  command: all
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5
+  script_dir: test_auto/_DATA/hier5/scriptw
+  start_char: a
+  limit: 6
+  input_dir: test_auto/_DATA/hier5/tadw
+
+ycmd:2
+  command: spec
+  tsv_fname:  test_auto/misc/testlist-x.txt
+  output_dir: test_auto/_DATA/hier5
+  script_dir: test_auto/_DATA/hier5/scriptw
+  start_char: a
+  limit: 6
+  input_dir: test_auto/_DATA/hier5/tadw
+
+
+ycmd:1 all
+ swa
+ swb
+ sw
+ycmd:2 spec
+ swa
+ swb
+ sw
+xcmd:1  all
+ sya
+ syb
+ sy
+xcmd:2  spec
+ sya
+ syb
+ sy
