@@ -3,4 +3,5 @@ bin_dir=$(dirname $0)
 top_dir=$(dirname $bin_dir)
 
 # echo bundle exec rspec ${top_dir}/mkspec_cli_spec.rb -t xcmd:1
-bundle exec rspec ${top_dir}/mkspec_cli_spec.rb -t cmd:4
+#bundle exec rspec ${top_dir}/mkspec_cli_spec.rb -t cmd:4
+${bin_dir}/cmd -t cmd:4
