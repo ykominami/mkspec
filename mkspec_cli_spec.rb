@@ -8,7 +8,7 @@ RSpec.describe 'command-line', type: :aruba do
 
   let(:original_output_dir_pn) { Pathname.new('_DATA').join('hier5') }
   let(:original_output_dir) { original_output_dir_pn.to_s }
-  let(:conf) { TestConf::TestConf.new(ENV['GLOBAL_YAML'], 'mkspec', '', __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new(ENV['GLOBAL_YAML_FNAME'], 'mkspec', '', __FILE__, original_output_dir) }
   let(:o) { conf.o }
 
   context 'make script' do
@@ -95,7 +95,7 @@ RSpec.describe 'command-line', type: :aruba do
 
         run_command("bash #{cmdline}")
       end
-      it '', test_normal_sh:true, xcmd:0, xcmd:1 do expect(last_command_started).to be_successfully_executed end
+      it '', test_normal_sh:true, xcmd:0 do expect(last_command_started).to be_successfully_executed end
       #it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
   #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
     end
@@ -143,7 +143,7 @@ RSpec.describe 'command-line', type: :aruba do
 
         run_command("bash #{cmdline}")
       end
-      it '', test_normal_sh:true, ycmd:0, ycmd:1 do expect(last_command_started).to be_successfully_executed end
+      it '', test_normal_sh:true, ycmd:0 do expect(last_command_started).to be_successfully_executed end
       #it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
   #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
     end
