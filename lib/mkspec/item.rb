@@ -145,8 +145,7 @@ module Mkspec
         Loggerxcm.error_b do
           #{message}
         end
-        binding.pry
-        STATE.change(CANNOT_WRITE_YAML_FILE, message)
+        STATE.change(Mkspec::CANNOT_GET_RESULT_WITH_ERUBY, message)
       end
       @extracted
     end

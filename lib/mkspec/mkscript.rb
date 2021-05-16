@@ -36,21 +36,21 @@ module Mkspec
         Loggerxcm.error_b do
           #{message}
         end
-        return STATE.change(CMDLINE_OPTION_ERROR, message)
+        return STATE.change(Mkspec::CMDLINE_OPTION_ERROR, message)
       end
 
-      return STATE.change(CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
-      return STATE.change(CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
-      return STATE.change(CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
-      return STATE.change(CMDLINE_OPTION_ERROR_C, "invalid -c") unless command_options.find { |it| @cmd == it }
-      return STATE.change(CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
-      return STATE.change(CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
-      return STATE.change(CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless command_options.find { |it| @cmd == it }
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
       @global_yaml_pn = Pathname.new(@global_yaml_fname)
-      return STATE.change(CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
-      return STATE.change(CMDLINE_OPTION_ERROR_X, "not specified -x") unless @original_output_dir
-      return STATE.change(CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd1
-      return STATE.change(CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd2
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_X, "not specified -x") unless @original_output_dir
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd1
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd2
     end
 
     def init
@@ -135,7 +135,7 @@ module Mkspec
     def make_spec_file(config, setting, testscript)
       ret = true
       data_yaml_path = setting.data_yaml_path
-      return STATE.change(STATE.CANNOT_FIND_DATA_YAML_FILE) unless data_yaml_path.file?
+      return STATE.change(Mkspec::CANNOT_FIND_DATA_YAML_FILE) unless data_yaml_path.file?
 
       str = Root.new(data_yaml_path, config).result
       spec_fname = Util.make_spec_filename(testscript.name)
@@ -149,7 +149,7 @@ module Mkspec
           #{message}
         end
         str_2 = str
-        STATE.change(CANNOT_CONVERT_WITH_RUBO)
+        STATE.change(Mkspec::CANNOT_CONVERT_WITH_RUBO)
       end
 
       begin
@@ -160,7 +160,7 @@ module Mkspec
           #{message}
         end
         str_2 = str
-        STATE.change(CANNOT_WRITE_SPEC_FILE)
+        STATE.change(Mkspec::CANNOT_WRITE_SPEC_FILE)
       end
     end
 

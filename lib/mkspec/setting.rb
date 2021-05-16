@@ -94,7 +94,7 @@ module Mkspec
         Loggerxcm.error_b do
           #{message}
         end
-        STATE.change(CANNOT_WRITE_YAML_FILE)
+        STATE.change(Mkspec::CANNOT_WRITE_YAML_FILE)
         ret = false
       end
       ret

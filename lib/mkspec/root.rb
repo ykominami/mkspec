@@ -53,7 +53,7 @@ module Mkspec
         Loggerxcm.error_b do
           #{ message }
         end
-        return STATE.change(CANNOT_GET_RESULT_WITH_ERUBY)
+        return STATE.change(Mkspec::CANNOT_GET_RESULT_WITH_ERUBY)
       end
     end
   end
