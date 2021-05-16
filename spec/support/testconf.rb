@@ -8,16 +8,15 @@ module TestConf
   class TestConf
     attr_reader :o
 
-    def initialize(global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, original_output_dir = nil)
+    def initialize(global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path)
       global_yaml_pn = Pathname.new(global_yaml)
       @global_hash = Mkspec::Util.extract_yaml(global_yaml_pn)
       @global_hash[Mkspec::GLOBAL_YAML_FNAME] = global_yaml_pn.to_s
-      @global_hash["original_output_dir"] = original_output_dir
+      @global_hash["original_spec_file_path"] = original_spec_file_path
+#      @global_hash["original_output_dir"] = original_output_dir
 
       o = OpenStruct.new
-
-      o.original_output_dir = original_output_dir
-
+      o.original_output_dir = @global_hash["original_output_dir"]
       pn = Pathname.new(original_spec_file_path)
       if pn.dirname == "spec"
         spec_pn = pn.parent
@@ -44,11 +43,15 @@ module TestConf
       o.exe_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, "exe", target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
       #o.make_arg_basename = 'make_cmdline_1'
 
+      setup(o)
+    end
+
+    def setup(o)
       o.test_root_dir_pn = o.top_dir_pn.join("test_auto")
       o.test_root_dir = o.test_root_dir_pn.to_s
 
-      if original_output_dir != nil
-        o.target_parent_dir_pn = o.test_root_dir_pn.join(original_output_dir)
+      if o.original_output_dir != nil
+        o.target_parent_dir_pn = o.test_root_dir_pn.join(o.original_output_dir)
       else
         o.target_parent_dir_pn = o.test_root_dir_pn.join("test_data2", "test_case")
       end
@@ -107,7 +110,7 @@ module TestConf
       #
       @o = o
     end
-
+=begin
     def method_missing(name, arg)
       case name
       when "_config"
@@ -118,7 +121,7 @@ module TestConf
         nil
       end
     end
-
+=end
     def get_path(parent_dir_pn, dir, cmd_1, cmd_2)
       pn_0 = parent_dir_pn.join(dir)
       if pn_0.exist?
