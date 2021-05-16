@@ -6,9 +6,7 @@ require 'pry'
 RSpec.describe 'command-line', type: :aruba do
   include TestConf
 
-  let(:original_output_dir_pn) { Pathname.new('_DATA').join('hier5') }
-  let(:original_output_dir) { original_output_dir_pn.to_s }
-  let(:conf) { TestConf::TestConf.new(ENV['GLOBAL_YAML_FNAME'], 'mkspec', '', __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new(ENV['GLOBAL_YAML_FNAME'], 'mkspec', '', __FILE__) }
   let(:o) { conf.o }
 
   context 'make script' do
