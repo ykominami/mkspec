@@ -8,4 +8,5 @@ gemspec
 #              :branch => "main"
 #gem 'clitest',  :github => 'ykominami/clitest'
 #gem 'clitest',  path: '/home/ykominami/repo/clitest'
+gem 'loggeryk' , :path => "/home/ykominami/repo/loggeryk"
 
