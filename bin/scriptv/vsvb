@@ -1,7 +1,0 @@
-#!/bin/bash
-bin_dir=$(dirname $0)
-top_dir=$(dirname $bin_dir)
-
-less -N ${top_dir}/test_auto/_DATA/hier5/scriptv/b_spec.rb
-
-
