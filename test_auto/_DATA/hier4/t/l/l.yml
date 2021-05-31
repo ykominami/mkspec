@@ -1,0 +1,137 @@
+---
+path: l/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  original_output_dir: _DATA/hier4
+  target_cmd_1_pn: "/home/ykominami/repo/mkspec/bin/mkspec"
+  target_cmd_2_pn: 
+  tecspath: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecslib"
+  tecsgen_cmd_path: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
+  test_case_dir: test_case
+  abs_test_case_dir: "/home/ykominami/repo/mkspec/test_auto/_DATA/hier4/test_case"
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+dataqueue:
+  path: rspec_describe_context/content.txt
+  context: dataqueue
+  tecsgen_cmd: tecsgen
+make_cmdline_1_dataqueue:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+dataqueue_1:
+  path: rspec_describe_context_context/content.txt
+  context: dataqueue_1
+  dir: '1'
+  cdlfile: dataqueue.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 146
+  tc_1: 147
+through:
+  path: rspec_describe_context/content.txt
+  context: through
+  tecsgen_cmd: tecsgen
+make_cmdline_1_through:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+through_1:
+  path: rspec_describe_context_context/content.txt
+  context: through_1
+  dir: '1'
+  cdlfile: through.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 148
+  tc_1: 149
+rpc:
+  path: rspec_describe_context/content.txt
+  context: rpc
+  tecsgen_cmd: tecsgen
+make_cmdline_1_rpc:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+rpc_1:
+  path: rspec_describe_context_context/content.txt
+  context: rpc_1
+  dir: '1'
+  cdlfile: rpc.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 150
+  tc_1: 151
+sharedRPC:
+  path: rspec_describe_context/content.txt
+  context: sharedRPC
+  tecsgen_cmd: tecsgen
+make_cmdline_1_sharedRPC:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+sharedRPC_1:
+  path: rspec_describe_context_context/content.txt
+  context: sharedRPC_1
+  dir: '1'
+  cdlfile: sharedRPC.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 152
+  tc_1: 153
+opaqueRPC:
+  path: rspec_describe_context/content.txt
+  context: opaqueRPC
+  tecsgen_cmd: tecsgen
+make_cmdline_1_opaqueRPC:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+opaqueRPC_1:
+  path: rspec_describe_context_context/content.txt
+  context: opaqueRPC_1
+  dir: '1'
+  cdlfile: opaqueRPC.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 154
+  tc_1: 155
+opaqueMarshaler:
+  path: rspec_describe_context/content.txt
+  context: opaqueMarshaler
+  tecsgen_cmd: tecsgen
+make_cmdline_1_opaqueMarshaler:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+opaqueMarshaler_1:
+  path: rspec_describe_context_context/content.txt
+  context: opaqueMarshaler_1
+  dir: '1'
+  cdlfile: opaqueMarshaler.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 156
+  tc_1: 157

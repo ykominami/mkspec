@@ -1,0 +1,133 @@
+---
+path: c/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  original_output_dir: _DATA/hier4
+  target_cmd_1_pn: "/home/ykominami/repo/mkspec/bin/mkspec"
+  target_cmd_2_pn: 
+  tecspath: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecslib"
+  tecsgen_cmd_path: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
+  test_case_dir: test_case
+  abs_test_case_dir: "/home/ykominami/repo/mkspec/test_auto/_DATA/hier4/test_case"
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+singleton:
+  path: rspec_describe_context/content.txt
+  context: singleton
+  tecsgen_cmd: tecsgen
+make_cmdline_1_singleton:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+singleton_1:
+  path: rspec_describe_context_context/content.txt
+  context: singleton_1
+  dir: '1'
+  cdlfile: singleton.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 42
+  tc_1: 43
+poartarray:
+  path: rspec_describe_context/content.txt
+  context: poartarray
+  tecsgen_cmd: tecsgen
+make_cmdline_1_poartarray:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+poartarray_1:
+  path: rspec_describe_context_context/content.txt
+  context: poartarray_1
+  dir: '1'
+  cdlfile: poartarray.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 44
+  tc_1: 45
+cmoposite_1:
+  path: rspec_describe_context/content.txt
+  context: cmoposite_1
+  tecsgen_cmd: tecsgen
+make_cmdline_1_cmoposite_1:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+cmoposite_1_1:
+  path: rspec_describe_context_context/content.txt
+  context: cmoposite_1_1
+  dir: '1'
+  cdlfile: cmoposite_1.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 46
+  tc_1: 47
+recursive_composite:
+  path: rspec_describe_context/content.txt
+  context: recursive_composite
+  tecsgen_cmd: tecsgen
+make_cmdline_1_recursive_composite:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+recursive_composite_1:
+  path: rspec_describe_context_context/content.txt
+  context: recursive_composite_1
+  dir: '1'
+  cdlfile: recursive_composite.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 48
+  tc_1: 49
+recursive_composite_2:
+  path: rspec_describe_context_context/content.txt
+  context: recursive_composite_2
+  dir: '2'
+  cdlfile: recursive_composite.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 50
+  tc_1: 51
+recursive_composite_2_idx_is_id:
+  path: rspec_describe_context_context/content.txt
+  context: recursive_composite_2_idx_is_id
+  dir: 2_idx_is_id
+  cdlfile: recursive_composite.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 52
+  tc_1: 53
+recursive_composite_3:
+  path: rspec_describe_context_context/content.txt
+  context: recursive_composite_3
+  dir: '3'
+  cdlfile: recursive_composite.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 54
+  tc_1: 55

@@ -1,0 +1,33 @@
+
+# frozen_string_literal: true
+require 'spec_helper'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= dataqueue %>
+    <%= make_cmdline_1_dataqueue %>
+    <%= dataqueue_1 %>
+  <%= rspec_describe_context_end %>
+  <%= through %>
+    <%= make_cmdline_1_through %>
+    <%= through_1 %>
+  <%= rspec_describe_context_end %>
+  <%= rpc %>
+    <%= make_cmdline_1_rpc %>
+    <%= rpc_1 %>
+  <%= rspec_describe_context_end %>
+  <%= sharedRPC %>
+    <%= make_cmdline_1_sharedRPC %>
+    <%= sharedRPC_1 %>
+  <%= rspec_describe_context_end %>
+  <%= opaqueRPC %>
+    <%= make_cmdline_1_opaqueRPC %>
+    <%= opaqueRPC_1 %>
+  <%= rspec_describe_context_end %>
+  <%= opaqueMarshaler %>
+    <%= make_cmdline_1_opaqueMarshaler %>
+    <%= opaqueMarshaler_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>
