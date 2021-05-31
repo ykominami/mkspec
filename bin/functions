@@ -1,0 +1,11 @@
+function get_output_dir () {
+  local global_yaml_fname=$1
+  local data_dir_item=$2
+  local sub_data_dir_1_item=$3
+  local sub_data_dir_2_item=$4
+  data_top_dir=$(dirname $global_yaml_fname)
+  data_dir_0=$(grep $data_dir_item $global_yaml_fname | awk '{print $2}')
+  sub_data_dir_1=$(grep $sub_data_dir_1_item $global_yaml_fname | awk '{print $2}')
+  sub_data_dir_2=$(grep $sub_data_dir_2_item $global_yaml_fname | awk '{print $2}')
+  echo ${data_dir_0}/${sub_data_dir_1}
+}

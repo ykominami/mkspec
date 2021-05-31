@@ -1,0 +1,21 @@
+#!/bin/bash
+script_dir=$1
+shift
+start=$1
+shift
+
+bin_dir=$(cd $(dirname $0) && pwd)
+top_dir=$(dirname $bin_dir)
+. ${bin_dir}/functions
+output_dir=$(get_output_dir $GLOBAL_YAML_FNAME "data_dir_0" "sub_data_dir_1" "sub_data_dir_2")
+echo "output_dir=${output_dir}"
+echo "script_dir=${script_dir}"
+echo "start=${start}"
+echo "$*"
+
+#exit 0
+echo bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
+#bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
+
+
+

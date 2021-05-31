@@ -1,0 +1,4 @@
+#!/bin/bash
+script_dir=script_2
+bin_dir=$(cd $(dirname $0) && pwd)
+bash ${bin_dir}/sz ${script_dir} $*ZZ
