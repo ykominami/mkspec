@@ -1,0 +1,33 @@
+
+# frozen_string_literal: true
+require 'spec_helper'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= hello %>
+    <%= make_cmdline_1_hello %>
+    <%= hello_1 %>
+  <%= rspec_describe_context_end %>
+  <%= simple %>
+    <%= make_cmdline_1_simple %>
+    <%= simple_1 %>
+  <%= rspec_describe_context_end %>
+  <%= optional %>
+    <%= make_cmdline_1_optional %>
+    <%= optional_1 %>
+  <%= rspec_describe_context_end %>
+  <%= series %>
+    <%= make_cmdline_1_series %>
+    <%= series_1 %>
+  <%= rspec_describe_context_end %>
+  <%= pointer %>
+    <%= make_cmdline_1_pointer %>
+    <%= pointer_1 %>
+  <%= rspec_describe_context_end %>
+  <%= c_exp %>
+    <%= make_cmdline_1_c_exp %>
+    <%= c_exp_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

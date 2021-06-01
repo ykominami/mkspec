@@ -1,0 +1,24 @@
+
+# frozen_string_literal: true
+require 'spec_helper'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= factory %>
+    <%= make_cmdline_1_factory %>
+    <%= factory_1 %>
+  <%= rspec_describe_context_end %>
+  <%= import_C %>
+    <%= make_cmdline_1_import_C %>
+    <%= import_C_1 %>
+    <%= import_C_2 %>
+    <%= import_C_3 %>
+    <%= import_C_4 %>
+  <%= rspec_describe_context_end %>
+  <%= init %>
+    <%= make_cmdline_1_init %>
+    <%= init_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

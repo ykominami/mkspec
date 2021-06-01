@@ -1,0 +1,22 @@
+
+# frozen_string_literal: true
+require 'spec_helper'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= tecsInfo %>
+    <%= make_cmdline_1_tecsInfo %>
+    <%= tecsInfo_raminitializer %>
+  <%= rspec_describe_context_end %>
+  <%= tecsinfo %>
+    <%= make_cmdline_1_tecsinfo %>
+    <%= tecsinfo_ramonly %>
+  <%= rspec_describe_context_end %>
+  <%= tecsinfoaccessor %>
+    <%= make_cmdline_1_tecsinfoaccessor %>
+    <%= tecsinfoaccessor_raminitializer %>
+    <%= tecsinfoaccessor_ramonly %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

@@ -1,0 +1,12 @@
+include TestConf
+
+let(:original_output_dir) { '<%= original_output_dir %>' }
+let(:abs_test_case_dir) { '<%= abs_test_case_dir %>' }
+let(:test_case_dir_pn) { Pathname.new(abs_test_case_dir) }
+let(:conf) { TestConf::TestConf.new( '<%= global_yaml_fname %>', '<%= target_cmd_1_pn %>', '<%= target_cmd_2_pn %>', __FILE__) }
+let(:o) { conf.o }
+
+before(:each) {
+  ENV['TECSPATH'] = '<%= tecspath %>'
+  ENV['PATH'] = ['<%= tecsgen_cmd_path %>', ENV['PATH']].join(':')
+}

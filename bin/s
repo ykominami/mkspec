@@ -1,0 +1,23 @@
+#!/bin/bash
+start=$1
+shift
+
+data_top_dir=$(dirname $GLOBAL_YAML_FNAME)
+echo "data_top_dir=${data_top_dir}"
+data_dir_0=$(grep "data_dir_0" $GLOBAL_YAML_FNAME | cut -d ' ' -f 2)
+sub_data_dir_1=$(grep "sub_data_dir_1" $GLOBAL_YAML_FNAME | cut -d ' ' -f 2)
+sub_data_dir_2=$(grep "sub_data_dir_2" $GLOBAL_YAML_FNAME | cut -d ' ' -f 2)
+output_dir=${data_dir_0}/${sub_data_dir_1}
+echo "output_dir=${output_dir}"
+exit 0
+
+. ${data_top_dir}/setting.bash
+
+bin_dir=$(cd $(dirname $0) && pwd)
+top_dir=$(dirname $bin_dir)
+
+echo bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
+bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
+
+
+

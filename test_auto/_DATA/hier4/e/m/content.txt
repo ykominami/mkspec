@@ -1,0 +1,33 @@
+
+# frozen_string_literal: true
+require 'spec_helper'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= sharedOpaqueRPC %>
+    <%= make_cmdline_1_sharedOpaqueRPC %>
+    <%= sharedOpaqueRPC_1 %>
+  <%= rspec_describe_context_end %>
+  <%= signaturePlugin %>
+    <%= make_cmdline_1_signaturePlugin %>
+    <%= signaturePlugin_1 %>
+  <%= rspec_describe_context_end %>
+  <%= celltypePlugin %>
+    <%= make_cmdline_1_celltypePlugin %>
+    <%= celltypePlugin_1 %>
+  <%= rspec_describe_context_end %>
+  <%= cellPlugin %>
+    <%= make_cmdline_1_cellPlugin %>
+    <%= cellPlugin_1 %>
+  <%= rspec_describe_context_end %>
+  <%= cppbridge %>
+    <%= make_cmdline_1_cppbridge %>
+    <%= cppbridge_1 %>
+  <%= rspec_describe_context_end %>
+  <%= reverse_require %>
+    <%= make_cmdline_1_reverse_require %>
+    <%= reverse_require_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

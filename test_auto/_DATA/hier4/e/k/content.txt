@@ -1,0 +1,19 @@
+
+# frozen_string_literal: true
+require 'spec_helper'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= merge %>
+    <%= make_cmdline_1_merge %>
+    <%= merge_1 %>
+    <%= merge_2 %>
+    <%= merge_3 %>
+    <%= merge_4 %>
+    <%= merge_5 %>
+    <%= merge_6 %>
+    <%= merge_6_2 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>
