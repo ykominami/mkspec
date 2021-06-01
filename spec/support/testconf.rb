@@ -110,18 +110,21 @@ module TestConf
       #
       @o = o
     end
-=begin
+
     def method_missing(name, arg)
       case name
-      when "_config"
+      when :_config
+        p "method_missing _config"
         @o._config = Mkspec::Config.new(@o.spec_dir, @o._output_dir, nil, nil).setup
-      when "config_0"
+      when :config_0
+        p "method_missing config_0"
         @o.config_0 = Mkspec::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
       else
+        p "method_missing name=#{name} name.class=#{name.class} nil"
         nil
       end
     end
-=end
+
     def get_path(parent_dir_pn, dir, cmd_1, cmd_2)
       pn_0 = parent_dir_pn.join(dir)
       if pn_0.exist?
@@ -204,6 +207,7 @@ module TestConf
     end
 
     def _create_instance_of_root
+      _config(nil)
       yml_path = @o._config.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
       Mkspec::Root.new(yml_path, @o._config)
     end
@@ -222,6 +226,7 @@ module TestConf
       tag = "make_arg_data_flat"
       hash = {}
       #              (size,  name, outer_hash,   content_path, yaml_path, config)
+      _config(nil)
       @o._config.setup
       Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @o._config)
     end
@@ -237,7 +242,8 @@ module TestConf
       testscript = create_instance_of_testscript
       _config = _create_instance_of_config
       func_name_of_make_arg = o.make_arg_basename
-      Mkspec::Setting.new(@global_hash, testscript, _config)
+      lt_id = -1
+      Mkspec::Setting.new(@global_hash, testscript, _config, lt_id)
     end
 
     def create_instance_of_testscript

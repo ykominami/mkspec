@@ -62,12 +62,45 @@ module Mkspec
       @global_hash[TARGET_CMD_1_PN] = Pathname.new(@target_cmd1).realpath.to_s
       @global_hash[TARGET_CMD_2_PN] = Pathname.new(@target_cmd2).realpath.to_s
 
+<<<<<<< Updated upstream
       @global_hash[MAKE_ARG_X] = Mkspec::MAKE_ARG unless @global_hash[MAKE_ARG_X]
       @config = Config.new(SPEC_PN, @output_dir, @script_dir, @tad_dir).setup
       @tsv_path = Pathname.new(@tsv_fname)
+||||||| merged common ancestors
+      output_dir = @global_hash[ORIGINAL_OUTPUT_DIR]
+      @config = Config.new(SPEC_PN, output_dir, @script_dir, @tad_dir).setup
+      Loggeryk::Loggerykc.error("### Mkscript init 0 @tad_dir=#{@tad_dir}")
+      Loggeryk::Loggerykc.error("Mkscript init 1")
+      return unless STATE.success?
+      Loggeryk::Loggerykc.error("Mkscript init 2")
+      @tsv_path = Pathname.new(@global_hash[TSV_FNAME_KEY])
+      Loggeryk::Loggerykc.error("Mkscript init 3")
+=======
+      output_dir = @global_hash[ORIGINAL_OUTPUT_DIR]
+      @config = Config.new(SPEC_PN, output_dir, @script_dir, @tad_dir).setup
+      Loggeryk::Loggerykc.error("### Mkscript init 0 @tad_dir=#{@tad_dir}")
+      return unless STATE.success?
+      @tsv_path = Pathname.new(@global_hash[TSV_FNAME_KEY])
+>>>>>>> Stashed changes
       @tsv_path = @config.make_path_under_misc_dir(@tsv_path) unless @tsv_path.exist?
+<<<<<<< Updated upstream
 
       @tsg = Mkspec::TestScriptGroup.new(@tsv_path, @start_char, @limit, @global_hash[MAKE_ARG_X]).setup
+||||||| merged common ancestors
+      Loggeryk::Loggerykc.error("Mkscript init 4")
+      return unless STATE.success?
+
+      Loggeryk::Loggerykc.error("Mkscript init 5")
+      @tsg = TestScriptGroup.new(@tsv_path, @start_char, @limit, @global_hash[MAKE_ARG_X]).setup
+      Loggeryk::Loggerykc.error("Mkscript init 6")
+      return unless STATE.success?
+      Loggeryk::Loggerykc.error("Mkscript init 7")
+=======
+      return unless STATE.success?
+
+      @tsg = TestScriptGroup.new(@tsv_path, @start_char, @limit, @global_hash[MAKE_ARG_X]).setup
+      return unless STATE.success?
+>>>>>>> Stashed changes
       @setting_and_testscript_array = make_array_of_setting_and_testscript(@tsg, @config)
     end
 
@@ -93,12 +126,55 @@ module Mkspec
         script = true
       when "tad"
         template_and_data = true
+<<<<<<< Updated upstream
+||||||| merged common ancestors
+        data_dir_index = 0
+      when "spec"
+        spec = true
+        data_dir_index = 0
+      when "all-2"
+        template_and_data = true
+        spec = true
+        data_dir_index = 1
+      when "tad-2"
+        template_and_data = true
+        spec = true
+        data_dir_index = 1
+      when "spec-2"
+        spec = true
+        data_dir_index = 1
+=======
+        data_dir_index = 0
+      when "spec"
+        spec = true
+        data_dir_index = 0
+      when "all-2"
+        template_and_data = true
+        spec = true
+        data_dir_index = 1
+      when "tad-2"
+        template_and_data = true
+        data_dir_index = 1
+      when "spec-2"
+        spec = true
+        data_dir_index = 1
       else
         # scr
         script = true
       end
       create_all_template_and_data(@setting_and_testscript_array) if template_and_data && STATE.success?
       create_all_spec_file(@config, @setting_and_testscript_array) if script && STATE.success?
+      [template_and_data, spec, data_dir_index]
+    end
+
+    def create_files
+      Loggeryk::Loggerykc.debug("@template_and_data=#{@template_and_data}")
+      Loggeryk::Loggerykc.debug("@spec=#{@spec}")
+      Loggeryk::Loggerykc.debug("1 STATE.success?=#{STATE.success?}")
+      create_all_template_and_data(@setting_and_testscript_array) if @template_and_data && STATE.success?
+      Loggeryk::Loggerykc.debug("2 STATE.success?=#{STATE.success?}")
+      create_all_spec_file(@config, @setting_and_testscript_array) if @spec && STATE.success?
+      Loggeryk::Loggerykc.debug("3 STATE.success?=#{STATE.success?}")
       STATE.success?
     end
 

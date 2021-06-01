@@ -15,7 +15,7 @@ rubocop-cof.yml
 /test/tmp/
 /test/version_tmp/
 /tmp/
-/spec/test/_DATA
+#/spec/test/_DATA
 /spec/test/_output
 
 # Used by dotenv library to load environment variables.
@@ -69,4 +69,12 @@ Gemfile.lock
 package-lock.json
 
 #
-_DATA
+/test_auto/_DATA/hier1
+/test_auto/_DATA/hier2
+/test_auto/_DATA/hier3
+/test_auto/_DATA/hier4
+/test_auto/_DATA/hier4/1
+/test_auto/_DATA/hier4/e
+
+
+/test_auto/_output
