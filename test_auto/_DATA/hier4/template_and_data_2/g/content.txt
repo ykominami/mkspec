@@ -16,6 +16,6 @@ RSpec.describe '<%= desc %>', type: :aruba do
     <%= make_cmdline_1_romram %>
     <%= romram_normal %>
     <%= romram_r %>
-    <%= romram_ram_initializer_1 %>
+    <%= romram_ram_initializer %>
   <%= rspec_describe_context_end %>
 <%= rspec_describe_end %>

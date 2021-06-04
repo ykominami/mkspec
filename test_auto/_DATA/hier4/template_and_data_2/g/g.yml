@@ -10,7 +10,6 @@ rspec_describe_head:
   tecsgen_cmd_path: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecsgen"
   global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
-  abs_test_case_dir: "/home/ykominami/repo/mkspec/test_auto/_DATA/hier4/test_case"
 rspec_describe_end:
   path: rspec_describe_end/content.txt
 rspec_describe_context_end:
@@ -91,10 +90,10 @@ romram_r:
   func_name: make_cmdline_1
   tc_0: 98
   tc_1: 99
-romram_ram_initializer_1:
+romram_ram_initializer:
   path: rspec_describe_context_context/content.txt
-  context: romram_ram_initializer_1
-  dir: ram_initializer_1
+  context: romram_ram_initializer
+  dir: ram_initializer
   cdlfile: romram.cdl
   test_1: to
   test_1_value: be_successfully_executed
