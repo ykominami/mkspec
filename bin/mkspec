@@ -3,7 +3,7 @@
 
 require 'bundler/setup'
 require 'mkspec'
-
+require 'pp'
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
@@ -14,8 +14,43 @@ require 'mkspec'
 # require 'irb'
 # IRB.start(__FILE__)
 
+exit_code = nil
 mkscript = Mkspec::Mkscript.new(ARGV)
-mkscript.create_files
-#Mkspec::Loggerxcm.error(Mkspec::STATE.message) if Mkspec::STATE.message
-exit_code = Mkspec::STATE.show_message
+begin
+  mkscript.create_files
+rescue Mkspec::MkspecDebugError => e
+  pp e.message
+  pp "-- backtrace S"
+  pp e.backtrace.join("\n")
+  pp "-- backtrace E"
+  if Mkspec::STATE.success?
+    exit_code = 1000
+  else
+    exit_code = Mkspec::STATE.show_message
+  end
+  # exit(exit_code)
+rescue Mkspec::MkspecAppError => e
+  pp e.message
+  pp "-- backtrace S"
+  pp e.backtrace.join("\n")
+  pp "-- backtrace E"
+  if Mkspec::STATE.success?
+    exit_code = 2000
+  else
+    exit_code = Mkspec::STATE.show_message
+  end
+  # exit(exit_code)
+rescue => e
+  p "###################### 1"
+  exit_code = Mkspec::STATE.show_message
+  pp e.message
+  pp "-- backtrace S"
+  pp e.backtrace.join("\n")
+   pp "-- backtrace E"
+ # exit(exit_code)
+end
+unless exit_code
+  pp "###################### 2"
+  exit_code = Mkspec::STATE.show_message
+end
 exit(exit_code)
