@@ -15,7 +15,5 @@ echo "$*"
 
 #exit 0
 echo bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
-#bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
-
-
+bundle exec rspec ${top_dir}/test_auto/${output_dir}/${script_dir}/${start}_spec.rb $*
 
