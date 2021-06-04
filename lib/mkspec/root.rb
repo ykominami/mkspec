@@ -7,8 +7,8 @@ module Mkspec
     def initialize(yml_fname, config)
       yml_pn = Pathname.new(yml_fname)
       yml_pn = config.make_path_under_misc_dir(yml_pn) if yml_pn.exist?
-      Loggerxcm.debug("yaml_lod yml_pn=#{yml_pn}")
-      @setting_hash = YAML.load_file(yml_pn)
+      Loggerxcm.debug("Util.extract_in_yaml_file yml_pn=#{yml_pn}")
+      @setting_hash = Util.extract_in_yaml_file(yml_pn)
       @content_path = @setting_hash['path']
       @config = config
       @content_pn = @config.make_path_under_template_and_data_dir(@content_path)
@@ -20,9 +20,9 @@ module Mkspec
         if v.instance_of?(Hash)
           content_path = v['path']
           yaml_path = nil
+          Loggerxcm.debug("Root#extract_in_hash content_path=#{content_path}")
           item = Item.new(@level, 0, k, v, content_path, yaml_path, @config)
           hash[k] = item.result
-          return unless STATE.success?
         else
           hash[k] = v
         end
@@ -36,25 +36,35 @@ module Mkspec
     end
 
     def result
+      ret = nil
       hash = {}
       item = make_item(hash)
       content = item.result
-      return unless STATE.success?
-      eruby = PrefixedLineEruby.new(content)
+      @cont = content
+      Loggerxcm.debug("content=#{content}")
+      #raise Mkspec::MkspecDebugError
+      eruby = Erubis::Eruby.new(content)
       begin
-        eruby.result(hash)
+        Loggerxcm.debug("Root#result 1")
+        ret = eruby.result(hash)
+        Loggerxcm.debug("Root#result 2")
       rescue StandardError => e
-        message = %W[
-          "3 Item.to_s"
-          #{e.to_s}
-          "@content=#{@content_pn}"
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
+          "Root#result",
+          "@content=#{@content_pn}",
           "content=#{content}"
         ]
-        Loggerxcm.error_b do
-          #{ message }
-        end
-        return STATE.change(Mkspec::CANNOT_GET_RESULT_WITH_ERUBY)
+        Loggerxcm.fatal(message)
+        Loggerxcm.debug("Root#result 3")
+        STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not get formated ruby script")
       end
-    end
+      Loggerxcm.debug("Root#result 4")
+      raise Mkspec::MkspecDebugError unless STATE.success?
+      raise Mkspec::MkspecDebugError unless ret
+      raise Mkspec::MkspecDebugError if ret.strip.size == 0
+      ret
+   end
   end
 end

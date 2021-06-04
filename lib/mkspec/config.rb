@@ -25,7 +25,7 @@ module Mkspec
     TEST_CASE_ARCHIVE_DIR = '_test_case_archive'
     MISC_DIR = 'misc'
 
-    ROOT_OUTPUT_DIR = 'test_output'
+    ROOT_OUTPUT_DIR = 'test_auto'
     OUTPUT_SCRIPT_DIR = 'script'
     OUTPUT_TEST_CASE_DIR = 'test_case'
     OUTPUT_TEMPLATE_AND_DATA_DIR = 'template_and_data'
@@ -47,11 +47,16 @@ module Mkspec
     end
 
     def setup
-      return self if @setup_count.positive?
-      Loggerxcm.error("Config.setup #{@setup_count} self=#{self}")
-#      Loggerxcm.error_b { ["caller=" , caller].join("") }
-      Loggerxcm.error_b { ["caller="].join("") }
-      pn = @root_output_dir_pn.join(@output_dir)
+      # return self if @setup_count.positive?
+      raise MkscriptDebugError if @setup_count.positive?
+      Loggerxcm.debug("Config.setup #{@setup_count} self=#{self}")
+      Loggerxcm.debug(["caller=" , caller].join("\n"))
+      _output_dir_pn = Pathname.new(@output_dir)
+      if _output_dir_pn.absolute?
+        pn = _output_dir_pn
+      else
+        pn = @root_output_dir_pn.join(@output_dir)
+      end
       Loggerxcm.debug("Config.setup pn=#{pn}")
       pn.mkpath unless pn.exist?
       @output_dir_pn = pn
@@ -70,6 +75,7 @@ module Mkspec
         setup_dir_content(@test_case_archive_dir_pn, @output_test_case_dir_pn)
       else
         Loggerxcm.error("Can't find #{@test_case_archive_dir_pn}")
+        raise Mkspec::MkspecDebugError
       end
 
       @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
@@ -77,7 +83,8 @@ module Mkspec
         setup_dir_content(@archive_dir_pn, @output_template_and_data_dir_pn)
       else
         Loggerxcm.error("Can't find #{@archive_dir_pn}")
-      end
+        raise Mkspec::MkspecDebugError
+    end
       @setup_count += 1
 
       self

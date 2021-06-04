@@ -5,7 +5,6 @@ module Mkspec
     require "optparse"
 
     def initialize(argv)
-      #p "Mkscript.new = argv=#{argv}"
       check_cli_options(argv)
       init if STATE.success?
     end
@@ -31,13 +30,15 @@ module Mkspec
       opt.on("-z target_cmd1", "path of target command 2") { |x| @target_cmd2 = x }
       begin
         opt.parse!(argv)
-      rescue => e
-        message = %W[#{e.message} #{e.backtrace}]
-        Loggerxcm.error_b do
-          #{message}
-        end
-        return STATE.change(Mkspec::CMDLINE_OPTION_ERROR, message)
+      rescue StandardError => e
+        message = [
+          e.message,
+          e.backtrace.join("\n")
+        ]
+        Loggerxcm.fatal(message)
+        return STATE.change(Mkspec::INVALID_CMDLINE_OPTION_ERROR, "Invalid command line option")
       end
+      raise Mkspec::MkspecDebugError unless STATE.success?
 
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
@@ -56,20 +57,23 @@ module Mkspec
     def init
       @lt_id = -1
 
-      @global_hash = Mkspec::Util.extract_yaml(@global_yaml_pn)
+      @global_hash = Mkspec::Util.extract_in_yaml_file(@global_yaml_pn)
       @global_hash[GLOBAL_YAML_FNAME] = @global_yaml_pn.realpath.to_s
       @global_hash[ORIGINAL_OUTPUT_DIR] = @original_output_dir
       @global_hash[TARGET_CMD_1_PN] = Pathname.new(@target_cmd1).realpath.to_s
       @global_hash[TARGET_CMD_2_PN] = Pathname.new(@target_cmd2).realpath.to_s
 
       @global_hash[MAKE_ARG_X] = Mkspec::MAKE_ARG unless @global_hash[MAKE_ARG_X]
-      @config = Config.new(SPEC_PN, @output_dir, @script_dir, @tad_dir).setup
+      config = Config.new(SPEC_PN, @output_dir, @script_dir, @tad_dir)
+      @config = config.setup
       @tsv_path = Pathname.new(@tsv_fname)
       output_dir = @global_hash[ORIGINAL_OUTPUT_DIR]
-      @config = Config.new(SPEC_PN, output_dir, @script_dir, @tad_dir).setup
-      Loggeryk::Loggerykc.error("### Mkscript init 0 @tad_dir=#{@tad_dir}")
+      config = Config.new(SPEC_PN, output_dir, @script_dir, @tad_dir)
+      @config = config.setup
+      Loggerxcm.debug("### Mkscript init 0 @tad_dir=#{@tad_dir}")
       return unless STATE.success?
-      @tsv_path = Pathname.new(@global_hash[TSV_FNAME_KEY])
+      index = @global_hash[TSV_PATH_INDEX_KEY]
+      @tsv_path = Pathname.new(@global_hash[TSV_PATH][index])
       @tsv_path = @config.make_path_under_misc_dir(@tsv_path) unless @tsv_path.exist?
 
       @tsg = Mkspec::TestScriptGroup.new(@tsv_path, @start_char, @limit, @global_hash[MAKE_ARG_X]).setup
@@ -99,7 +103,7 @@ module Mkspec
       case @cmd
       when "all"
         template_and_data = true
-        script = true
+        spec = true
       when "tad"
         template_and_data = true
         data_dir_index = 0
@@ -118,32 +122,42 @@ module Mkspec
         data_dir_index = 1
       else
         # scr
-        script = true
+        spec = true
       end
-      create_all_template_and_data(@setting_and_testscript_array) if template_and_data && STATE.success?
-      create_all_spec_file(@config, @setting_and_testscript_array) if script && STATE.success?
+      Loggerxcm.debug("template_and_data=#{template_and_data}")
+      Loggerxcm.debug("spec=#{spec}")
+      Loggerxcm.debug("data_dir_index=#{data_dir_index}")
+      raise MkspecDebugError unless STATE.success?
+
+      if template_and_data && STATE.success?
+        create_all_template_and_data(@setting_and_testscript_array)
+        raise MkspecDebugError unless STATE.success?
+      end
+      raise MkspecDebugError unless STATE.success?
+      Loggerxcm.debug("spec=#{spec}")
+      if spec && STATE.success?
+        #raise MkspecDebugError #unless STATE.success?
+        errors = create_all_spec_file(@config, @setting_and_testscript_array)
+        Loggerxcm.debug("errors.size=#{errors.size}")
+        if errors.size > 0
+          errors.map { |element|
+            setting, testscript = element
+          }
+          raise MkspecDebugError
+        end
+      end
+      #raise MkspecDebugError #unless STATE.success?
+
       [template_and_data, spec, data_dir_index]
     end
 
-    def create_files
-      Loggeryk::Loggerykc.debug("@template_and_data=#{@template_and_data}")
-      Loggeryk::Loggerykc.debug("@spec=#{@spec}")
-      Loggeryk::Loggerykc.debug("1 STATE.success?=#{STATE.success?}")
-      create_all_template_and_data(@setting_and_testscript_array) if @template_and_data && STATE.success?
-      Loggeryk::Loggerykc.debug("2 STATE.success?=#{STATE.success?}")
-      create_all_spec_file(@config, @setting_and_testscript_array) if @spec && STATE.success?
-      Loggeryk::Loggerykc.debug("3 STATE.success?=#{STATE.success?}")
-      STATE.success?
-    end
-
     def create_all_template_and_data(array)
-      error_count = 0
-      array.map do |x|
-        setting, _tmp = x
+      array.inject([]) do |errors, element|
+        setting, _tmp = element
         ret = make_template_and_data(setting)
-        error_count += 1 unless ret
+        errors << x unless ret
+        errors
       end
-      error_count.zero?
     end
 
     def make_template_and_data(setting)
@@ -158,43 +172,91 @@ module Mkspec
     end
 
     def create_all_spec_file(config, array)
-      error_count = 0
-      array.map do |x|
-        setting, testscript = x
-        error_count += 1 unless make_spec_file(config, setting, testscript)
+      array.inject([]) do |errors, element|
+        setting, testscript = element
+        ret = make_spec_file(config, setting, testscript)
+        errors << x unless ret
+        errors
       end
-      error_count.zero?
+    end
+
+    def format_ruby_script(spec_file_pn, str)
+      str_2 = nil
+      begin
+        str_2 = Mkscript.format(str)
+      rescue StandardError => e
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
+          '-- str S',
+          str,
+          '-- str E',
+          "Can't convert for #{spec_file_pn}"
+        ]
+        Loggerxcm.fatal(message)
+        str_2 = str
+        STATE.change(Mkspec::CANNOT_CONVERT_WITH_RUBO, "Can't reformat ruby script")
+      end
+      raise Mkspec::MkspecDebugError unless STATE.success?
+      str_2
+    end
+
+    def output_ruby_script(spec_file_pn, str)
+      begin
+        File.open(spec_file_pn.to_s, "w") { |file| file.write(str) }
+      rescue StandardError => e
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
+          "Can't convert for #{spec_file_pn}"
+        ]
+        Loggerxcm.fatal(message)
+        STATE.change(Mkspec::CANNOT_WRITE_SPEC_FILE, "Can not write spec file(#{spec_file_pn.to_s})")
+      end
+      raise Mkspec::MkspecDebugError unless STATE.success?
+      true
     end
 
     def make_spec_file(config, setting, testscript)
       ret = true
       data_yaml_path = setting.data_yaml_path
-      return STATE.change(Mkspec::CANNOT_FIND_DATA_YAML_FILE) unless data_yaml_path.file?
-
+      Loggerxcm.debug("Mkscript#make_spec_file")
+      Loggerxcm.debug("data_yaml_path=#{data_yaml_path}")
+      Loggerxcm.debug("Mkscript#make_spec_file")
+      Loggerxcm.debug("data_yaml_path=#{data_yaml_path}")
+      Loggerxcm.debug("config=#{config}")
       str = Root.new(data_yaml_path, config).result
       spec_fname = Util.make_spec_filename(testscript.name)
       spec_file_pn = config.make_path_under_script_dir(spec_fname)
       spec_file_pn.parent.mkdir unless spec_file_pn.parent.exist?
-      begin
-        str_2 = Mkscript.format(str)
-      rescue StandardError => e
-        message = %W[#{e.to_s} "Can't convert for #{spec_file_pn}"]
-        Loggerxcm.error_b do
-          #{message}
+      Loggerxcm.debug("spec_file_pn=#{spec_file_pn}")
+      Loggerxcm.debug("str=#{str}")
+      str_2 = nil
+      if str
+        begin
+          str_2 = format_ruby_script(spec_file_pn, str)
+          Loggerxcm.debug("### #{spec_file_pn} str2")
+          Loggerxcm.debug(str_2)
+          Loggerxcm.debug("### END")
+        rescue StandardError => e
+          message = [
+            e.message,
+            e.backtrace.join("\n"),
+          ]
+          Loggerxcm.fatal(message)
+          STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
         end
-        str_2 = str
-        STATE.change(Mkspec::CANNOT_CONVERT_WITH_RUBO)
+        raise MkspecAppError unless STATE.success?
+      else
+        STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
+        raise MkspecAppError unless STATE.success?
       end
 
-      begin
-        File.open(spec_file_pn.to_s, "w") { |file| file.write(str_2) }
-      rescue StandardError => e
-        message = %W[#{e.to_s} "Can't convert for #{spec_file_pn}"]
-        Loggerxcm.error_b do
-          #{message}
-        end
-        str_2 = str
-        STATE.change(Mkspec::CANNOT_WRITE_SPEC_FILE)
+      if str_2
+        output_ruby_script(spec_file_pn, str_2)
+      else
+        STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
+        raise MkspecAppError unless STATE.success?
       end
     end
 

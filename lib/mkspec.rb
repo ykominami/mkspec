@@ -8,12 +8,20 @@ require 'pry'
 require 'rufo'
 require 'clitest'
 
+require_relative 'mkspec/loggerxcm'
+
 # Mkspecモジュール
 module Mkspec
+  Loggerxcm.init(:default, false, :error)
+#  Loggerxcm.init(:default, true, :error)
+#  Loggerxcm.init(:default, true, :info)
+#  Loggerxcm.init(:default, true, :debug)
+#  Loggerxcm.init(:default, false, :debug)
+
   # エラーコード：成功
   SUCCESS = 0
   # エラーコード：コマンドラインオプションエラー
-  CMDLINE_OPTION_ERROR = 9
+  INVALID_CMDLINE_OPTION_ERROR = 9
   # エラーコード：コマンドラインOオプションエラー
   CMDLINE_OPTION_ERROR_O = 10
   # エラーコード：コマンドラインTオプションエラー
@@ -42,7 +50,8 @@ module Mkspec
   # エラーコード：YAMLファイル出力失敗
   CANNOT_WRITE_YAML_FILE = 50
   # エラーコード：ERUBYテンプレート展開失敗
-  CANNOT_GET_RESULT_WITH_ERUBY = 60
+  CANNOT_FORMAT_WITH_ERUBY = 60
+  # 
 
   # グローバルYAMLファイルを表すキー
   GLOBAL_YAML_FNAME = 'global_yaml_fname'
@@ -58,6 +67,16 @@ module Mkspec
   MAKE_ARG_X = 'make_arg'
   # テストケースディレクトリを表すキー
   TEST_CASE_DIR = 'test_case_dir'
+  # tsv_fname_indexを表すキー
+  TSV_FNAME_INDEX = "tsv_fname_index"
+  # tsv_fname_arrayを表すキー
+  TSV_FNAME_ARRAY = "tsv_fname_array"
+  # tsv_pathを表すキー
+  TSV_PATH = "tsv_path"
+  # tsv_path_indexを表すキー
+  TSV_PATH_INDEX_KEY = "tsv_path_index"
+  # tsv_fnameを表すキー
+  TSV_FNAME_KEY = "tsv_fname"
 
   # SPECファイルディレクトリを表すキー
   SPEC_DIR = "spec"
@@ -74,10 +93,18 @@ module Mkspec
   # Your code goes here...
 
   # 固定長インデント付きErubyテンプレートクラス
-  class PrefixedLineEruby < Erubis::Eruby
-    include Erubis::PrefixedLineEnhancer
+  #class PrefixedLineEruby < Erubis::Eruby
+  #  include Erubis::PrefixedLineEnhancer
+  #end
+
+  class MkspecError < StandardError
   end
 
+  class MkspecDebugError < MkspecError
+  end
+
+  class MkspecAppError < MkspecError
+  end
 end
 
 require_relative 'mkspec/version'
@@ -90,8 +117,6 @@ require_relative 'mkspec/testscript'
 require_relative 'mkspec/testscriptgroup'
 require_relative 'mkspec/mkscript'
 require_relative 'mkspec/config'
-require_relative 'mkspec/loggerxcm'
 require_relative 'mkspec/item'
 require_relative 'mkspec/util'
-
 require_relative 'mkspec/state'

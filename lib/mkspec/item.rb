@@ -13,11 +13,12 @@ module Mkspec
       @name = name
       @outer_hash = outer_hash
       @local_hash = {}
+      @var_state = {}
       Mkspec::Loggerxcm.debug("-1 content_path=#{content_path}|")
       if content_path.nil?
         Mkspec::Loggerxcm.debug("0 content_path=#{content_path}|")
         @content_pn = nil
-        raise
+        raise MkspecAppError
       else
         Mkspec::Loggerxcm.debug("1 content_path=#{content_path}|")
         pn = Pathname.new(content_path)
@@ -29,7 +30,7 @@ module Mkspec
           if @content_pn.exist? == false
             Mkspec::Loggerxcm.debug("3 @content_pn=#{@content_pn}|")
             @content_pn = nil
-            raise
+            raise MkspecAppError
           end
         end
       end
@@ -37,12 +38,18 @@ module Mkspec
         pn_2 = Pathname.new(yaml_path)
         if pn_2.exist?
           @yaml_pn = pn_2
+          @var_state[:yaml_pn] = 1
         else
           @yaml_pn = config.make_path_under_template_and_data_dir(pn_2)
-          @yaml_pn = nil unless @yaml_pn.exist?
+          @var_state[:yaml_pn] = 2
+          unless @yaml_pn.exist?
+            @yaml_pn = nil
+            @var_state[:yaml_pn] = 22
+          end
         end
       else
         @yaml_pn = nil
+        @var_state[:yaml_pn] = 3
       end
 
       @config = config
@@ -52,32 +59,40 @@ module Mkspec
       Loggerxcm.debug("@content_pn=#{@content_pn}")
       @extracted = nil
       @extract_count = 0
-      setup
+      prepare
     end
 
-    def setup
-      # @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn && @yaml_pn.exist?
-      @local_hash = YAML.load_file(@yaml_pn) if @yaml_pn&.exist?
-      raise if @content_pn.nil? || !@content_pn.exist?
-      @content_lines = File.readlines(@content_pn).map(&:chomp)
+    def prepare
+      Loggerxcm.debug("Item#setup @yaml_pn=#{@yaml_pn.to_s}")
+      Loggerxcm.debug("Item#setup @var_state[:yaml_pn]=#{@var_state[:yaml_pn]}")
+      @local_hash = Util.extract_in_yaml_file(@yaml_pn) if @yaml_pn&.exist?
+      raise MkspecAppError if @content_pn.nil? || !@content_pn.exist?
+      @content_lines = Util.get_file_content_lines(@content_pn)
       @tag_table = analyze(@content_lines)
-      @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
+#      @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
+      if @local_hash.size.positive?
+        Loggerxcm.debug("Item#setup use @local_hash")
+        @hash = @local_hash
+      else
+        Loggerxcm.debug("Item#setup use @outer_hash")
+        @hash = @outer_hash
+      end
       @children = make_children(@tag_table, @hash)
       error_count = 0
       @children.each do |k, v|
         @hash[k] = v.result
-        return less STATE.success?
+        raise MkspecAppError less STATE.success?
       end
     end
 
     def result
       Loggerxcm.debug(%(################################## @content_pn=#{@content_pn}))
-      raise unless @content_pn&.exist?
+      Loggerxcm.debug("Item#result @content_pn=#{@content_pn}")
+      raise MkspecAppError unless @content_pn&.exist?
 
-      add_indent(@hash)
+#      add_indent(@hash)
       content = @content_lines.join("\n")
       replace_tag(content, @hash)
-      @extracted
     end
 
     def add_indent(hash)
@@ -119,6 +134,7 @@ module Mkspec
           yaml_path = hs["setting_path"]
           Mkspec::Loggerxcm.debug("-X hs.class=#{hs.class}|")
           Mkspec::Loggerxcm.debug("-X hs=#{hs}|")
+          Loggerxcm.debug("Item#make_chldren content_path=#{content_path} yaml_path=#{yaml_path}")
           children[tag] = Item.new(@indent_level + 1, extra_indent, tag, hs, content_path, yaml_path, @config)
         when ::String
           Mkspec::Loggerxcm.debug("-V Sring hash[#{tag}]=#{hash[tag]}|")
@@ -130,24 +146,44 @@ module Mkspec
     end
 
     def replace_tag(content, hash)
-      eruby = PrefixedLineEruby.new(content)
+      eruby = Erubis::Eruby.new(content)
+
       begin
         @extracted = eruby.result(hash)
-        return unless STATE.success?
         @extract_count += 1
       rescue StandardError => e
-        message = %W[
-          "3 Item.to_s"
-          #{e.to_s}
-          "@content=#{@content_pn}"
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
+          "- content S",
+          content,
+          "- content E",
+          "@content=#{@content_pn}",
           "content=#{content}"
         ]
-        Loggerxcm.error_b do
-          #{message}
-        end
-        STATE.change(Mkspec::CANNOT_GET_RESULT_WITH_ERUBY, message)
+        Loggerxcm.debug("Item#replace_tag 3 message=#{message}")
+        Loggerxcm.fatal(message)
+
+        STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format with eruby")
       end
-      @extracted
+      raise Mkspec::MkspecDebugError unless STATE.success?
+      Loggerxcm.debug("Item#replace_tag 2 @extract_count=#{@extract_count}")
+      if @extracted  !~ /^\s*$/x
+        Loggerxcm.debug("#---------------")
+        Loggerxcm.debug("Item#replace_tag <A> @extract_count=#{@extract_count}")
+        Loggerxcm.debug("##--------------")
+        Loggerxcm.debug("Item#replace_tag <B> content=")
+        Loggerxcm.debug(content)
+        Loggerxcm.debug("###---------------")
+        Loggerxcm.debug("Item#replace_tag <C> hash=")
+        Loggerxcm.debug(hash)
+        Loggerxcm.debug("####---------------")
+        Loggerxcm.debug("Item#replace_tag <D> @extracted=")
+        Loggerxcm.debug(@extracted)
+        Loggerxcm.debug("#####---------------")
+      end
+      #raise Mkspec::MkspecDebugError #unless STATE.success?
+     @extracted
     end
   end
 end

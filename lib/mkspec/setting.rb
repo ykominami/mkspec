@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "pp"
 
 module Mkspec
+
   class Setting
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
     attr_reader :lt_id
@@ -13,19 +13,19 @@ module Mkspec
       @testscript = testscript
       @hash = {}
       name = @testscript.name
-      raise unless name.instance_of?(String)
+      raise MkspecAppError unless name.instance_of?(String)
       data_sub_pn = config.make_path_under_template_and_data_dir(name)
       data_sub_pn.mkdir unless data_sub_pn.exist?
       @template_path = data_sub_pn.join("content.txt")
 
       @path_value = @template_path.relative_path_from(data_sub_pn.parent)
       name_2 = @testscript.name
-      raise unless name_2.instance_of?(String)
+      raise MkspecAppError unless name_2.instance_of?(String)
       @data_yaml_path = data_sub_pn.join(%(#{name_2}.yml))
       if @global_hash["make_arg"].nil? || @global_hash["make_arg"] =~ /^\s*$/
         Loggerxcm.debug("Setting testscript.name=#{name_2}")
         Loggerxcm.debug("Setting make_arg=|#{@global_hash["make_arg"]}|")
-        raise
+        raise MkspecAppError
       end
       @func_name_of_make_arg = global_hash["make_arg"]
 
@@ -54,7 +54,7 @@ module Mkspec
       error_count = 0
       @testscript.test_groups.map do |test_group|
         name = test_group.name
-        raise unless name.instance_of?(String)
+        raise MkspecAppError unless name.instance_of?(String)
         make_context(name)
         ret = make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
         ret = setup_test_cases(test_group) if ret
@@ -65,13 +65,14 @@ module Mkspec
 
     def setup_test_cases(test_group)
       test_group_name = test_group.name
-      raise unless test_group_name.instance_of?(String)
+      raise MkspecAppError unless test_group_name.instance_of?(String)
       error_count = 0
       test_group.test_cases.map do |test_case|
         func_name = @func_name_of_make_arg
         func_name = test_case.extra if test_case.extra
         ret = make_make_arg(test_group.content_name_of_make_arg, func_name)
         if ret
+          raise MkspecDebugError if Util.numeric?(test_case.test_1)
           make_context_context(test_case.name, test_group.name, test_case.dir,
                                test_case.test_1, test_case.test_1_value,
                                test_case.test_2, test_case.test_2_value,
@@ -87,22 +88,21 @@ module Mkspec
       begin
         File.open(@data_yaml_path, "w") { |file| file.write(YAML.dump(@hash)) }
       rescue StandardError => e
-        message = %w[
-          #{e.to_s}
-          #{e.backtrace}
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
         ]
-        Loggerxcm.error_b do
-          #{message}
-        end
+        Loggerxcm.fatal(message)
         STATE.change(Mkspec::CANNOT_WRITE_YAML_FILE)
         ret = false
       end
+      raise Mkspec::MkspecDebugError unless STATE.success?
       ret
     end
 
     def make_context(test_group_name)
-      raise unless test_group_name.instance_of?(String)
-      raise if @hash[test_group_name]
+      raise MkspecAppError unless test_group_name.instance_of?(String)
+      raise MkspecAppError if @hash[test_group_name]
       @hash[test_group_name] = {
         "path" => "rspec_describe_context/content.txt",
         "context" => test_group_name,
@@ -131,7 +131,7 @@ module Mkspec
     end
 
     def make_context_context(test_case_name, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)
-      raise unless test_case_name.instance_of?(String)
+      raise MkspecAppError unless test_case_name.instance_of?(String)
       tc_0 = next_testcase_id
       tc_1 = next_testcase_id
       @hash[test_case_name] = {

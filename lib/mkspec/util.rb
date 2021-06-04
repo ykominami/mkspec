@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Mkspec
-  require 'pp'
 
   class Util
     class << self
@@ -10,8 +9,13 @@ module Mkspec
       end
 
       def get_file_content(file_path)
-        File.readlines(file_path).select{ |l| l !~ /^(\s*)#/ }.map { |l| l.chomp }.join("\n")
+        get_file_content_lines(file_path).join("\n")
       end
+
+      def get_file_content_lines(file_path)
+        File.readlines(file_path).select{ |l| l !~ /^(\s*)#/ }.map(&:chomp)
+      end
+
 
       def extract_with_eruby(content, hash)
         result = nil
@@ -19,24 +23,21 @@ module Mkspec
         begin
           result = eruby.result(hash)
         rescue StandardError => e
-          message = %W[
-            #{e.message}
-            #{e.backtrace}
+          message = [
+            e.message,
+            e.backtrace.joiin("\n")
           ]
-          pp message
-          Loggerxcm.fatal_b do
-            #{message}
-          end
+          Loggerxcm.fatal(message)
         end
+        raise Mkspec::MkspecDebugError if result == nil
+
         result
       end
 
       def extract_in_yaml(yaml_str)
         result = nil
         hash = YAML.load(yaml_str)
-        #p "hash=#{hash}"
         result = extract_with_eruby(yaml_str, hash)
-        #p "result=#{result}"
         if result.instance_of?(String)
           [YAML.load(result), result]
         else
@@ -45,21 +46,49 @@ module Mkspec
       end
 
       def extract_in_yaml_all(yaml_str)
-        hash , result = extract_in_yaml(yaml_str)
-        hs = hash.find{ |key, value| value =~ /<%=/}
+        #hash , result = extract_in_yaml(yaml_str)
+        result = yaml_str
+        hs = {}#hash.find{ |key, value| value =~ /<%=/}
         while hs != nil
           hash , result2 = extract_in_yaml(result)
           hs = hash.find{ |key, value| value =~ /<%=/}
           result = result2
         end
-        hs
+        hash
       end
 
       def extract_in_yaml_file(yaml_file_path)
         result = nil
         #hash = YAML.load_file(yaml_file_path)
         content = get_file_content(yaml_file_path)
-        extract_in_yaml(content)
+        extract_in_yaml_all(content)
+      end
+
+      def check_numeric_and_raise(tmp, n , error)
+        raise error if tmp.size > n && Util.numeric?(tmp[n])
+      end
+
+      def numeric?(lookAhead)
+        #lookAhead.match?(/[[:digit:]]/)
+        if lookAhead.to_i == 0
+          chunk = lookAhead.strip
+          if chunk.size == 1
+            #if chunk.match?(/0/)
+            if chunk == '0'
+              true
+            else
+              false
+            end
+          else
+            false
+          end
+        else
+          if lookAhead.match?(/\./)
+            false
+          else
+            true
+          end
+        end
       end
     end
   end

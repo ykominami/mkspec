@@ -21,18 +21,17 @@ module Mkspec
     end
 
     def show_message
-      Loggerxcm.error(@message)
+      Loggerxcm.error(@message) if @message
       @exit_code
     end
 
     def show_usage_and_exit(opt, message)
-      Loggerxcm.error_b do
-        %w[
-          #{message}
-          #{opt.banner}
-          #{@message}
-        ]
-      end
+      str = [
+        #{message},
+        #{opt.banner},
+        #{@message}
+      ]
+      Loggerxcm.error(str)
     end
   end
 

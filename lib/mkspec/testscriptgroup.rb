@@ -9,7 +9,7 @@ module Mkspec
 
     def initialize(tsv_path, start_char, limit, make_arg_basename)
       @tsv_path = tsv_path
-      raise unless start_char.instance_of?(String)
+      raise MkspecAppError unless start_char.instance_of?(String)
       @name = start_char
       @limit = limit
       @make_arg_basename = make_arg_basename
@@ -20,19 +20,31 @@ module Mkspec
     def setup_test_group(l, state)
       # tgroup, tcase, tmp = l.chomp.split(/\s+|\t+/)
       tgroup, tcase, *tmp = l.chomp.split("\t")
-      return if tgroup.nil?
+      raise MkspecAppError if tgroup.nil?
 
-      return if tgroup =~ /^\s*#/
+      Loggerxcm.debug("tgroup=#{tgroup}|")
+      raise MkspecAppError if tgroup =~ /^\s*#/
 
-      return if tcase.nil?
+      raise MkspecAppError if tcase.nil?
 
-      return if tcase =~ /^\s*#/
+      raise MkspecAppError if tcase =~ /^\s*#/
 
+      raise MkspecAppError if tmp.size > 4
+
+      Util.check_numeric_and_raise(tmp, 0 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 1 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 2 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 3 , MkspecAppError)
+      # Loggerxcm.debug("tmp=#{tmp}")
       tgroup = tgroup.tr('-', '_').tr('.', '_')
       testgroup = (state[tgroup] ||= TestGroup.new(tgroup, @make_arg_basename))
       tcase = tcase.tr('-', '_').tr('.', '_')
       array = DEFAULT_VALUES.zip(tmp[0, 4]).map { |lh, rh| rh.nil? ? lh : rh }
       extra = tmp[4, tmp.size]
+      # Loggerxcm.debug("array=#{array}")
       test_1, test_1_value, test_2, test_2_value = array
       testgroup.add_test_case("#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_2, test_2_value, extra)
       self
@@ -40,6 +52,8 @@ module Mkspec
 
     def setup_from_tsv
       File.readlines(@tsv_path).each_with_object({}) do |l, state|
+        next if l =~ /^\s*#/
+        next if l =~ /^\s*$/
         setup_test_group(l, state)
       end
     end

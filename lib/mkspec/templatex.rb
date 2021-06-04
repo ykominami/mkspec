@@ -55,15 +55,15 @@ RSpec.describe '<%= desc %>', type: :aruba do
           file.write(@content)
         end
       rescue StandardError => e
-        message = %w[
-          #{e.message}
-          #{e.backtrace}
+        message = [
+          e.message,
+          e.backtrace.join("\n")
         ]
-        Loggerxcm.error_b do
-          #{message}
-        end
+        Loggerxcm.error(message)
         ret = false
       end
+      raise Mkspec::MkspecDebugError unless ret
+
       ret
     end
   end

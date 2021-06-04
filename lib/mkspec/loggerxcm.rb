@@ -5,29 +5,31 @@ module Mkspec
   require 'fileutils'
 
   class Loggerxcm
-    LOG_FILE = 'logtest.log'
+    LOG_FILE = "logtest-#{Time.now.strftime("%Y%m%d-%H%M%S")}.log"
+    @log_file = nil
+    @log_stdout = nil
 
     class << self
       def init(fname, stdout, level = :info)
-        level_hs = {
-          info: Logger::INFO,
-          debug: Logger::DEBUG,
-          warn: Logger::WARN,
-          error: Logger::ERROR,
-          fatal: Logger::FATAL,
-          unknown: Logger::UNKNOWN
-        }
+        unless @log_file
+          level_hs = {
+            info: Logger::INFO,
+            debug: Logger::DEBUG,
+            warn: Logger::WARN,
+            error: Logger::ERROR,
+            fatal: Logger::FATAL,
+            unknown: Logger::UNKNOWN
+          }
 
-        @log_file = nil
-        @log_stdout = nil
-        fname = nil if fname == false
-        fname = LOG_FILE if fname == :default
-        @log_file = Logger.new(fname) unless fname.nil?
-        @log_stdout = Logger.new($stdout) if stdout
+          fname = nil if fname == false
+          fname = LOG_FILE if fname == :default
+          @log_file = Logger.new(fname) unless fname.nil?
+          @log_stdout = Logger.new(STDOUT) if stdout
 
-        obj = proc do |_, _, _, msg| "#{msg}\n" end
-        register_log_format(obj)
-        register_log_level(level_hs[level])
+          obj = proc do |_, _, _, msg| "#{msg}\n" end
+          register_log_format(obj)
+          register_log_level(level_hs[level])
+        end
       end
 
       def register_log_format(obj)
@@ -43,80 +45,52 @@ module Mkspec
         # DEBUG < INFO < WARN < ERROR < FATAL < UNKNOWN
       end
 
-      def block_call(block)
-        return unless block.nil?
-
-        value = block.call
-        if value.instance_of(Array)
+      def to_string(value)
+        if value.instance_of?(Array)
           value.join("\n")
         else
           value
         end
       end
 
-      def error(str)
+      def error(value)
+        str = to_string(value)
         @log_file&.error(str)
         @log_stdout&.error(str)
+        true
       end
 
-      def error_b(&block)
-        return unless block
-
-        str = block_call(block)
-        error(str) if str
-      end
-
-      def debug(str)
+      def debug(value)
+        str = to_string(value)
         @log_file&.debug(str)
         @log_stdout&.debug(str)
+        true
       end
 
-      def debug_b(&block)
-        return unless block
-
-        str = block_call(block)
-        debug(str) if str
-      end
-
-      def info(str)
+      def info(value)
+        str = to_string(value)
         @log_file&.info(str)
         @log_stdout&.info(str)
+        true
       end
 
-      def info_b(&block)
-        return unless block
-
-        str = block_call(block)
-        debug(str) if str
-      end
-
-      def warn(str)
+      def warn(value)
+        str = to_string(value)
         @log_file&.warn(str)
         @log_stdout&.warn(str)
+        true
       end
 
-      def warn_b(&block)
-        return unless block
-
-        str = block_call(block)
-        warn(str) if str
-      end
-
-      def fatal(str)
+      def fatal(value)
+        str = to_string(value)
         @log_file&.fatal(str)
         @log_stdout&.fatal(str)
-      end
-
-      def fatal_b(&block)
-        return unless block
-
-        str = block_call(block)
-        fatal(str) if str
+        true
       end
 
       def close
         @log_file&.close
-        @log_stdout&.close
+        # @log_stdout&.close
       end
     end
     #  Loggerxcm.init(:default, true, :unknown)
@@ -124,7 +98,7 @@ module Mkspec
     #  Loggerxcm.init(:default, true, :error)
     #  Loggerxcm.init(:default, true, :warn)
     #  Loggerxcm.init(:default, true, :info)
-    Loggerxcm.init(:default, true, :debug)
+    #  Loggerxcm.init(:default, true, :debug)
     #  Loggerxcm.init(:default, false, :debug)
   end
 end
