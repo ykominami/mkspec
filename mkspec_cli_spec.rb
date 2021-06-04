@@ -31,8 +31,9 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
-
+p "bash #{cmdline}"
         run_command("bash #{cmdline}")
+
       end
       it '', test_normal_sh:true, cmd:0 do expect(last_command_started).to be_successfully_executed end
       it '', test_normal_sh_out:true, cmd:1 do expect(last_command_started).not_to have_output(/error:/) end
@@ -53,7 +54,7 @@ RSpec.describe 'command-line', type: :aruba do
                ]
 
         cmdline = make_cmdline_1(test_case_dir, argv)
-
+p "bash #{cmdline}"
         run_command("bash #{cmdline}")
       end
       it '', test_normal_sh:true, cmd:2 do expect(last_command_started).to be_successfully_executed end
@@ -75,6 +76,7 @@ RSpec.describe 'command-line', type: :aruba do
                -c spec -s #{o.start_char} -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end
@@ -90,6 +92,7 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end
@@ -106,6 +109,7 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end
@@ -122,6 +126,7 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end
@@ -138,6 +143,7 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end
@@ -154,6 +160,7 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end
@@ -170,6 +177,7 @@ RSpec.describe 'command-line', type: :aruba do
                -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
+p "bash #{cmdline}"
 
         run_command("bash #{cmdline}")
       end

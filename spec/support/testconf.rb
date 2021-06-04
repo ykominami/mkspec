@@ -9,73 +9,11 @@ module TestConf
     attr_reader :o
 
     def initialize(global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path)
-      global_yaml_pn = Pathname.new(global_yaml)
-      @global_hash = Mkspec::Util.extract_yaml(global_yaml_pn)
-      @global_hash[Mkspec::GLOBAL_YAML_FNAME] = global_yaml_pn.to_s
-      @global_hash["original_spec_file_path"] = original_spec_file_path
-#      @global_hash["original_output_dir"] = original_output_dir
-
-      o = OpenStruct.new
-      o.original_output_dir = @global_hash["original_output_dir"]
-      pn = Pathname.new(original_spec_file_path)
-      if pn.dirname == "spec"
-        spec_pn = pn.parent
-      else
-        pn = Pathname.new(ENV["PWD"])
-        spec_pn = pn.join("spec")
-        spec_pn = nil unless spec_pn.exist?
-      end
-      if spec_pn == nil
-        if ENV["SPEC_DIR"]
-          spec_pn = Pathname.new(ENV["SPEC_DIR"])
-          spec_pn = nil unless spec_pn.exist?
-        end
-      end
-      #
-      o.spec_pn = spec_pn
-      #
-      o.spec_dir = o.spec_pn.to_s
-      o.top_dir_pn = o.spec_pn.parent
-      o.top_dir = o.top_dir_pn.to_s
-
-      _tmp, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, ".", target_cmd_1, target_cmd_2)
-      o.bin_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, "bin", target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
-      o.exe_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = get_path(o.top_dir_pn, "exe", target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
-      #o.make_arg_basename = 'make_cmdline_1'
 
       setup(o)
     end
 
     def setup(o)
-      o.test_root_dir_pn = o.top_dir_pn.join("test_auto")
-      o.test_root_dir = o.test_root_dir_pn.to_s
-
-      if o.original_output_dir != nil
-        o.target_parent_dir_pn = o.test_root_dir_pn.join(o.original_output_dir)
-      else
-        o.target_parent_dir_pn = o.test_root_dir_pn.join("test_data2", "test_case")
-      end
-      o.target_parent_dir = o.target_parent_dir_pn
-      o.result = "result.txt"
-      o._test_data_dir_pn = o.test_root_dir_pn.join("_test_data")
-      o.misc_dir_pn = o.test_root_dir_pn.join("misc")
-      o.tsv_fname = "testlist-x.txt"
-      o.tsv_fname_2 = "t.txt"
-      o.misc_tsv_fname = o.misc_dir_pn.join(o.tsv_fname)
-      o.misc_tsv_fname_2 = o.misc_dir_pn.join(o.tsv_fname_2)
-
-      #
-      o.output_dir_pn = o.target_parent_dir_pn
-      o.output_dir = o.output_dir_pn.to_s
-      #
-      o.output_template_and_data_dir_pn = o.output_dir_pn.join("template_and_data")
-      o.output_template_and_data_dir = o.output_template_and_data_dir_pn.to_s
-      o.output_script_dir_pn = o.output_dir_pn.join("script")
-      o.output_script_dir = o.output_script_dir_pn.to_s
-      o.output_test_case_root_dir_pn = o.output_dir_pn.join("test_case")
-      o.output_test_case_root_dir = o.output_test_case_root_dir_pn.to_s
-
-      o.template_and_data_dir_pn = o.output_dir_pn.join("template_and_data")
       o._output_dir_pn = o.test_root_dir_pn.join("_output")
       o._output_dir = o._output_dir_pn.to_s
       o._test_case_dir_pn = o._output_dir_pn.join("test_case")
@@ -84,9 +22,6 @@ module TestConf
       o._template_and_data_dir = o._template_and_data_dir_pn.to_s
       o._script_dir_pn = o._output_dir_pn.join("script")
       o._script_dir = o._script_dir_pn.to_s
-      o.content_fname = "content.txt"
-      o.testdata_fname = "testdata.txt"
-      o.yaml_fname = "a.yml"
       o._yaml_fname = "a.yml"
       o._data_dir_pn = o._template_and_data_dir_pn.join("a")
       #

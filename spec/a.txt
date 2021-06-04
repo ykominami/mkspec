@@ -1,0 +1,26 @@
+  context 'unknown' do
+    before(:all) do
+      Mkspec::Loggerxcm.init(:default, true, :unknown)
+    end
+
+    context 'unknown 1' do
+      before(:each) do
+        str="unknown 1"
+        @ret = Mkspec::Loggerxcm.unknown(str)
+      end
+      it 'unknown for string' , kind:"unknown", cmd:21 do expect(@ret).to eq(true) end
+    end
+
+    context 'unknown 2' do
+      before(:each) do
+        message = [
+          "unknown 1",
+          "unknown 2"
+        ]
+        @ret = Mkspec::Loggerxcm.unknown(message)
+      end
+
+      it 'unknown for array' , kind:"unknown", cmd:22 do expect(@ret).to eq(true) end
+    end
+  end
+

@@ -5,12 +5,12 @@ require 'spec_helper'
 RSpec.describe Mkspec do
   include TestConf
 
-  let(:original_output_dir_pn) { Pathname.new('_DATA') + 'hier9' }
-  let(:original_output_dir) { original_output_dir_pn.to_s }
   let(:target_cmd_1) { 'tecsgen' }
   let(:target_cmd_2) { 'tecsmerge' }
-  let(:conf) { TestConf::TestConf.new( ENV['GLOBAL_YAML_FNAME'], target_cmd_1, target_cmd_2, __FILE__, original_output_dir) }
+  let(:conf) { TestConf::TestConf.new( ENV['GLOBAL_YAML_FNAME'], target_cmd_1, target_cmd_2, __FILE__) }
   let(:o) { conf.o }
+  let(:original_output_dir_pn) { o.original_output_dir_pn }
+  let(:original_output_dir) { o.original_output_dir }
   let(:tsv_lines) { o.tsv_lines }
 #
   context 'format' do
