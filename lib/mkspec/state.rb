@@ -3,8 +3,8 @@
 module Mkspec
 
   class State
-    attr_accessor :opt, :message, :exit_code
-
+     attr_accessor :message, :exit_code
+#    attr_accessor :message
 
     def initialize
       @exit_code = SUCCESS
@@ -20,18 +20,12 @@ module Mkspec
       self
     end
 
-    def show_message
-      Loggerxcm.error(@message) if @message
+    def show_message(message = nil)
+      ary = []
+      ary << @message if @message
+      ary << message if message
+      Loggerxcm.show(ary)
       @exit_code
-    end
-
-    def show_usage_and_exit(opt, message)
-      str = [
-        #{message},
-        #{opt.banner},
-        #{@message}
-      ]
-      Loggerxcm.error(str)
     end
   end
 

@@ -62,7 +62,7 @@ RSpec.describe '<%= desc %>', type: :aruba do
         Loggerxcm.error(message)
         ret = false
       end
-      raise Mkspec::MkspecDebugError unless ret
+      raise(Mkspec::MkspecDebugError, "templatex.rb 1 ret=#{ret}") unless ret
 
       ret
     end

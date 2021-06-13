@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require 'spec_helper_1'
 require 'pry'
 require 'pp'
 
@@ -9,7 +9,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
   context 'fatal' do
     before(:all) do
-      Mkspec::Loggerxcm.init(:default, true, :fatal)
+      Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @str="Fatal"
       @message_array = [
         "fatal 1",
@@ -67,7 +67,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
   context 'error' do
     before(:all) do
-      Mkspec::Loggerxcm.init(:default, true, :error)
+      Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @str="error 1"
       @message_array = [
         "error 1",
@@ -77,6 +77,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'error 1' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.error(@str)
       end
       it 'error for string' , kind:"error", cmd:21 do expect(@ret).to eq(true) end
@@ -84,6 +85,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'error 2' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.error(@message_array)
       end
 
@@ -92,6 +94,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'error fatal' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.fatal(@message_array)
       end
 
@@ -100,6 +103,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'error warn' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.warn(@message_array)
       end
 
@@ -108,6 +112,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'error debug' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.debug(@message_array)
       end
 
@@ -116,6 +121,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'error info' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.info(@message_array)
       end
 
@@ -125,7 +131,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
   context 'warn' do
     before(:all) do
-      Mkspec::Loggerxcm.init(:default, true, :warn)
+      Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @str="warn 1"
       @message_array = [
         "warn 1",
@@ -135,6 +141,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'warn 1' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.warn(@str)
       end
       it 'warn for string' , kind:"warn", cmd:31 do expect(@ret).to eq(true) end
@@ -142,6 +149,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'warn warn message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.warn(@message_array)
       end
 
@@ -150,6 +158,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'warn fatal message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.fatal(@message_array)
       end
 
@@ -158,6 +167,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'warn error message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.error(@message_array)
       end
 
@@ -166,6 +176,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'warn debug message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.debug(@message_array)
       end
 
@@ -174,6 +185,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'warn debug message_array info' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.info(@message_array)
       end
 
@@ -183,7 +195,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
   context 'info' do
     before(:all) do
-      Mkspec::Loggerxcm.init(:default, true, :info)
+      Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @str="info 1"
       @message_array = [
           "info 1",
@@ -193,6 +205,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'info 1' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.info(@str)
       end
       it 'info for string' , kind:"info", cmd:41 do expect(@ret).to eq(true) end
@@ -200,6 +213,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'info 2' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.info(@message_array)
       end
 
@@ -208,6 +222,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'info fatal message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.fatal(@message_array)
       end
 
@@ -216,6 +231,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'info error message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.error(@message_array)
       end
 
@@ -224,6 +240,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'info warn message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.warn(@message_array)
       end
 
@@ -232,6 +249,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'info debug message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.debug(@message_array)
       end
 
@@ -241,7 +259,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
   context 'debug' do
     before(:all) do
-      Mkspec::Loggerxcm.init(:default, true, :debug)
+      Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @str="debug 1"
       @message_array = [
         "debug 1",
@@ -251,6 +269,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'debug 1' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.debug(@str)
       end
       it 'debug for string' , kind:"debug", cmd:51 do expect(@ret).to eq(true) end
@@ -258,6 +277,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'debug 2' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.debug(@message_array)
       end
 
@@ -266,6 +286,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'debug fatal message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.fatal(@message_array)
       end
 
@@ -274,6 +295,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'debug error message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.error(@message_array)
       end
 
@@ -282,6 +304,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'debug warn message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.warn(@message_array)
       end
 
@@ -290,6 +313,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
 
     context 'debug info message_array' do
       before(:each) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @ret = Mkspec::Loggerxcm.info(@message_array)
       end
 
