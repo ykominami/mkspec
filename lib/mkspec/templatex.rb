@@ -24,7 +24,8 @@ module Mkspec
       lines = []
       str = %(
 # frozen_string_literal: true
-require 'spec_helper'
+require 'spec_helper_3'
+require 'aruba/rspec'
 require 'pathname'
 
 RSpec.describe '<%= desc %>', type: :aruba do
@@ -62,7 +63,7 @@ RSpec.describe '<%= desc %>', type: :aruba do
         Loggerxcm.error(message)
         ret = false
       end
-      raise Mkspec::MkspecDebugError unless ret
+      raise(Mkspec::MkspecDebugError, "templatex.rb 1 ret=#{ret}") unless ret
 
       ret
     end

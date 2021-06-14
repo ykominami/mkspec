@@ -5,7 +5,7 @@ module Mkspec
     attr_reader :name, :test_cases, :size, :content_name_of_make_arg
 
     def initialize(name, make_arg_basename, extra = nil)
-      raise MkspecAppError unless name.instance_of?(String)
+      raise(MkspecAppError, "testgroup.rb 1 name.class=#{name.class}") unless name.instance_of?(String)
       @name = name
       @test_cases = []
       @size = 0

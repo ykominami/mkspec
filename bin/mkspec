@@ -16,41 +16,36 @@ require 'pp'
 
 exit_code = nil
 mkscript = Mkspec::Mkscript.new(ARGV)
+exit_code = mkscript.check_state_and_show_useage_and_state_message
+exit(exit_code) if exit_code
 begin
   mkscript.create_files
 rescue Mkspec::MkspecDebugError => e
   pp e.message
-  pp "-- backtrace S"
   pp e.backtrace.join("\n")
-  pp "-- backtrace E"
   if Mkspec::STATE.success?
-    exit_code = 1000
+    exit_code = Mkspec::MKSPEC_DEBUG_ERROR
   else
     exit_code = Mkspec::STATE.show_message
   end
   # exit(exit_code)
 rescue Mkspec::MkspecAppError => e
   pp e.message
-  pp "-- backtrace S"
   pp e.backtrace.join("\n")
-  pp "-- backtrace E"
   if Mkspec::STATE.success?
-    exit_code = 2000
+    exit_code = Mkspec::MKSPEC_APP_ERROR
   else
     exit_code = Mkspec::STATE.show_message
   end
   # exit(exit_code)
 rescue => e
-  p "###################### 1"
+  # pp "###################### 1"
   exit_code = Mkspec::STATE.show_message
-  pp e.message
-  pp "-- backtrace S"
-  pp e.backtrace.join("\n")
-   pp "-- backtrace E"
- # exit(exit_code)
 end
-unless exit_code
-  pp "###################### 2"
+if exit_code != nil
+  # pp "###################### 2"
   exit_code = Mkspec::STATE.show_message
+else
+  exit_code = 0
 end
 exit(exit_code)

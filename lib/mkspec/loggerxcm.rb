@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 module Mkspec
-  require 'logger'
-  require 'fileutils'
+  class Loggerxcm0
+    require 'logger'
+    require 'fileutils'
 
-  class Loggerxcm
-    LOG_FILE = "logtest-#{Time.now.strftime("%Y%m%d-%H%M%S")}.log"
-    @log_file = nil
-    @log_stdout = nil
+    LOG_FILENAME_BASE ||= "#{Time.now.strftime("%Y%m%d-%H%M%S")}.log"
+    @log_file ||= nil
+    @log_stdout ||= nil
 
     class << self
-      def init(fname, stdout, level = :info)
+      def init(prefix, fname, log_dir, stdout, level = :info)
         unless @log_file
           level_hs = {
-            info: Logger::INFO,
             debug: Logger::DEBUG,
+            info: Logger::INFO,
             warn: Logger::WARN,
             error: Logger::ERROR,
             fatal: Logger::FATAL,
@@ -22,9 +22,10 @@ module Mkspec
           }
 
           fname = nil if fname == false
-          fname = LOG_FILE if fname == :default
-          @log_file = Logger.new(fname) unless fname.nil?
-          @log_stdout = Logger.new(STDOUT) if stdout
+          fname = prefix + LOG_FILENAME_BASE if fname == :default
+          filepath = Pathname.new(log_dir).join(fname)
+          @log_file ||= Logger.new(filepath) unless fname.nil?
+          @log_stdout ||= Logger.new(STDOUT) if stdout
 
           obj = proc do |_, _, _, msg| "#{msg}\n" end
           register_log_format(obj)
@@ -51,6 +52,14 @@ module Mkspec
         else
           value
         end
+      end
+
+      def show(value)
+        str = to_string(value)
+        @log_file&.error(str)
+        @log_stdout&.error(str)
+        puts(str) unless @log_stdout
+        true
       end
 
       def error(value)
@@ -93,12 +102,11 @@ module Mkspec
         # @log_stdout&.close
       end
     end
-    #  Loggerxcm.init(:default, true, :unknown)
-    #  Loggerxcm.init(:default, true, :fatal)
-    #  Loggerxcm.init(:default, true, :error)
-    #  Loggerxcm.init(:default, true, :warn)
-    #  Loggerxcm.init(:default, true, :info)
-    #  Loggerxcm.init(:default, true, :debug)
-    #  Loggerxcm.init(:default, false, :debug)
+  end
+
+  class Loggerxcm < Loggerxcm0
+  end
+
+  class Loggerxcmspec < Loggerxcm0
   end
 end

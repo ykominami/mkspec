@@ -8,8 +8,9 @@ module TestConf
   class TestConf
     attr_reader :o
 
-    def initialize(global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path)
-
+    def initialize(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
+      @globalconfig = Mkspec::GlobalConfig.new(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
+      o = @globalconfig.o
       setup(o)
     end
 
@@ -41,7 +42,7 @@ module TestConf
       o.tgroup_0_name_normalize = "mruby_MrubyBridge"
       o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
       #
-      @global_hash.map { |x| o[x[0]] = x[1] if o[x[0]] == nil || o[x[0]] =~ /^\s*$/ }
+      @globalconfig.arrange(o)
       #
       @o = o
     end
@@ -49,38 +50,11 @@ module TestConf
     def method_missing(name, arg)
       case name
       when :_config
-        p "method_missing _config"
         @o._config = Mkspec::Config.new(@o.spec_dir, @o._output_dir, nil, nil).setup
       when :config_0
-        p "method_missing config_0"
         @o.config_0 = Mkspec::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
       else
-        p "method_missing name=#{name} name.class=#{name.class} nil"
         nil
-      end
-    end
-
-    def get_path(parent_dir_pn, dir, cmd_1, cmd_2)
-      pn_0 = parent_dir_pn.join(dir)
-      if pn_0.exist?
-        dir_pn = pn_0.realpath
-
-        if cmd_1
-          pn_1 = dir_pn.join(cmd_1)
-          pn_cmd_1 = pn_1.exist? ? pn_1 : nil
-        else
-          pn_cmd_1 = nil
-        end
-
-        if cmd_2
-          pn_2 = dir_pn.join(cmd_2)
-          pn_cmd_2 = pn_2.exist? ? pn_2 : nil
-        else
-          pn_cmd_2 = nil
-        end
-        [dir_pn, pn_cmd_1, pn_cmd_2]
-      else
-        [nil, nil, nil]
       end
     end
 
@@ -178,7 +152,7 @@ module TestConf
       _config = _create_instance_of_config
       func_name_of_make_arg = o.make_arg_basename
       lt_id = -1
-      Mkspec::Setting.new(@global_hash, testscript, _config, lt_id)
+      Mkspec::Setting.new(o, testscript, _config, lt_id)
     end
 
     def create_instance_of_testscript

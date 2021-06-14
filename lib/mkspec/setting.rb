@@ -7,27 +7,28 @@ module Mkspec
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg
     attr_reader :lt_id
 
-    def initialize(global_hash, testscript, config, initail_testcase_id)
-      @global_hash = global_hash
-      Loggerxcm.debug("Setting.initialize make_arg=#{@global_hash["make_arg"]}")
+    def initialize(global_config, testscript, config, initail_testcase_id)
+      raise(Mkspec::MkspecAppError, "setting.rb 1 #{STATE.message}") unless global_config
+      @gc = global_config
+      Loggerxcm.debug("Setting.initialize make_arg=#{@gc.make_arg}")
       @testscript = testscript
       @hash = {}
       name = @testscript.name
-      raise MkspecAppError unless name.instance_of?(String)
+      raise(MkspecAppError,  "setting.rb 2 #{STATE.message}") unless name.instance_of?(String)
       data_sub_pn = config.make_path_under_template_and_data_dir(name)
       data_sub_pn.mkdir unless data_sub_pn.exist?
       @template_path = data_sub_pn.join("content.txt")
 
       @path_value = @template_path.relative_path_from(data_sub_pn.parent)
       name_2 = @testscript.name
-      raise MkspecAppError unless name_2.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 3  #{STATE.message}") unless name_2.instance_of?(String)
       @data_yaml_path = data_sub_pn.join(%(#{name_2}.yml))
-      if @global_hash["make_arg"].nil? || @global_hash["make_arg"] =~ /^\s*$/
+      if @gc.make_arg.nil? || @gc.make_arg =~ /^\s*$/
         Loggerxcm.debug("Setting testscript.name=#{name_2}")
-        Loggerxcm.debug("Setting make_arg=|#{@global_hash["make_arg"]}|")
-        raise MkspecAppError
+        Loggerxcm.debug("Setting make_arg=|#{@gc.make_arg}|")
+        raise(MkspecAppError, "setting.rb 4  Can not get make_arg")
       end
-      @func_name_of_make_arg = global_hash["make_arg"]
+      @func_name_of_make_arg = @gc.make_arg
 
       @lt_id = initail_testcase_id
     end
@@ -41,20 +42,21 @@ module Mkspec
       @hash["desc"] = desc
       @hash["rspec_describe_head"] = {
         "path" => "rspec_describe_head/content.txt",
-        ORIGINAL_OUTPUT_DIR => @global_hash[ORIGINAL_OUTPUT_DIR],
-        TARGET_CMD_1_PN => @global_hash[TARGET_CMD_1_PN],
-        TARGET_CMD_2_PN => @hash[TARGET_CMD_2_PN],
-        "tecspath" => @global_hash["tecspath"],
-        "tecsgen_cmd_path" => @global_hash["tecsgen_cmd_path"],
-        GLOBAL_YAML_FNAME => @global_hash[GLOBAL_YAML_FNAME],
-        TEST_CASE_DIR => @global_hash[TEST_CASE_DIR],
+        @gc.get_key_of_top_dir => @gc.top_dir,
+        @gc.get_key_of_original_output_dir => @gc.output_dir,
+        @gc.get_key_of_target_cmd_1 => @gc.target_cmd_1,
+        @gc.get_key_of_target_cmd_2 => @gc.target_cmd_2,
+        @gc.get_key_of_tecspath => @gc.tecspath,
+        @gc.get_key_of_tecspath_cmd_path => @gc.tecsgen_cmd_path,
+        @gc.get_key_of_global_yaml_fname => @gc.global_yaml_fname,
+        @gc.get_key_of_test_case_dir => @gc.test_case_dir,
       }
       @hash["rspec_describe_end"] = { "path" => "rspec_describe_end/content.txt" }
       @hash["rspec_describe_context_end"] = { "path" => "rspec_describe_context_end/content.txt" }
       error_count = 0
       @testscript.test_groups.map do |test_group|
         name = test_group.name
-        raise MkspecAppError unless name.instance_of?(String)
+        raise(MkspecAppError, "setting.rb 5  #{STATE.message}") unless name.instance_of?(String)
         make_context(name)
         ret = make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
         ret = setup_test_cases(test_group) if ret
@@ -65,14 +67,14 @@ module Mkspec
 
     def setup_test_cases(test_group)
       test_group_name = test_group.name
-      raise MkspecAppError unless test_group_name.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 6  #{STATE.message}") unless test_group_name.instance_of?(String)
       error_count = 0
       test_group.test_cases.map do |test_case|
         func_name = @func_name_of_make_arg
         func_name = test_case.extra if test_case.extra
         ret = make_make_arg(test_group.content_name_of_make_arg, func_name)
         if ret
-          raise MkspecDebugError if Util.numeric?(test_case.test_1)
+          raise(MkspecDebugError, "setting.rb 7  #{STATE.message}") if Util.numeric?(test_case.test_1)
           make_context_context(test_case.name, test_group.name, test_case.dir,
                                test_case.test_1, test_case.test_1_value,
                                test_case.test_2, test_case.test_2_value,
@@ -96,17 +98,17 @@ module Mkspec
         STATE.change(Mkspec::CANNOT_WRITE_YAML_FILE)
         ret = false
       end
-      raise Mkspec::MkspecDebugError unless STATE.success?
+      raise(Mkspec::MkspecDebugError, "setting.rb 8  #{STATE.message}") unless STATE.success?
       ret
     end
 
     def make_context(test_group_name)
-      raise MkspecAppError unless test_group_name.instance_of?(String)
-      raise MkspecAppError if @hash[test_group_name]
+      raise(MkspecAppError, "setting.rb 9") unless test_group_name.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 10") if @hash[test_group_name]
       @hash[test_group_name] = {
         "path" => "rspec_describe_context/content.txt",
         "context" => test_group_name,
-        "tecsgen_cmd" => @global_hash['tecsgen_cmd']
+        "tecsgen_cmd" => @gc.tecsgen_cmd
       }
     end
 
@@ -131,7 +133,7 @@ module Mkspec
     end
 
     def make_context_context(test_case_name, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)
-      raise MkspecAppError unless test_case_name.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 11") unless test_case_name.instance_of?(String)
       tc_0 = next_testcase_id
       tc_1 = next_testcase_id
       @hash[test_case_name] = {

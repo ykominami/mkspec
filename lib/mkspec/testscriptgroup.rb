@@ -9,7 +9,7 @@ module Mkspec
 
     def initialize(tsv_path, start_char, limit, make_arg_basename)
       @tsv_path = tsv_path
-      raise MkspecAppError unless start_char.instance_of?(String)
+      raise( MkspecAppError, "testscriptgroup.rb 1 start_char.class=#{start_char.class}") unless start_char.instance_of?(String)
       @name = start_char
       @limit = limit
       @make_arg_basename = make_arg_basename
@@ -20,16 +20,16 @@ module Mkspec
     def setup_test_group(l, state)
       # tgroup, tcase, tmp = l.chomp.split(/\s+|\t+/)
       tgroup, tcase, *tmp = l.chomp.split("\t")
-      raise MkspecAppError if tgroup.nil?
+      raise( MkspecAppError, "testscriptgroup.rb 2 tgroup=#{tgroup}") if tgroup.nil?
 
       Loggerxcm.debug("tgroup=#{tgroup}|")
-      raise MkspecAppError if tgroup =~ /^\s*#/
+      raise(MkspecAppError, "testscriptgroup.rb 3") if tgroup =~ /^\s*#/
 
-      raise MkspecAppError if tcase.nil?
+      raise(MkspecAppError, "testscriptgroup.rb 4") if tcase.nil?
 
-      raise MkspecAppError if tcase =~ /^\s*#/
+      raise(MkspecAppError, "testscriptgroup.rb 5") if tcase =~ /^\s*#/
 
-      raise MkspecAppError if tmp.size > 4
+      raise(MkspecAppError, "testscriptgroup.rb 6") if tmp.size > 4
 
       Util.check_numeric_and_raise(tmp, 0 , MkspecAppError)
 

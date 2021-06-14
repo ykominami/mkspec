@@ -18,7 +18,7 @@ module Mkspec
       if content_path.nil?
         Mkspec::Loggerxcm.debug("0 content_path=#{content_path}|")
         @content_pn = nil
-        raise MkspecAppError
+        raise(MkspecAppError, "item.rb 1")
       else
         Mkspec::Loggerxcm.debug("1 content_path=#{content_path}|")
         pn = Pathname.new(content_path)
@@ -30,7 +30,7 @@ module Mkspec
           if @content_pn.exist? == false
             Mkspec::Loggerxcm.debug("3 @content_pn=#{@content_pn}|")
             @content_pn = nil
-            raise MkspecAppError
+            raise(MkspecAppError, "item.rb 2")
           end
         end
       end
@@ -66,7 +66,7 @@ module Mkspec
       Loggerxcm.debug("Item#setup @yaml_pn=#{@yaml_pn.to_s}")
       Loggerxcm.debug("Item#setup @var_state[:yaml_pn]=#{@var_state[:yaml_pn]}")
       @local_hash = Util.extract_in_yaml_file(@yaml_pn) if @yaml_pn&.exist?
-      raise MkspecAppError if @content_pn.nil? || !@content_pn.exist?
+      raise(MkspecAppError"item.rb 3") if @content_pn.nil? || !@content_pn.exist?
       @content_lines = Util.get_file_content_lines(@content_pn)
       @tag_table = analyze(@content_lines)
 #      @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
@@ -81,14 +81,14 @@ module Mkspec
       error_count = 0
       @children.each do |k, v|
         @hash[k] = v.result
-        raise MkspecAppError less STATE.success?
+        raise(MkspecAppError, "item.rb 4 #{STATE.message}") unless STATE.success?
       end
     end
 
     def result
       Loggerxcm.debug(%(################################## @content_pn=#{@content_pn}))
       Loggerxcm.debug("Item#result @content_pn=#{@content_pn}")
-      raise MkspecAppError unless @content_pn&.exist?
+      raise( MkspecAppError, "item.rb 5 Item#result @content_pn=#{@content_pn}") unless @content_pn&.exist?
 
 #      add_indent(@hash)
       content = @content_lines.join("\n")
@@ -166,7 +166,7 @@ module Mkspec
 
         STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format with eruby")
       end
-      raise Mkspec::MkspecDebugError unless STATE.success?
+      raise(Mkspec::MkspecDebugError, "item.rb 6 #{STATE.message}") unless STATE.success?
       Loggerxcm.debug("Item#replace_tag 2 @extract_count=#{@extract_count}")
       if @extracted  !~ /^\s*$/x
         Loggerxcm.debug("#---------------")
@@ -182,8 +182,7 @@ module Mkspec
         Loggerxcm.debug(@extracted)
         Loggerxcm.debug("#####---------------")
       end
-      #raise Mkspec::MkspecDebugError #unless STATE.success?
-     @extracted
+      @extracted
     end
   end
 end

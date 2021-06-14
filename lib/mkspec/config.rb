@@ -47,8 +47,7 @@ module Mkspec
     end
 
     def setup
-      # return self if @setup_count.positive?
-      raise MkscriptDebugError if @setup_count.positive?
+      return self if @setup_count.positive?
       Loggerxcm.debug("Config.setup #{@setup_count} self=#{self}")
       Loggerxcm.debug(["caller=" , caller].join("\n"))
       _output_dir_pn = Pathname.new(@output_dir)
@@ -75,7 +74,7 @@ module Mkspec
         setup_dir_content(@test_case_archive_dir_pn, @output_test_case_dir_pn)
       else
         Loggerxcm.error("Can't find #{@test_case_archive_dir_pn}")
-        raise Mkspec::MkspecDebugError
+        raise(Mkspec::MkspecDebugError, "config.rg 1")
       end
 
       @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
@@ -83,8 +82,8 @@ module Mkspec
         setup_dir_content(@archive_dir_pn, @output_template_and_data_dir_pn)
       else
         Loggerxcm.error("Can't find #{@archive_dir_pn}")
-        raise Mkspec::MkspecDebugError
-    end
+        raise(Mkspec::MkspecDebugError, "config.rb 2")
+      end
       @setup_count += 1
 
       self

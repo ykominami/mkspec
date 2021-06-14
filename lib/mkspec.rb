@@ -12,12 +12,6 @@ require_relative 'mkspec/loggerxcm'
 
 # Mkspecモジュール
 module Mkspec
-  Loggerxcm.init(:default, false, :error)
-#  Loggerxcm.init(:default, true, :error)
-#  Loggerxcm.init(:default, true, :info)
-#  Loggerxcm.init(:default, true, :debug)
-#  Loggerxcm.init(:default, false, :debug)
-
   # エラーコード：成功
   SUCCESS = 0
   # エラーコード：コマンドラインオプションエラー
@@ -40,9 +34,17 @@ module Mkspec
   CMDLINE_OPTION_ERROR_Y = 17
   # エラーコード：コマンドラインZオプションエラー
   CMDLINE_OPTION_ERROR_Z = 18
+  # エラーコード：コマンドラインGGオプションエラー
+  CMDLINE_OPTION_ERROR_GG = 19
+  # エラーコード：コマンドラインTTオプションエラー
+  Mkspec::CMDLINE_OPTION_ERROR_TT = 20
+  # エラーコード：コマンドラインLLオプションエラー
+  CMDLINE_OPTION_ERROR_LL = 21
 
   # エラーコード：SPECファイル出力失敗
-  CANNOT_WRITE_SPEC_FILE = 20
+  CANNOT_WRITE_SPEC_FILE = 25
+  # エラーコード：Invalid YAMLファイル
+  INVALID_YAML_FILE = 26
   # エラーコード：データYAMLファイル未発見
   CANNOT_FIND_DATA_YAML_FILE = 30
   # エラーコード：RUBOライブラリでの変換失敗
@@ -51,32 +53,11 @@ module Mkspec
   CANNOT_WRITE_YAML_FILE = 50
   # エラーコード：ERUBYテンプレート展開失敗
   CANNOT_FORMAT_WITH_ERUBY = 60
+  # MkspecDebugError発生
+  MKSPEC_DEBUG_ERROR = 100
+  # MkspecAppError発生
+  MKSPEC_APP_ERROR = 101
   # 
-
-  # グローバルYAMLファイルを表すキー
-  GLOBAL_YAML_FNAME = 'global_yaml_fname'
-  # オリジナル出力ディレクトリを表すキー
-  ORIGINAL_OUTPUT_DIR = 'original_output_dir'
-  # ターゲットコマンド1のPathnameを表すキー
-  TARGET_CMD_1_PN = 'target_cmd_1_pn'
-  # ターゲットコマンド2のPathnameを表すキー
-  TARGET_CMD_2_PN = 'target_cmd_2_pn'
-  # コマンドライン作成を表すキー
-  MAKE_ARG = 'make_cmdline_1'
-  # 拡張コマンドライン作成を表すキー
-  MAKE_ARG_X = 'make_arg'
-  # テストケースディレクトリを表すキー
-  TEST_CASE_DIR = 'test_case_dir'
-  # tsv_fname_indexを表すキー
-  TSV_FNAME_INDEX = "tsv_fname_index"
-  # tsv_fname_arrayを表すキー
-  TSV_FNAME_ARRAY = "tsv_fname_array"
-  # tsv_pathを表すキー
-  TSV_PATH = "tsv_path"
-  # tsv_path_indexを表すキー
-  TSV_PATH_INDEX_KEY = "tsv_path_index"
-  # tsv_fnameを表すキー
-  TSV_FNAME_KEY = "tsv_fname"
 
   # SPECファイルディレクトリを表すキー
   SPEC_DIR = "spec"
@@ -108,6 +89,7 @@ module Mkspec
 end
 
 require_relative 'mkspec/version'
+require_relative 'mkspec/globalconfig'
 require_relative 'mkspec/root'
 require_relative 'mkspec/setting'
 require_relative 'mkspec/templatex'

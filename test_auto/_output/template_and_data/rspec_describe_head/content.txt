@@ -2,12 +2,13 @@ include TestConf
 
 let(:test_case_parent_dir) { '<%= test_case_dir %>' }
 let(:test_case_parent_dir_pn) { Pathname.new(test_case_parent_dir) }
-let(:conf) { TestConf::TestConf.new( '<%= global_yaml_fname %>', '<%= target_cmd_1_pn %>', '<%= target_cmd_2_pn %>', __FILE__) }
+let(:conf) { TestConf::TestConf.new( ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], '<%= target_cmd_1_pn %>', '<%= target_cmd_2_pn %>', __FILE__ , <%= top_dir %>)}
 let(:o) { conf.o }
 let(:original_output_dir_pn) { o.original_output_dir_pn }
 let(:original_output_dir) { original_output_dir_pn.to_s }
+let(:target_parent_dir_pn) { o.target_parent_dir_pn }
 
 before(:each) {
   ENV['TECSPATH'] = '<%= tecspath %>'
-  ENV['PATH'] = ['<%= tecsgen_cmd_path %>', ENV['PATH']].join(':')
+#  ENV['PATH'] = ['<%= tecsgen_cmd_path %>', ENV['PATH']].join(':')
 }
