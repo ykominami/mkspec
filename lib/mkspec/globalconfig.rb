@@ -4,17 +4,31 @@ module Mkspec
 
     SPEC_DIR = "spec"
     TEST_DIR = "test"
+# _test_archive  _test_case_archive misc _test_data _test_include _test_misc _test_template_and_data
 
-    TEST_ARCHIVE_DIR = "_test_archive"
-    TEST_CASE_ARCHIVE_DIR = "_test_case_archive"
+    _TEST_ARCHIVE_DIR = "_test_archive"
+    _TEST_CASE_ARCHIVE_DIR = "_test_case_archive"
     MISC_DIR = "misc"
+    TEST_DATA_DIR = "_test_data"
+    TEST_INCLUDE_DIR = "_test_include"
+    TEST_MISC_DIR = "_test_misc"
+    _TEST_TEMPLATE_AND_DATA = "_test_template_and_data"
+
+    TSV_FNAME = "testlist-x.txt"
+    TSV_FNAME_2 = "t.txt"
 
     ROOT_OUTPUT_DIR = "test_auto"
     OUTPUT_SCRIPT_DIR = "script"
     OUTPUT_TEST_CASE_DIR = "test_case"
     OUTPUT_TEMPLATE_AND_DATA_DIR = "template_and_data"
     INCLUDE_DIR = "_test_include"
+    #
+    RESULT_FNAME = "result.txt"
+    CONTENT_FNAME = "content.txt"
+    TESTDATA_FNAME = "testdata.txt"
 
+    # SPEC_DIRを表すキー
+    SPEC_DIR_KEY = "SPEC_DIR"
     # top_dirを表すキー
     TOP_DIR_KEY = "top_dir"
     # original_spec_file_pathを表すキー
@@ -182,6 +196,8 @@ module Mkspec
       o.spec_dir = o.spec_pn.to_s
       o.top_dir_pn = o.spec_pn.parent
       o.top_dir = o.top_dir_pn.to_s
+      o.spec_test_dir_pn = o.spec_pn.join(TEST_DIR)
+      o.spec_test_test_misc_dir_pn = o.spec_test_dir_pn.join(TEST_MISC_DIR)
     end
 
     def setup(o)
@@ -194,11 +210,12 @@ module Mkspec
         o.target_parent_dir_pn = o.test_root_dir_pn.join("test_data2", "test_case")
       end
       o.target_parent_dir = o.target_parent_dir_pn
-      o.result = "result.txt"
-      o._test_data_dir_pn = o.test_root_dir_pn.join("_test_data")
-      o.misc_dir_pn = o.test_root_dir_pn.join("misc")
-      o.tsv_fname = "testlist-x.txt"
-      o.tsv_fname_2 = "t.txt"
+      o.result = RESULT_FNAME
+      o._test_data_dir_pn = o.test_root_dir_pn.join(TEST_DATA_DIR)
+      o.misc_dir_pn = o.test_root_dir_pn.join(MISC_DIR)
+      o.tsv_fname = TSV_FNAME
+      o.tsv_fname_2 = TSV_FNAME_2
+
       o.misc_tsv_fname = o.misc_dir_pn.join(o.tsv_fname)
       o.misc_tsv_fname_2 = o.misc_dir_pn.join(o.tsv_fname_2)
 
@@ -214,9 +231,9 @@ module Mkspec
       o.output_test_case_root_dir = o.output_test_case_root_dir_pn.to_s
 
       o.template_and_data_dir_pn = o.output_dir_pn.join("template_and_data")
-      o.content_fname = "content.txt"
-      o.testdata_fname = "testdata.txt"
-      o.yaml_fname = "a.yml"
+      o.content_fname = CONTENT_FNAME
+      o.testdata_fname = TESTDATA_FNAME
+#      o.yaml_fname = "a.yml"
     end
 
     def arrange(o)
