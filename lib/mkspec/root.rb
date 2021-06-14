@@ -44,6 +44,6 @@ module Mkspec
       ret = Util.extract_with_eruby(content)
       Loggerxcm.debug("Root#result 4")
       ret
-   end
+    end
   end
 end
