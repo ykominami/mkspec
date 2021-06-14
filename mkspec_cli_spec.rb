@@ -36,7 +36,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[ -G #{o.specific_yaml_fname} -g #{o.global_yaml_fname} -o #{o.output_dir} -t #{o.tsv_fname} -c all -s #{o.start_char}
-               -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn} -z #{o.target_cmd_2_pn} -T #{o.top_dir}
+               -l #{o.limit} -x #{o.original_output_dir} -y #{o.target_cmd_1_pn.to_s} -z #{o.target_cmd_2_pn.to_s} -T #{o.top_dir}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
         run_command("bash #{cmdline}")
