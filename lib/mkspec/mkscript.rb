@@ -280,7 +280,8 @@ module Mkspec
           Loggerxcm.fatal(message)
           STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
         end
-        raise( MkspecAppError, "mkscript.rb 8 #{STATE.message}") unless STATE.success?
+        #raise( MkspecAppError, "mkscript.rb 8 #{STATE.message}") unless STATE.success?
+        str_2 = str
       else
         STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
         raise(MkspecAppError , "mkscript.rb 9 #{STATE.message}") unless STATE.success?
