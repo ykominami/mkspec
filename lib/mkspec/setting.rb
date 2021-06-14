@@ -42,9 +42,10 @@ module Mkspec
       @hash["desc"] = desc
       @hash["rspec_describe_head"] = {
         "path" => "rspec_describe_head/content.txt",
+        @gc.get_key_of_top_dir => @gc.top_dir,
         @gc.get_key_of_original_output_dir => @gc.output_dir,
-        @gc.get_key_of_target_cmd1_pn => @gc.target_cmd_1_pn,
-        @gc.get_key_of_target_cmd2_pn => @gc.target_cmd_2_pn,
+        @gc.get_key_of_target_cmd_1 => @gc.target_cmd_1,
+        @gc.get_key_of_target_cmd_2 => @gc.target_cmd_2,
         @gc.get_key_of_tecspath => @gc.tecspath,
         @gc.get_key_of_tecspath_cmd_path => @gc.tecsgen_cmd_path,
         @gc.get_key_of_global_yaml_fname => @gc.global_yaml_fname,
