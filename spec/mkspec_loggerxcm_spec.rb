@@ -5,7 +5,6 @@ require 'pry'
 require 'pp'
 
 RSpec.describe 'Loggerxcm', type: :aruba do
-  include TestConf
 
   context 'fatal' do
     before(:all) do

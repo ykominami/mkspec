@@ -7,8 +7,6 @@ RSpec.describe Mkspec do
 
   let(:conf) {TestConf::TestConf.new(ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], 'mkspec', '',  __FILE__, nil) }
   let(:o) { conf.o }
-  let(:original_output_dir_pn) { o.original_output_dir_pn }
-  let(:original_output_dir) { o.original_output_dir }
 
   context 'call methods of Root class' do
     before(:each) do

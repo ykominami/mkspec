@@ -5,7 +5,6 @@ require 'pry'
 require 'pp'
 
 RSpec.describe 'util' do
-  include TestConf
   include Mkspec::Misc
 
   context 'get_file_content' do
