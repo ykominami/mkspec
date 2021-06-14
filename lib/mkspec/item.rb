@@ -92,7 +92,8 @@ module Mkspec
 
 #      add_indent(@hash)
       content = @content_lines.join("\n")
-      replace_tag(content, @hash)
+      @extracted = Util.extract_with_eruby(content, @hash)
+      # replace_tag(content, @hash)
     end
 
     def add_indent(hash)
@@ -143,46 +144,6 @@ module Mkspec
         end
       end
       children
-    end
-
-    def replace_tag(content, hash)
-      eruby = Erubis::Eruby.new(content)
-
-      begin
-        @extracted = eruby.result(hash)
-        @extract_count += 1
-      rescue StandardError => e
-        message = [
-          e.message,
-          e.backtrace.join("\n"),
-          "- content S",
-          content,
-          "- content E",
-          "@content=#{@content_pn}",
-          "content=#{content}"
-        ]
-        Loggerxcm.debug("Item#replace_tag 3 message=#{message}")
-        Loggerxcm.fatal(message)
-
-        STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format with eruby")
-      end
-      raise(Mkspec::MkspecDebugError, "item.rb 6 #{STATE.message}") unless STATE.success?
-      Loggerxcm.debug("Item#replace_tag 2 @extract_count=#{@extract_count}")
-      if @extracted  !~ /^\s*$/x
-        Loggerxcm.debug("#---------------")
-        Loggerxcm.debug("Item#replace_tag <A> @extract_count=#{@extract_count}")
-        Loggerxcm.debug("##--------------")
-        Loggerxcm.debug("Item#replace_tag <B> content=")
-        Loggerxcm.debug(content)
-        Loggerxcm.debug("###---------------")
-        Loggerxcm.debug("Item#replace_tag <C> hash=")
-        Loggerxcm.debug(hash)
-        Loggerxcm.debug("####---------------")
-        Loggerxcm.debug("Item#replace_tag <D> @extracted=")
-        Loggerxcm.debug(@extracted)
-        Loggerxcm.debug("#####---------------")
-      end
-      @extracted
     end
   end
 end
