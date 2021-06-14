@@ -15,6 +15,8 @@ module Mkspec
     OUTPUT_TEMPLATE_AND_DATA_DIR = "template_and_data"
     INCLUDE_DIR = "_test_include"
 
+    # top_dirを表すキー
+    TOP_DIR_KEY = "top_dir"
     # original_spec_file_pathを表すキー
     ORIGINAL_SPEC_FILE_PATH_KEY = "original_spec_file_path"
     # tecsgenコマンドを表すキー
@@ -27,6 +29,10 @@ module Mkspec
     TARGET_CMD_1_PN_KEY = "target_cmd_1_pn"
     # ターゲットコマンド2のPathnameを表すキー
     TARGET_CMD_2_PN_KEY = "target_cmd_2_pn"
+    # ターゲットコマンド1のパスを表すキー
+    TARGET_CMD_1_KEY = "target_cmd_1"
+    # ターゲットコマンド2のパスを表すキー
+    TARGET_CMD_2_KEY = "target_cmd_2"
     # コマンドライン作成を表すキー
     MAKE_ARG_KEY = "make_arg"
     # 拡張コマンドライン作成を表すキー
@@ -72,6 +78,8 @@ module Mkspec
 
       o = OpenStruct.new
       @o = o
+      o.target_cmd_1 = target_cmd_1
+      o.target_cmd_2 = target_cmd_2
       basic_setup(o)
       if original_spec_file_path
         spec_file_setup(o, original_spec_file_path)
@@ -262,6 +270,17 @@ module Mkspec
       @global_hash[TECSGEN_CMD_KEY]
     end
 
+    def target_cmd_1
+      @o.target_cmd_1
+    end
+
+    def target_cmd_2
+      @o.target_cmd_2
+    end
+
+    def top_dir
+      @o.top_dir
+    end
 
     def get_key_of_global_yaml_fname
       GLOBAL_YAML_FNAME_KEY
@@ -279,12 +298,20 @@ module Mkspec
       ORIGINAL_OUTPUT_DIR_KEY
     end
 
-    def get_key_of_target_cmd1_pn
+    def get_key_of_target_cmd_1_pn
       TARGET_CMD_1_PN_KEY
     end
 
-    def get_key_of_target_cmd2_pn
+    def get_key_of_target_cmd_2_pn
       TARGET_CMD_2_PN_KEY
+    end
+
+    def get_key_of_target_cmd_1
+      TARGET_CMD_1_KEY
+    end
+
+    def get_key_of_target_cmd_2
+      TARGET_CMD_2_KEY
     end
 
     def get_key_of_test_case_dir
@@ -293,6 +320,10 @@ module Mkspec
 
     def get_key_of_tecsgen_cmd
       TECSGEN_CMD_KEY
+    end
+
+    def get_key_of_top_dir
+      TOP_DIR_KEY
     end
   end
 end
