@@ -10,5 +10,4 @@ let(:target_parent_dir_pn) { o.target_parent_dir_pn }
 
 before(:each) {
   ENV['TECSPATH'] = '<%= tecspath %>'
-#  ENV['PATH'] = ['<%= tecsgen_cmd_path %>', ENV['PATH']].join(':')
 }
