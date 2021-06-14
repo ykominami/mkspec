@@ -39,11 +39,11 @@ rescue Mkspec::MkspecAppError => e
   end
   # exit(exit_code)
 rescue => e
-  pp "###################### 1"
+  # pp "###################### 1"
   exit_code = Mkspec::STATE.show_message
 end
-unless exit_code
-  pp "###################### 2"
+if exit_code != nil
+  # pp "###################### 2"
   exit_code = Mkspec::STATE.show_message
 else
   exit_code = 0
