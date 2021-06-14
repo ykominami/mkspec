@@ -1,0 +1,38 @@
+---
+path: o/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  top_dir: !ruby/object:Pathname
+    path: "/home/ykominami/repo/mkspec"
+  original_output_dir: _DATA/hier4
+  target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
+  target_cmd_2: "/home/ykominami/repo/mkspec/bin"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: tecsgen
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
+  test_case_dir: test_case
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+restrict:
+  path: rspec_describe_context/content.txt
+  context: restrict
+  tecsgen_cmd: tecsgen
+_restrict:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+restrict_1:
+  path: rspec_describe_context_context/content.txt
+  context: restrict_1
+  dir: '1'
+  cdlfile: restrict.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 182
+  tc_1: 183

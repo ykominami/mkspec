@@ -1,0 +1,31 @@
+
+# frozen_string_literal: true
+require 'spec_helper_3'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= domainPlugin %>
+    <%= _domainPlugin %>
+    <%= domainPlugin_1 %>
+  <%= rspec_describe_context_end %>
+  <%= reverse_join %>
+    <%= _reverse_join %>
+    <%= reverse_join_1 %>
+  <%= rspec_describe_context_end %>
+  <%= proto %>
+    <%= _proto %>
+    <%= proto_1 %>
+  <%= rspec_describe_context_end %>
+  <%= cp_omit %>
+    <%= _cp_omit %>
+    <%= cp_omit_1 %>
+    <%= cp_omit_2 %>
+  <%= rspec_describe_context_end %>
+  <%= notificationPlugin %>
+    <%= _notificationPlugin %>
+    <%= notificationPlugin_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

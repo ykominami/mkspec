@@ -1,0 +1,14 @@
+
+# frozen_string_literal: true
+require 'spec_helper_3'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+
+  <%= restrict %>
+    <%= _restrict %>
+    <%= restrict_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>
