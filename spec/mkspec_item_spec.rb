@@ -8,15 +8,16 @@ RSpec.describe Mkspec do
   let(:conf) {TestConf::TestConf.new(ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], 'mkspec', '',  __FILE__, nil) }
   let(:o) { conf.o }
 
-  context 'call methods of Root class' do
+  context 'call methods of Iem class' do
     before(:each) do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-      @root = conf._create_instance_of_root
-      @ret = @root.result
+      content_path = o.spec_test_test_misc_dir_pn.join("_content.txt")
+      yaml_path = o.spec_test_test_misc_dir_pn.join("_a.yml")
+      @item = conf._create_instance_of_item(content_path, yaml_path)
+      @ret = @item.result
     end
 
     it 'call result(String)' , xcmd:1 do
-#      expect(@ret.instance_of?(String)).to eq(true)
       expect(@ret.class).to eq(String)
     end
 
