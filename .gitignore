@@ -72,9 +72,9 @@ package-lock.json
 /test_auto/_DATA/hier1
 /test_auto/_DATA/hier2
 /test_auto/_DATA/hier3
-/test_auto/_DATA/hier4
-/test_auto/_DATA/hier4/1
-/test_auto/_DATA/hier4/e
+#test_auto/_DATA/hier4
+#/test_auto/_DATA/hier4/1
+#/test_auto/_DATA/hier4/e
 
 
-/test_auto/_output
+#/test_auto/_output
