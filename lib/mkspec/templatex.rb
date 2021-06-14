@@ -24,7 +24,8 @@ module Mkspec
       lines = []
       str = %(
 # frozen_string_literal: true
-require 'spec_helper'
+require 'spec_helper_3'
+require 'aruba/rspec'
 require 'pathname'
 
 RSpec.describe '<%= desc %>', type: :aruba do
