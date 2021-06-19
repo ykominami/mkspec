@@ -9,7 +9,7 @@ sub_data_dir_1=$(grep "sub_data_dir_1" $GLOBAL_YAML_FNAME | cut -d ' ' -f 2)
 sub_data_dir_2=$(grep "sub_data_dir_2" $GLOBAL_YAML_FNAME | cut -d ' ' -f 2)
 output_dir=${data_dir_0}/${sub_data_dir_1}
 echo "output_dir=${output_dir}"
-exit 0
+#exit 0
 
 . ${data_top_dir}/setting.bash
 
