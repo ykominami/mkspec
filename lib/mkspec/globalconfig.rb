@@ -26,7 +26,7 @@ module Mkspec
     RESULT_FNAME = "result.txt"
     CONTENT_FNAME = "content.txt"
     TESTDATA_FNAME = "testdata.txt"
-
+    YAML_FNAME = "a.yml"
     # SPEC_DIRを表すキー
     SPEC_DIR_KEY = "SPEC_DIR"
     # top_dirを表すキー
@@ -76,14 +76,23 @@ module Mkspec
     TECSPATH_CMD_PATH_KEY = "tecspath_cmd_path"
 
     def initialize(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil, top_dir)
+      unless Util.nil_or_not_empty_string?(top_dir)
+        raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
+      end
       specific_yaml_pn = Pathname.new(specific_yaml)
       @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn)
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb 1") if @specific_hash.instance_of?(Array)
-
+      ret, kind = Util.not_empty_hash?(@specific_hash)
+      unless ret
+        Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{@specific_hash.class}")
+        Loggerxcm.debug("GlobalConfig.initialize kind=#{kind}")
+        raise(Mkspec::MkspecDebugError, "globalconfig.rb 1")
+      end
       global_yaml_pn = Pathname.new(global_yaml)
       raise(Mkspce::MkspecAppError, "globalconfig.rb 2") unless global_yaml_pn.exist?
       @global_hash = Util.extract_in_yaml_file(global_yaml_pn, @specific_hash)
-      raise(MkspecAppError, "globalconfig.rb 3") unless @global_hash
+      raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
+      Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
+
       @global_hash[SPECIFIC_YAML_FNAME_KEY] = specific_yaml_pn.to_s
 
       @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pn.to_s
@@ -98,8 +107,10 @@ module Mkspec
       if original_spec_file_path
         spec_file_setup(o, original_spec_file_path)
       else
-        raise(MkspecAppError, "globalconfig.rb 4") unless top_dir
-        o.top_dir = top_dir
+        unless Util.not_empty_string?(top_dir).first
+          raise(MkspecAppError, "globalconfig.rb 4")
+        end
+        o.top_dir = top_dir.to_s
         o.top_dir_pn = Pathname.new(top_dir)
         raise(MkspecAppError, "globalconfig.rb 5") unless o.top_dir_pn.exist?
       end
@@ -158,6 +169,9 @@ module Mkspec
       o.sub_data_dir_1 = @global_hash["sub_data_dir_1"]
       o.sub_data_dir_2 = @global_hash["sub_data_dir_2"]
       o.root_output_dir = @global_hash["root_output_dir"]
+      Loggerxcm.debug("GlobalConfig.initialize @root_output_dir=#{@root_output_dir}")
+      raise( Mkspec::MkspecAppError , "@global_hash['root_output_dir']") unless @global_hash["root_output_dir"]
+      raise( Mkspec::MkspecAppError , "o.root_output_dir") unless o.root_output_dir
       o.original_output_dir = @global_hash[ORIGINAL_OUTPUT_DIR_KEY]
       o.test_case_dir = @global_hash[TEST_CASE_DIR_KEY]
       o.tad_dir_index = @global_hash["tad_dir_index"]
@@ -196,11 +210,14 @@ module Mkspec
       o.spec_dir = o.spec_pn.to_s
       o.top_dir_pn = o.spec_pn.parent
       o.top_dir = o.top_dir_pn.to_s
+      raise(MkspecAppError, "globalconfig.rb X") unless Util.not_empty_string?(top_dir).first
       o.spec_test_dir_pn = o.spec_pn.join(TEST_DIR)
       o.spec_test_test_misc_dir_pn = o.spec_test_dir_pn.join(TEST_MISC_DIR)
+      o.spec_test_test_include_dir_pn = o.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
     end
 
     def setup(o)
+      raise(Mkspec::MkspecAppError , "o.root_output_dir is nil") unless o.root_output_dir
       o.test_root_dir_pn = o.top_dir_pn.join(o.root_output_dir)
       o.test_root_dir = o.test_root_dir_pn.to_s
 
@@ -233,7 +250,7 @@ module Mkspec
       o.template_and_data_dir_pn = o.output_dir_pn.join("template_and_data")
       o.content_fname = CONTENT_FNAME
       o.testdata_fname = TESTDATA_FNAME
-#      o.yaml_fname = "a.yml"
+      o.yaml_fname = YAML_FNAME
     end
 
     def arrange(o)
@@ -296,7 +313,8 @@ module Mkspec
     end
 
     def top_dir
-      @o.top_dir
+      raise(MkspecAppError, "globalconfig.rb X-2") unless Util.not_empty_string?(o.top_dir).first
+      @o.top_dir.to_s
     end
 
     def get_key_of_global_yaml_fname

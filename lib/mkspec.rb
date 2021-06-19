@@ -3,7 +3,6 @@
 require 'erubis'
 require 'yaml'
 require 'pathname'
-require 'pp'
 require 'pry'
 require 'rufo'
 require 'clitest'
@@ -41,6 +40,8 @@ module Mkspec
   # エラーコード：コマンドラインLLオプションエラー
   CMDLINE_OPTION_ERROR_LL = 21
 
+  # エラーコード：SPECファイル作成失敗
+  CANNOT_MAKE_SPEC_FILE = 24
   # エラーコード：SPECファイル出力失敗
   CANNOT_WRITE_SPEC_FILE = 25
   # エラーコード：Invalid YAMLファイル

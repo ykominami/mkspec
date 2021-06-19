@@ -107,6 +107,9 @@ module Mkspec
   class Loggerxcm < Loggerxcm0
   end
 
+  class Loggerxcmcli < Loggerxcm0
+  end
+
   class Loggerxcmspec < Loggerxcm0
   end
 end

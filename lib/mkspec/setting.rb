@@ -14,14 +14,14 @@ module Mkspec
       @testscript = testscript
       @hash = {}
       name = @testscript.name
-      raise(MkspecAppError,  "setting.rb 2 #{STATE.message}") unless name.instance_of?(String)
+      raise(MkspecAppError,  "setting.rb 2 #{STATE.message}") unless Util.not_empty_string?(name).first
       data_sub_pn = config.make_path_under_template_and_data_dir(name)
       data_sub_pn.mkdir unless data_sub_pn.exist?
       @template_path = data_sub_pn.join("content.txt")
 
       @path_value = @template_path.relative_path_from(data_sub_pn.parent)
       name_2 = @testscript.name
-      raise(MkspecAppError, "setting.rb 3  #{STATE.message}") unless name_2.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 3  #{STATE.message}") unless Util.not_empty_string?(name_2).first
       @data_yaml_path = data_sub_pn.join(%(#{name_2}.yml))
       if @gc.make_arg.nil? || @gc.make_arg =~ /^\s*$/
         Loggerxcm.debug("Setting testscript.name=#{name_2}")
@@ -40,9 +40,11 @@ module Mkspec
     def setup(desc)
       @hash["path"] = @path_value.to_s
       @hash["desc"] = desc
+      raise(MkspecAppError, "setting.rb X") unless Util.not_empty_string?(@gc.top_dir).first
+
       @hash["rspec_describe_head"] = {
         "path" => "rspec_describe_head/content.txt",
-        @gc.get_key_of_top_dir => @gc.top_dir,
+        @gc.get_key_of_top_dir => @gc.top_dir.to_s,
         @gc.get_key_of_original_output_dir => @gc.output_dir,
         @gc.get_key_of_target_cmd_1 => @gc.target_cmd_1,
         @gc.get_key_of_target_cmd_2 => @gc.target_cmd_2,
@@ -56,7 +58,7 @@ module Mkspec
       error_count = 0
       @testscript.test_groups.map do |test_group|
         name = test_group.name
-        raise(MkspecAppError, "setting.rb 5  #{STATE.message}") unless name.instance_of?(String)
+        raise(MkspecAppError, "setting.rb 5  #{STATE.message}") unless Util.not_empty_string?(name).first
         make_context(name)
         ret = make_make_arg(test_group.content_name_of_make_arg, @func_name_of_make_arg)
         ret = setup_test_cases(test_group) if ret
@@ -67,7 +69,7 @@ module Mkspec
 
     def setup_test_cases(test_group)
       test_group_name = test_group.name
-      raise(MkspecAppError, "setting.rb 6  #{STATE.message}") unless test_group_name.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 6  #{STATE.message}") unless Util.not_empty_string?(test_group_name).first
       error_count = 0
       test_group.test_cases.map do |test_case|
         func_name = @func_name_of_make_arg
@@ -76,8 +78,8 @@ module Mkspec
         if ret
           raise(MkspecDebugError, "setting.rb 7  #{STATE.message}") if Util.numeric?(test_case.test_1)
           make_context_context(test_case.name, test_group.name, test_case.dir,
-                               test_case.test_1, test_case.test_1_value,
-                               test_case.test_2, test_case.test_2_value,
+                               test_case.test_1, test_case.test_1_value, test_case.test_1_message, test_case.test_1_tag,
+                               test_case.test_2, test_case.test_2_value, test_case.test_2_message, test_case.test_2_tag,
                                func_name)
         end
         error_count += 1 unless ret
@@ -103,7 +105,7 @@ module Mkspec
     end
 
     def make_context(test_group_name)
-      raise(MkspecAppError, "setting.rb 9") unless test_group_name.instance_of?(String)
+      raise(MkspecAppError, "setting.rb 9") unless Util.not_empty_string?(test_group_name).first
       raise(MkspecAppError, "setting.rb 10") if @hash[test_group_name]
       @hash[test_group_name] = {
         "path" => "rspec_describe_context/content.txt",
@@ -132,8 +134,8 @@ module Mkspec
       ret
     end
 
-    def make_context_context(test_case_name, test_group, dir, test_1, test_1_value, test_2, test_2_value, func_name)
-      raise(MkspecAppError, "setting.rb 11") unless test_case_name.instance_of?(String)
+    def make_context_context(test_case_name, test_group, dir, test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag, func_name)
+      raise(MkspecAppError, "setting.rb 11") unless Util.not_empty_string?(test_case_name).first
       tc_0 = next_testcase_id
       tc_1 = next_testcase_id
       @hash[test_case_name] = {
@@ -143,8 +145,12 @@ module Mkspec
         "cdlfile" => %(#{test_group}.cdl),
         "test_1" => test_1,
         "test_1_value" => test_1_value,
+        "test_1_message" => test_1_message,
+        "test_1_tag" => test_1_tag,
         "test_2" => test_2,
         "test_2_value" => test_2_value,
+        "test_2_message" => test_2_message,
+        "test_2_tag" => test_2_tag,
         "func_name" => func_name,
         "tc_0" => tc_0,
         "tc_1" => tc_1,

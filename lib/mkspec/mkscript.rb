@@ -17,8 +17,9 @@ module Mkspec
     end
 
     def check_cli_options(argv)
-      command_options = %w[ spec tad all ]
-      command_options_str = command_options.join(" ")
+      argv_dup = argv.dup
+      #
+      cmd_options = %w[ spec tad all ]
       opt = OptionParser.new
       #
       @opt = opt
@@ -55,7 +56,7 @@ module Mkspec
       @original_top_dir_pn = Pathname.new(@original_top_dir)
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_TT, "invalid -T") unless @original_top_dir_pn.exist?
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless command_options.find { |it| @cmd == it }
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless cmd_options.find { |it| @cmd == it }
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
 
@@ -71,7 +72,7 @@ module Mkspec
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd1
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd2
 
-      if valid_string?(@log_dir)
+      if Util.not_empty_string?(@log_dir).first
         @log_dir_pn = Pathname.new(@log_dir)
         unless @log_dir_pn.exist?
           return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_LL, "invalid -L")
@@ -85,11 +86,11 @@ module Mkspec
         end
         @log_dir_pn = Pathname.new(@log_dir)
       end
-      Loggerxcm.init("mk_", :default, @log_dir_pn, false, :error)
-    end
+#      Loggerxcm.init("mk_", :default, @log_dir_pn, false, :error)
+      Loggerxcm.init("mk_", :default, @log_dir_pn, false, :debug)
+      Loggerxcm.error("argv=#{argv_dup}")
+      Loggerxcm.error("argv_str=#{argv_dup.join(' ')}")
 
-    def valid_string?(str)
-      str && str.strip.size > 0
     end
 
     def valid_dir?(path)
@@ -98,7 +99,7 @@ module Mkspec
 
     def init
       @lt_id = -1
-      @gc = GlobalConfig.new(@specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil, @original_top_dir_pn)
+      @gc = GlobalConfig.new(@specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil, @original_top_dir)
 
       config = Config.new(SPEC_PN, @output_dir, @script_dir, @tad_dir)
       @config = config.setup
@@ -229,7 +230,7 @@ module Mkspec
         ]
         Loggerxcm.fatal(message)
         str_2 = str
-        STATE.change(Mkspec::CANNOT_CONVERT_WITH_RUBO, "Can't reformat ruby script")
+        #STATE.change(Mkspec::CANNOT_CONVERT_WITH_RUBO, "Can't reformat ruby script")
       end
       raise( Mkspec::MkspecDebugError, "mkscript.rb 6 #{STATE.message}") unless STATE.success?
       str_2
@@ -260,39 +261,30 @@ module Mkspec
       Loggerxcm.debug("data_yaml_path=#{data_yaml_path}")
       Loggerxcm.debug("config=#{config}")
       str = Root.new(data_yaml_path, config).result
+      unless str
+        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can not make a ruby script from data_yaml_path(#{data_yaml_path.to_s})")
+        raise(MkspecAppError , "mkscript.rb 9 #{STATE.message}") unless STATE.success?
+      end
+
       spec_fname = Util.make_spec_filename(testscript.name)
       spec_file_pn = config.make_path_under_script_dir(spec_fname)
       spec_file_pn.parent.mkdir unless spec_file_pn.parent.exist?
       Loggerxcm.debug("spec_file_pn=#{spec_file_pn}")
       Loggerxcm.debug("str=#{str}")
-      str_2 = nil
-      if str
-        begin
-          str_2 = format_ruby_script(spec_file_pn, str)
-          Loggerxcm.debug("### #{spec_file_pn} str2")
-          Loggerxcm.debug(str_2)
-          Loggerxcm.debug("### END")
-        rescue StandardError => e
-          message = [
-            e.message,
-            e.backtrace.join("\n"),
-          ]
-          Loggerxcm.fatal(message)
-          STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
-        end
-        #raise( MkspecAppError, "mkscript.rb 8 #{STATE.message}") unless STATE.success?
-        str_2 = str
-      else
+      begin
+        str_2 = format_ruby_script(spec_file_pn, str)
+      rescue StandardError => e
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
+        ]
+        Loggerxcm.fatal(message)
         STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
-        raise(MkspecAppError , "mkscript.rb 9 #{STATE.message}") unless STATE.success?
       end
-
-      if str_2
-        output_ruby_script(spec_file_pn, str_2)
-      else
-        STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
+      unless str_2
         raise( MkspecAppError , "mkscript.rb 10 #{STATE.message}" ) unless STATE.success?
       end
+      output_ruby_script(spec_file_pn, str_2)
     end
 
     def self.format(code)

@@ -12,85 +12,91 @@ module Mkspec
       @extra_indent = extra_indent
       @name = name
       @outer_hash = outer_hash
+      raise(Mkspec::MkspecDebugError, "item.rb initialize 1") unless Util.validate_hash(@outer_hash, "top_dir", String)
       @local_hash = {}
-      @var_state = {}
-      Mkspec::Loggerxcm.debug("-1 content_path=#{content_path}|")
-      if content_path.nil?
-        Mkspec::Loggerxcm.debug("0 content_path=#{content_path}|")
-        @content_pn = nil
-        raise(MkspecAppError, "item.rb 1")
-      else
-        Mkspec::Loggerxcm.debug("1 content_path=#{content_path}|")
-        pn = Pathname.new(content_path)
-        if pn.exist?
-          @content_pn = pn
-          Mkspec::Loggerxcm.debug("2 @content_pn=#{@content_pn}|")
-        else
-          @content_pn = config.make_path_under_template_and_data_dir(pn)
-          if @content_pn.exist? == false
-            Mkspec::Loggerxcm.debug("3 @content_pn=#{@content_pn}|")
-            @content_pn = nil
-            raise(MkspecAppError, "item.rb 2")
-          end
-        end
-      end
-      if yaml_path
-        pn_2 = Pathname.new(yaml_path)
-        if pn_2.exist?
-          @yaml_pn = pn_2
-          @var_state[:yaml_pn] = 1
-        else
-          @yaml_pn = config.make_path_under_template_and_data_dir(pn_2)
-          @var_state[:yaml_pn] = 2
-          unless @yaml_pn.exist?
-            @yaml_pn = nil
-            @var_state[:yaml_pn] = 22
-          end
-        end
-      else
-        @yaml_pn = nil
-        @var_state[:yaml_pn] = 3
-      end
-
       @config = config
-      @re = Regexp.new("^(\s*)<%=(.+)%>")
+      Util.dump_var(:yaml_path, yaml_path)
+      Util.dump_var(:yaml_path, yaml_path)
+      Util.dump_var(:content_path, content_path)
+      @yaml_pn , kind_1 = ensure_path(yaml_path.to_s)
+      @content_pn , kind_2 = ensure_path(content_path.to_s)
+      Util.dump_var(:@yaml_pn, @yaml_pn)
+      Util.dump_var(:kind_1, kind_1)
+      Util.dump_var(:@content_pn, @content_pn)
+      Util.dump_var(:kind_2, kind_2)
+#      raise(Mkspec::MkspecDebugError, "item.rb 1") unless @yaml_pn
+      raise(Mkspec::MkspecDebugError, "item.rb 2") unless @content_pn
+
       @children = {}
-      Loggerxcm.debug("@yaml_pn=#{@yaml_pn}")
-      Loggerxcm.debug("@content_pn=#{@content_pn}")
+      Loggerxcm.debug("Item.new @yaml_pn=#{@yaml_pn}")
+      Loggerxcm.debug("Item.new @content_pn=#{@content_pn}")
       @extracted = nil
       @extract_count = 0
       prepare
     end
 
+    def ensure_path(path)
+      pn = nil
+      kind = nil
+      if Util.not_empty_string?(path).first
+        pn = Pathname.new(path)
+        kind = 1
+        unless pn.exist?
+          pn = @config.make_path_under_template_and_data_dir(pn)
+          kind = 2
+          unless pn.exist?
+            pn = nil 
+            kind = 3
+          end
+        end
+      else
+        pn = nil
+        kind = 4
+      end
+      [pn , kind]
+    end
+
     def prepare
       Loggerxcm.debug("Item#setup @yaml_pn=#{@yaml_pn.to_s}")
-      Loggerxcm.debug("Item#setup @var_state[:yaml_pn]=#{@var_state[:yaml_pn]}")
+      Loggerxcm.debug("Item#setup @content_pn=#{@content_pn}")
       @local_hash = Util.extract_in_yaml_file(@yaml_pn) if @yaml_pn&.exist?
-      raise(MkspecAppError"item.rb 3") if @content_pn.nil? || !@content_pn.exist?
+      raise(Mkspec::MkspecDebugError, "item.rb prepare 1") unless Util.validate_hash(@local_hash, "top_dir", String)
+      raise(MkspecAppError, "item.rb 4") unless Util.valid_pathname?(@content_pn)
+
       @content_lines = Util.get_file_content_lines(@content_pn)
-      @tag_table = analyze(@content_lines)
+      raise(MkspecAppError, "item.rb 5") unless Util.valid_array?(@content_lines)
+      @tag_table = Util.analyze(@content_lines)
 #      @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
       if @local_hash.size.positive?
         Loggerxcm.debug("Item#setup use @local_hash")
         @hash = @local_hash
+        #raise(Mkspec::MkspecDebugError, "item.rb prepare 1 use @local_hash")
       else
         Loggerxcm.debug("Item#setup use @outer_hash")
         @hash = @outer_hash
+        #raise(Mkspec::MkspecDebugError, "item.rb prepare 2 use @outer_hash")
       end
       @children = make_children(@tag_table, @hash)
       error_count = 0
       @children.each do |k, v|
         @hash[k] = v.result
-        raise(MkspecAppError, "item.rb 4 #{STATE.message}") unless STATE.success?
+        raise(MkspecAppError, "item.rb 10 #{STATE.message}") unless STATE.success?
       end
     end
 
-    def result
-      Loggerxcm.debug(%(################################## @content_pn=#{@content_pn}))
-      Loggerxcm.debug("Item#result @content_pn=#{@content_pn}")
-      raise( MkspecAppError, "item.rb 5 Item#result @content_pn=#{@content_pn}") unless @content_pn&.exist?
+    def check_kind_of_hash
+      if @hash == @logcal_hash
+        h = "local_hash"
+      else
+        h = "outer_hash"
+      end
+      Loggerxcm.debug("Item#result ## item.result h=#{h}")
+    end
 
-#      add_indent(@hash)
+    def result
+      Loggerxcm.debug(%(################################## Item#result @content_pn=#{@content_pn}))
+      raise( MkspecAppError, "item.rb 5 Item#result @content_pn=#{@content_pn}") unless @content_pn&.exist?
+      check_kind_of_hash
       content = @content_lines.join("\n")
       @extracted = Util.extract_with_eruby(content, @hash)
       # replace_tag(content, @hash)
@@ -111,16 +117,6 @@ module Mkspec
           end
         end
         hash[key] = content_lines.join("\n")
-      end
-    end
-
-    def analyze(content_lines)
-      content_lines.each_with_object({}) do |l, state|
-        next unless @re.match(l)
-
-        space = Regexp.last_match[1]
-        key = Regexp.last_match[2].strip
-        state[key] = space.size
       end
     end
 
