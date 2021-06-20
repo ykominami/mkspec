@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require 'bundler/setup'
+require 'mkspec'
+
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 
@@ -12,9 +15,6 @@ else
   ::Dir.glob(::File.expand_path('support/*.rb', __dir__)).each { |f| require_relative f }
   ::Dir.glob(::File.expand_path('support/**/*.rb', __dir__)).each { |f| require_relative f }
 end
-
-require 'bundler/setup'
-require 'mkspec'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

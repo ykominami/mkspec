@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module TestConf
+module Mkspec
   require "pathname"
   require "ostruct"
   require "clitest"
@@ -47,15 +47,12 @@ module TestConf
       @o = o
     end
 
-    def method_missing(name, arg)
-      case name
-      when :_config
-        @o._config = Mkspec::Config.new(@o.spec_dir, @o._output_dir, nil, nil).setup
-      when :config_0
-        @o.config_0 = Mkspec::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
-      else
-        nil
-      end
+    def _config
+      @o._config = Mkspec::Config.new(@o.spec_dir, @o._output_dir, nil, nil).setup
+    end
+
+    def config_0
+      @o.config_0 = Mkspec::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
     end
 
     def make_script_name(name)
@@ -103,7 +100,7 @@ module TestConf
     end
 
     def create_instance_of_config
-      Mkspec::Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
+      Config.new(@o.spec_dir, @o.output_dir, nil, nil).setup
     end
 
     def _create_instance_of_config
@@ -111,13 +108,19 @@ module TestConf
     end
 
     def create_instance_of_root
-      yml_path = @o.config_0.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
+      yml_path = Pathname.new("a").join(@o.yaml_fname).to_s
+      #      yml_path = @o.config_0.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
       Mkspec::Root.new(yml_path, @o.config_0)
     end
 
     def _create_instance_of_root
-      _config(nil)
-      yml_path = @o._config.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
+      _config()
+      #      yml_path = @o._config.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
+      raise(Mkspec::MkspecDebugErrorunless, "testconf.rb _create_instance_of @o.yaml_fname=#{@o.yaml_fname}") unless Util.not_empty_string?(@o.yaml_fname)
+      #yml_path = @o.spec_test_test_misc_dir_pn.join("a.yml").to_s
+      yml_path = @o._config.make_path_under_template_and_data_dir("a").join("a.yml").to_s
+      # yml_path = Pathname.new("a").join(@o.yaml_fname).to_s
+      Util.dump_var(:yml_path, "#{yml_path}|")
       Mkspec::Root.new(yml_path, @o._config)
     end
 
@@ -135,8 +138,12 @@ module TestConf
       tag = "make_arg_data_flat"
       hash = {}
       #              (size,  name, outer_hash,   content_path, yaml_path, config)
-      _config(nil)
+      pp "#=== content_path 1 =#{content_path}"
+      pp "#=== yaml_path 1 =#{yaml_path}"
+      _config()
       @o._config.setup
+      pp "#=== content_path 2 =#{content_path}"
+      pp "#=== yaml_path 2 =#{yaml_path}"
       Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @o._config)
     end
 
@@ -185,12 +192,14 @@ module TestConf
       test_group = create_instance_of_testgroup(tgroup, make_arg_basename)
       tcase_0 = "6.2"
       tcase = tcase_0.tr("-", "_").tr(".", "_")
-      test_1 = nil
-      test_1_value = nil
-      test_2 = nil
-      test_2_value = nil
-      extra = nil
-      Mkspec::TestCase.new(test_group, tcase, test_1, test_1_value, test_2, test_2_value, extra)
+      #args = arg.new()
+      #TestCase.new(args)
+      #Testcase.new(args)
+      #Mkspec::TestCase.new(tcase, test_1, test_1_value, test_1_message, test_1_tag)
+      #TestCase.new(tcase, test_1, test_1_value, test_1_message, test_1_tag)
+      add_testcases(test_group, 2)
+      #Mkspec::TestCase.new(tcase, args.test_1, args.test_1_value, args.test_1_message, args.test_1_tag, args.test_2, args.test_2_value, args.test_2_message, args.test_2_tag, args.extra)
+      #Mkspec::TestCase.new(test_group, tcase, test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag, extra)
     end
 
     def create_instance_of_testgroup(tgroup, make_arg_basename)

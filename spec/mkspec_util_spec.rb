@@ -5,10 +5,8 @@ require 'pry'
 require 'pp'
 
 RSpec.describe 'util' do
-  include Mkspec::Misc
-
   context 'get_file_content' do
-    before(:each) do
+    before(:all) do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @ret = Mkspec::Util.get_file_content(ENV['MKSPEC_GLOBAL_YAML_FNAME'])
     end
@@ -35,7 +33,7 @@ RSpec.describe 'util' do
         }
       end
       context 'extract_in_yaml_file' do
-        before(:each) do
+        before(:all) do
           Mkspec::STATE.change(Mkspec::SUCCESS, nil)
           @expected_ret_hash = @expected_hash_base
           @ret_hash = Mkspec::Util.extract_in_yaml_file(ENV['MKSPEC_SPECIFIC_YAML_FNAME'])
@@ -48,7 +46,7 @@ RSpec.describe 'util' do
 
       context 'extract_in_yaml_file 2' do
         context 'YAML file and nil' do
-          before(:each) do
+          before(:all) do
             Mkspec::STATE.change(Mkspec::SUCCESS, nil)
             @expected_ret_hash = nil
             @cret_hash = Mkspec::Util.extract_in_yaml_file(ENV['MKSPEC_SPECIFIC_YAML_FNAME'])
@@ -119,7 +117,7 @@ EOS
   end
   context 'extract_in_yaml' do
     context 'empty string and nil' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         yaml = ""
         hs = nil
@@ -127,13 +125,13 @@ EOS
         @ret_hash = Mkspec::Util.extract_in_yaml(yaml, hs)
       end
 
-      it 'result' , cmd:2000 do
+      it 'result' , k:"extract_in_yaml", cmd:2000 do
         expect(@ret_hash).to eq(@expected_ret_hash)
       end
     end
 
     context 'empty string and not appropriate hash' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         yaml =<<EOS
 EOS
@@ -141,13 +139,13 @@ EOS
         @expected_ret_hash = {}
         @ret_hash = Mkspec::Util.extract_in_yaml(yaml, hs)
       end
-      it 'result' , cmd:2020 do
+      it 'result' , k:"extract_in_yaml", cmd:2020 do
         expect(@ret_hash).to eq(@expected_ret_hash)
       end
     end
 
     context 'string and appropriate hash' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         yaml =<<EOS
 itemx2: <%= itemx %>_A
@@ -158,7 +156,7 @@ EOS
         @ret_hash = Mkspec::Util.extract_in_yaml(yaml, hs)
 
       end
-      it 'result' , cmd:2030 do
+      it 'result' , k:"extract_in_yaml", cmd:2030 do
         expect(@ret_hash).to eq(@expected_ret_hash)
       end
     end
@@ -166,27 +164,25 @@ EOS
 
   context 'extract_with_eruby' do
     context 'extract_with_eruby empty string and empty hash' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-        content = ""
-        hash = {}
+        @content = ""
+        @hash = {}
       end
 
       it 'result' , cmd:200 do
         expect {
-          @ret = Mkspec::Util.extract_with_eruby(content, hash)
+          @ret = Mkspec::Util.extract_with_eruby(@content, @hash)
         }.to raise_error(StandardError)
       end
     end
     context 'extract_with_eruby not empty string and appropriate hash' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @content =<<EOS
         <%= itemx %>
 EOS
-        @expected_result =<<EOS
-        ItemX
-EOS
+        @expected_result = nil
         @hash = { itemx: "ItemX"}
         @ret = Mkspec::Util.extract_with_eruby(@content, @hash)
       end
@@ -197,25 +193,24 @@ EOS
     end
 
     context 'extract_with_eruby not empty string and not appropriate hash' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @content =<<EOS
         <%= itemx %>
 EOS
         @expected_result = nil
         @hash = { itemx_2: "ItemX"}
+        @ret = Mkspec::Util.extract_with_eruby(@content, @hash)
       end
       it 'result' , cmd:202 do
-        expect {
-          @ret = Mkspec::Util.extract_with_eruby(@content, @hash)
-        }.to raise_error(StandardError)
+        expect(@ret).to eq(@expected_result)
       end
     end
   end
 
   context 'tag_analyze' do
     context 'string and appropriate hash 1' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         yaml =<<EOS
 names:
@@ -237,7 +232,7 @@ EOS
     end
 
     context 'string and appropriate hash 1' do
-      before(:each) do
+      before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         yaml=<<EOS
 itemx2: <%= itemx %>_A
@@ -249,6 +244,47 @@ EOS
 
       it 'result' , cmd:501 do
         expect(@ret_array).to eq(@expected_result)
+      end
+    end
+  end
+
+  context 'adjust_hash' do
+    context 'nil' do
+      before(:all) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
+        hash = nil
+        @expected_hash = {}
+        @ret_hash = Mkspec::Util.adjust_hash(hash)
+      end
+
+      it 'result' , cmd:601 do
+        expect(@ret_hash).to eq(@expected_hash)
+      end
+    end
+
+    context '{}' do
+      before(:all) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
+        hash = {}
+        @expected_hash = {}
+        @ret_hash = Mkspec::Util.adjust_hash(hash)
+      end
+
+      it 'result' , cmd:602 do
+        expect(@ret_hash).to eq(@expected_hash)
+      end
+    end
+
+    context 'hash size 1' do
+      before(:all) do
+        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
+        hash = {"a" => "A"}
+        @expected_hash = hash
+        @ret_hash = Mkspec::Util.adjust_hash(hash)
+      end
+
+      it 'result' , cmd:603 do
+        expect(@ret_hash).to eq(@expected_hash)
       end
     end
   end
