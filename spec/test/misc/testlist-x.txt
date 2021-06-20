@@ -20,7 +20,7 @@ data-error	11
 data-error	12
 data-error	13
 singleton	1
-poartarray	1
+portarray	1
 cmoposite.1	1
 recursive_composite	1
 recursive_composite	2
