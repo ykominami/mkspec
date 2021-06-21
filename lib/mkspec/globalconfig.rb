@@ -11,6 +11,8 @@ module Mkspec
     MISC_DIR = "misc"
     TEST_DATA_DIR = "_test_data"
     TEST_INCLUDE_DIR = "_test_include"
+    TEST_CYGWIN_DIR = "_test_cygwin"
+    TEST_CYGWIN3_DIR = "_test_cygwin3"
     TEST_MISC_DIR = "_test_misc"
     _TEST_TEMPLATE_AND_DATA = "_test_template_and_data"
 
@@ -214,6 +216,8 @@ module Mkspec
       o.spec_test_dir_pn = o.spec_pn.join(TEST_DIR)
       o.spec_test_test_misc_dir_pn = o.spec_test_dir_pn.join(TEST_MISC_DIR)
       o.spec_test_test_include_dir_pn = o.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
+      o.spec_test_test_cygwn_dir_pn = o.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
+      o.spec_test_test_cygwn3_dir_pn = o.spec_test_dir_pn.join(TEST_CYGWIN3_DIR)
     end
 
     def setup(o)
