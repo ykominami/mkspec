@@ -238,7 +238,9 @@ module Mkspec
 
     def output_ruby_script(spec_file_pn, str)
       begin
-        File.open(spec_file_pn.to_s, "w") { |file| file.write(str) }
+        spec_file_pn_ = Pathname.new( spec_file_pn.to_s + "_" )
+        File.open(spec_file_pn_.to_s, "w") { |file| file.write(str) }
+        FileUtils.move(spec_file_pn_.to_s, spec_file_pn.to_s)
       rescue StandardError => e
         message = [
           e.message,
