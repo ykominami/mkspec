@@ -7,6 +7,6 @@ gemspec
 # gem 'clitest', :git => 'git://github.com/ykominami/clitest.git',
 #              :branch => "main"
 #gem 'clitest',  :github => 'ykominami/clitest'
-gem 'clitest',  :path => '/home/ykominami/repo/clitest'
-gem 'loggeryk' , :path => "/home/ykominami/repo/loggeryk"
+#gem 'clitest',  :path => '/home/ykominami/repo/clitest'
+#gem 'loggeryk' , :path => "/home/ykominami/repo/loggeryk"
 
