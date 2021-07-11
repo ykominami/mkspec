@@ -35,7 +35,7 @@ module Mkspec
       o.test_1 = "test_1"
       o.test_2 = "test_2"
       o.format_fname = "format.txt"
-      o.number_of_testgroup = 59
+      o.number_of_testgroup = 60
       o.number_of_testscript = 19
       o.number_of_testgroup_of_first_testscript = 3
       o.tgroup_0_name = "mruby-MrubyBridge"
@@ -138,12 +138,8 @@ module Mkspec
       tag = "make_arg_data_flat"
       hash = {}
       #              (size,  name, outer_hash,   content_path, yaml_path, config)
-      pp "#=== content_path 1 =#{content_path}"
-      pp "#=== yaml_path 1 =#{yaml_path}"
       _config()
       @o._config.setup
-      pp "#=== content_path 2 =#{content_path}"
-      pp "#=== yaml_path 2 =#{yaml_path}"
       Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @o._config)
     end
 
