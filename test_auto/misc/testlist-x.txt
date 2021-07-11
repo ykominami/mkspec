@@ -61,6 +61,7 @@ optional	1
 series	1
 pointer	1
 c_exp	1
+composite_cexp	1
 const	1
 float	1
 sjis	1
