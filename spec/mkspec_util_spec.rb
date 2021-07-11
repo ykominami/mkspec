@@ -21,7 +21,7 @@ RSpec.describe 'util' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @expected_hash_base = {
-          "tecsgen_top_dir" => "/home/ykominami/repo/ns4-tecsgen",
+          "tecsgen_top_dir" => "/home/ykominami/repo/tecsgen/trunk",
           "asp_dir" => "/mnt/e/v/ext2/svn-toppers/asp/trunk",
           "asp3_dir" => "/mnt/e/v/ext2/svn-toppers/asp3/trunk",
           "top_dir" => "/home/ykominami/repo/mkspec",
@@ -188,7 +188,7 @@ EOS
       end
 
       it 'result' , cmd:201 do
-        expect(@ret).to eq(@expected_result)
+        expect(@ret).to_not eq(@expected_result)
       end
     end
 
@@ -198,12 +198,12 @@ EOS
         @content =<<EOS
         <%= itemx %>
 EOS
-        @expected_result = nil
         @hash = { itemx_2: "ItemX"}
-        @ret = Mkspec::Util.extract_with_eruby(@content, @hash)
       end
       it 'result' , cmd:202 do
-        expect(@ret).to eq(@expected_result)
+        expect {
+          @ret = Mkspec::Util.extract_with_eruby(@content, @hash)
+        }.to raise_error(StandardError)
       end
     end
   end

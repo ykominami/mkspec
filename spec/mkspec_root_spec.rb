@@ -19,9 +19,9 @@ RSpec.describe Mkspec do
         expect(hash.size.zero?).to eq(false)
       end
 
-      it 'call result' , xcmd:4 do
+      it 'call result' , xcmd:2 do
         ret = @root.result
-        expect(ret).to eq(nil)
+        expect(ret).to_not eq(nil)
       end
     end
 
@@ -29,12 +29,12 @@ RSpec.describe Mkspec do
       before(:all) do
         @item = @root.make_item({})
       end
-      it 'call make_item' , xcmd:2 do
+      it 'call make_item' , xcmd:3 do
         expect(@item.instance_of?(Mkspec::Item)).to eq(true)
       end
 
-      it 'call make_item' , xcmd:3 do
-        expect(@item.result).to eq(nil)
+      it 'call make_item' , xcmd:4 do
+        expect(@item.result).to_not eq(nil)
       end
     end
   end
