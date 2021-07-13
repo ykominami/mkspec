@@ -30,8 +30,10 @@ rescue Mkspec::MkspecDebugError => e
   output_error_message(e.message)
   output_error_message(e.backtrace.join("\n"))
   if Mkspec::STATE.success?
-    exit_code = Mkspec::MKSPEC_DEBUG_ERROR
+     puts "1"
+   exit_code = Mkspec::MKSPEC_DEBUG_ERROR
   else
+    puts "2"
     exit_code = Mkspec::STATE.show_message
   end
   # exit(exit_code)
@@ -39,19 +41,18 @@ rescue Mkspec::MkspecAppError => e
   output_error_message(e.message)
   output_error_message(e.backtrace.join("\n"))
   if Mkspec::STATE.success?
+    puts "3"
     exit_code = Mkspec::MKSPEC_APP_ERROR
   else
+    puts "4"
     exit_code = Mkspec::STATE.show_message
   end
 rescue => e
   output_error_message("###################### 1")
   output_error_message(e.message)
   output_error_message(e.backtrace.join("\n"))
+  puts "5"
   exit_code = Mkspec::STATE.show_message
 end
-if exit_code != nil
-  exit_code = Mkspec::STATE.show_message
-else
-  exit_code = 0
-end
+exit_code = 0 unless exit_code
 exit(exit_code)
