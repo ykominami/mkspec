@@ -58,6 +58,7 @@ inline	1
 hello	1
 simple	1
 optional	1
+optional	2
 series	1
 pointer	1
 c_exp	1
