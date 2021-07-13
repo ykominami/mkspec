@@ -6,8 +6,7 @@ let(:original_output_dir_pn) { o.original_output_dir_pn }
 let(:original_output_dir) { original_output_dir_pn.to_s }
 let(:target_parent_dir_pn) { o.target_parent_dir_pn }
 let(:inc_dir) { o.spec_test_test_include_dir_pn }
-let(:cygwin_dir) { o.spec_test_test_cygwn_dir_pn }
-let(:cygwin3_dir) { o.spec_test_test_cygwn3_dir_pn }
+let(:dq) { %s!\"\"! }
 
 before(:each) {
   ENV['TECSPATH'] = '<%= tecspath %>'
