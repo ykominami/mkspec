@@ -164,13 +164,13 @@ module Mkspec
       Loggerxcm.debug("template_and_data=#{template_and_data}")
       Loggerxcm.debug("spec=#{spec}")
       Loggerxcm.debug("data_dir_index=#{data_dir_index}")
-      raise( MkspecDebugError, "mkscript.rb 2 #{STATE.message}") unless STATE.success?
+      raise( MkspecDebugError, "mkscript.rb 1 #{STATE.message}") unless STATE.success?
 
       if template_and_data && STATE.success?
         create_all_template_and_data(@setting_and_testscript_array)
-        raise(MkspecDebugError, "mkscript.rb 3 #{STATE.message}") unless STATE.success?
+        raise(MkspecDebugError, "mkscript.rb 2 #{STATE.message}") unless STATE.success?
       end
-      raise( MkspecDebugError, "mkscript.rb 4 #{STATE.message}") unless STATE.success?
+      raise( MkspecDebugError, "mkscript.rb 3 #{STATE.message}") unless STATE.success?
       Loggerxcm.debug("spec=#{spec}")
       if spec && STATE.success?
         errors = create_all_spec_file(@config, @setting_and_testscript_array)
@@ -179,7 +179,7 @@ module Mkspec
           errors.map { |element|
             setting, testscript = element
           }
-          raise( MkspecDebugError, "mkscript.rb 5")
+          raise( MkspecDebugError, "mkscript.rb 4")
         end
       end
 
@@ -210,7 +210,6 @@ module Mkspec
       array.inject([]) do |errors, element|
         setting, testscript = element
         ret = make_spec_file(config, setting, testscript)
-        errors << x unless ret
         errors
       end
     end
@@ -232,7 +231,7 @@ module Mkspec
         str_2 = str
         #STATE.change(Mkspec::CANNOT_CONVERT_WITH_RUBO, "Can't reformat ruby script")
       end
-      raise( Mkspec::MkspecDebugError, "mkscript.rb 6 #{STATE.message}") unless STATE.success?
+      raise( Mkspec::MkspecDebugError, "mkscript.rb 5 #{STATE.message}") unless STATE.success?
       str_2
     end
 
@@ -250,23 +249,32 @@ module Mkspec
         Loggerxcm.fatal(message)
         STATE.change(Mkspec::CANNOT_WRITE_SPEC_FILE, "Can not write spec file(#{spec_file_pn.to_s})")
       end
-      raise( Mkspec::MkspecDebugError, "mkscript.rb 7 #{STATE.message}") unless STATE.success?
+      raise( Mkspec::MkspecDebugError, "mkscript.rb 6 #{STATE.message}") unless STATE.success?
       true
     end
 
     def make_spec_file(config, setting, testscript)
       ret = true
+      str = nil
       data_yaml_path = setting.data_yaml_path
       Loggerxcm.debug("Mkscript#make_spec_file")
       Loggerxcm.debug("data_yaml_path=#{data_yaml_path}")
       Loggerxcm.debug("Mkscript#make_spec_file")
       Loggerxcm.debug("data_yaml_path=#{data_yaml_path}")
       Loggerxcm.debug("config=#{config}")
-      str = Root.new(data_yaml_path, config).result
-      unless str
-        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can not make a ruby script from data_yaml_path(#{data_yaml_path.to_s})")
-        raise(MkspecAppError , "mkscript.rb 9 #{STATE.message}") unless STATE.success?
-      end
+      begin
+        str = Root.new(data_yaml_path, config).result
+      rescue StandardError => e
+        message = [
+          e.message,
+          e.backtrace.join("\n"),
+        ]
+        Loggerxcm.fatal(message)
+#        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can not make a ruby script from data_yaml_path(#{data_yaml_path.to_s})")
+        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, message)
+     end
+
+      raise(MkspecAppError , "mkscript.rb 7 #{STATE.message}") unless STATE.success?
 
       spec_fname = Util.make_spec_filename(testscript.name)
       spec_file_pn = config.make_path_under_script_dir(spec_fname)
@@ -284,7 +292,7 @@ module Mkspec
         STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
       end
       unless str_2
-        raise( MkspecAppError , "mkscript.rb 10 #{STATE.message}" ) unless STATE.success?
+        raise( MkspecAppError , "mkscript.rb 8 #{STATE.message}" ) unless STATE.success?
       end
       output_ruby_script(spec_file_pn, str_2)
     end
