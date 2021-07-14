@@ -207,11 +207,23 @@ module Mkspec
     end
 
     def create_all_spec_file(config, array)
-      array.inject([]) do |errors, element|
+      exit_flag = false
+      array.each do |element|
         setting, testscript = element
-        ret = make_spec_file(config, setting, testscript)
-        errors
+        begin
+          ret = make_spec_file(config, setting, testscript)
+        rescue StandardError => e
+          message = [
+            e.message,
+            e.backtrace.join("\n"),
+          ]
+          Loggerxcm.fatal(message)
+          STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can't make a spec file(message=#{message}")
+          exit_flag = true
+        end
+        break if exit_flag
       end
+      raise( Mkspec::MkspecDebugError, "mkscript.rb 10 #{STATE.message}") unless STATE.success?
     end
 
     def format_ruby_script(spec_file_pn, str)
