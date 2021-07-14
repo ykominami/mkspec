@@ -1,7 +1,0 @@
-class A
-  def initialize()
-  end
-
-  def m1
-  end
-end
