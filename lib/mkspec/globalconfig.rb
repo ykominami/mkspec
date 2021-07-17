@@ -2,12 +2,10 @@ module Mkspec
   class GlobalConfig
     attr_accessor :o
 
-    SPEC_DIR = "spec"
     TEST_DIR = "test"
-# _test_archive  _test_case_archive misc _test_data _test_include _test_misc _test_template_and_data
 
-    _TEST_ARCHIVE_DIR = "_test_archive"
-    _TEST_CASE_ARCHIVE_DIR = "_test_case_archive"
+    TEST_ARCHIVE_DIR = '_test_archive'
+    TEST_CASE_ARCHIVE_DIR = "_test_case_archive"
     MISC_DIR = "misc"
     TEST_DATA_DIR = "_test_data"
     TEST_INCLUDE_DIR = "_test_include"
@@ -95,6 +93,7 @@ module Mkspec
       raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
 
+      @data_top_dir_pn = global_yaml_pn.parent
       @global_hash[SPECIFIC_YAML_FNAME_KEY] = specific_yaml_pn.to_s
 
       @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pn.to_s
@@ -103,6 +102,8 @@ module Mkspec
 
       o = OpenStruct.new
       @o = o
+      o.data_top_dir_pn = @data_top_dir_pn
+      o.data_top_dir = @data_top_dir_pn.to_s
       o.target_cmd_1 = target_cmd_1
       o.target_cmd_2 = target_cmd_2
       basic_setup(o)
@@ -199,8 +200,8 @@ module Mkspec
         spec_pn = nil unless spec_pn.exist?
       end
       if spec_pn == nil
-        if ENV["SPEC_DIR"]
-          spec_pn = Pathname.new(ENV["SPEC_DIR"])
+        if ENV[SPEC_DIR_KEY]
+          spec_pn = Pathname.new(ENV[SPEC_DIR_KEY])
           spec_pn = nil unless spec_pn.exist?
         end
       end
@@ -213,7 +214,7 @@ module Mkspec
       o.top_dir_pn = o.spec_pn.parent
       o.top_dir = o.top_dir_pn.to_s
       raise(MkspecAppError, "globalconfig.rb X") unless Util.not_empty_string?(top_dir).first
-      o.spec_test_dir_pn = o.spec_pn.join(TEST_DIR)
+      o.spec_test_dir_pn = o.data_top_dir_pn.join(TEST_DIR)
       o.spec_test_test_misc_dir_pn = o.spec_test_dir_pn.join(TEST_MISC_DIR)
       o.spec_test_test_include_dir_pn = o.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
       o.spec_test_test_cygwn_dir_pn = o.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
@@ -222,7 +223,9 @@ module Mkspec
 
     def setup(o)
       raise(Mkspec::MkspecAppError , "o.root_output_dir is nil") unless o.root_output_dir
-      o.test_root_dir_pn = o.top_dir_pn.join(o.root_output_dir)
+
+#      o.test_root_dir_pn = o.top_dir_pn.join(o.root_output_dir)
+      o.test_root_dir_pn = o.data_top_dir_pn.join(TEST_DIR)
       o.test_root_dir = o.test_root_dir_pn.to_s
 
       if o.original_output_dir != nil
