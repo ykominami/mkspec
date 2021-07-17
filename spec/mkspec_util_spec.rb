@@ -24,11 +24,11 @@ RSpec.describe 'util' do
           "tecsgen_top_dir" => "/home/ykominami/repo/tecsgen/trunk",
           "asp_dir" => "/mnt/e/v/ext2/svn-toppers/asp/trunk",
           "asp3_dir" => "/mnt/e/v/ext2/svn-toppers/asp3/trunk",
-          "top_dir" => "/home/ykominami/repo/mkspec",
+          "top_dir" => "/home/ykominami/repo/mkspec_ruby30",
           "tsv_path_index" => 0,
           "tsv_path" => [
-            "/home/ykominami/repo/mkspec/test_auto/misc/testlist-x.txt",
-            "/home/ykominami/repo/mkspec/test_auto/misc/t.txt"
+            "/home/ykominami/repo/mkspec_data_ex/test/misc/testlist-x.txt",
+            "/home/ykominami/repo/mkspec_data_ex/test/misc/t.txt"
             ]
         }
       end

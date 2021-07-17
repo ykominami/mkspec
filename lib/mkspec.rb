@@ -60,11 +60,6 @@ module Mkspec
   MKSPEC_APP_ERROR = 101
   # 
 
-  # SPECファイルディレクトリを表すキー
-  SPEC_DIR = "spec"
-  # SPECファイルディレクトリのPathnameを表すキー
-  SPEC_PN = Pathname.new(__FILE__).parent.parent + SPEC_DIR
-
   # 非Stringインスタンスエラークラス
   class NotStringInstError < StandardError
   end
