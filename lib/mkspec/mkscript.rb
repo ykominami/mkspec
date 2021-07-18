@@ -199,7 +199,7 @@ module Mkspec
     end
 
     def make_template(setting)
-      templatex = Mkspec::Templatex.new(setting)
+      templatex = Mkspec::Templatex.new(setting, @config)
       ret = templatex.setup
       templatex.output if ret
     end

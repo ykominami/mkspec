@@ -2,8 +2,9 @@
 
 module Mkspec
   class Templatex
-    def initialize(setting)
+    def initialize(setting, config)
       @setting = setting
+      @config = config
       @template_path = @setting.template_path
       pn = Pathname.new(@template_path)
       pn.parent.mkdir unless pn.parent.exist?
@@ -22,15 +23,8 @@ module Mkspec
     def setup
       ret = true
       lines = []
-      str = %(
-# frozen_string_literal: true
-require 'spec_helper_3'
-require 'aruba/rspec'
-require 'pathname'
-
-RSpec.describe '<%= desc %>', type: :aruba do
-  <%= rspec_describe_head %>
-)
+      pn = Pathname.new("rspec_head/content.txt")
+      str = Util.get_file_content(@config.make_path_under_template_and_data_dir(pn))
       lines << str
 
       @setting.testscript.test_groups.each do |test_group|
