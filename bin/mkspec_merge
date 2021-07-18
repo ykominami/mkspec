@@ -1,0 +1,130 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'mkspec'
+require 'pp'
+require 'pathname'
+
+module Mkspec
+	class YamlConfig
+		attr_reader :hash, :hash_by_file, :pn
+
+		@excludes = %w!path desc rspec_describe_head rspec_describe_end rspec_describe_context_end!
+
+		class << self
+			def valid_key?(name)
+				! @excludes.include?(name)
+			end
+		end
+
+		def initialize(path)
+			@pn = Pathname.new(path)
+			@hash_by_file = {}
+			@hash = {}
+			#puts @pn
+		end
+
+		def get_all_rbfile
+			@pn.children
+		end
+
+		def setup
+			@pn.find{ |item_pn|
+				if item_pn.file? && item_pn.fnmatch("*.yml")
+					content = Util.get_file_content(item_pn)
+					hashx = YAML.load(content)
+					hashx.map { |k,v| 
+						if YamlConfig.valid_key?(k)
+							#puts k
+							@hash[k] = v
+						end
+					}
+					@hash_by_file[item_pn] = hashx
+				end
+			}
+		end
+	end
+
+	class YamlX
+		def initialize(dir1, dir2)
+			@yc1, @yc2 = [dir1, dir2].map{ |x|
+				yc = YamlConfig.new(x)
+				yc.setup
+				yc
+			}
+		end
+=begin
+		def merge
+			@hash = {}
+
+			@yc1.hash.map { |k,v| 
+				puts "# #{k}"
+				v.map { |k2, v2|
+					if @yc2.hash[k] && @yc2.hash[k][k2]
+						yc2_v2 = @yc2.hash[k][k2]
+						@yc1.hash[k][k2] = yc2_v2 if v2 != yc2_v2
+					end
+				}
+			}
+		end
+=end
+		def merge_sub(src_hash, dest_hash)
+			src_hash.map { |src_k, src_v|
+				puts "src_k=#{src_k}"
+
+				if src_v.instance_of?(Hash) && dest_hash[src_k] && dest_hash[src_k].instance_of?(Hash)
+					merge_sub(src_v, dest_hash[src_k])
+				else
+					case src_k
+					when "option_list","cdlfile"
+						#puts "B dest_hash[#{src_k}]=#{dest_hash[src_k]}"
+						dest_hash[src_k] = src_v
+						#puts "A dest_hash[#{src_k}]=#{dest_hash[src_k]}"
+					end
+				end
+			}
+		end
+
+		def merge
+			@hash = {}
+			#puts "======================="
+			merge_sub(@yc1.hash, @yc2.hash)
+		end
+
+		def show
+			@yc1.hash_by_file.map { |k, v|
+				puts "# #{k}"
+				v.map { |k2, v2|
+					puts "## #{k2}"
+					puts v2
+				}
+			}
+		end
+
+		def output
+			@yc2.hash_by_file.map { |k, v|
+				#puts "# #{k}"
+				File.open(k, 'w') { |file|
+					file.write( YAML.dump(v) )
+				}
+			}
+		end
+	end
+end
+
+spec_dir_1 = ARGV[0]
+spec_dir_2 = ARGV[1]
+
+puts spec_dir_1
+puts spec_dir_2
+
+yamlx = Mkspec::YamlX.new(spec_dir_1, spec_dir_2)
+
+yamlx.merge
+
+#yamlx.show
+
+#puts "==="
+
+yamlx.output
