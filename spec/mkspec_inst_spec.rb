@@ -19,7 +19,7 @@ end
 end
 EOS
       @ret = Mkspec::Mkscript.format(str)
-      format_pn = @o._test_data_dir_pn + @o.format_fname
+      format_pn = @o._test_data_dir_pn.join(@o.format_fname)
       @value = File.read(format_pn)
     end
 

@@ -101,12 +101,10 @@ module Mkspec
       @lt_id = -1
       @gc = GlobalConfig.new(@specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil, @original_top_dir)
 
-      config = Config.new(SPEC_PN, @output_dir, @script_dir, @tad_dir)
+      config = Config.new(@gc.o.top_dir_pn, @gc.o.data_top_dir_pn, @output_dir, @script_dir, @tad_dir)
       @config = config.setup
       @tsv_path = Pathname.new(@tsv_fname)
       output_dir = @gc.output_dir
-      config = Config.new(SPEC_PN, output_dir, @script_dir, @tad_dir)
-      @config = config.setup
       Loggerxcm.debug("### Mkscript init 0 @tad_dir=#{@tad_dir}")
       return unless STATE.success?
 
@@ -201,7 +199,7 @@ module Mkspec
     end
 
     def make_template(setting)
-      templatex = Mkspec::Templatex.new(setting)
+      templatex = Mkspec::Templatex.new(setting, @config)
       ret = templatex.setup
       templatex.output if ret
     end
@@ -310,7 +308,8 @@ module Mkspec
     end
 
     def self.format(code)
-      Rufo::Formatter.format(code, {})
+#      Rufo::Formatter.format(code, {})
+      Rufo::Formatter.format(code)
     end
   end
 end
