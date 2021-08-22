@@ -1,6 +1,6 @@
 module Mkspec
   class GlobalConfig
-    attr_accessor :o
+    attr_accessor :o, :specific_hash
 
     TEST_DIR = "test"
 
@@ -63,6 +63,8 @@ module Mkspec
     TSV_PATH_INDEX_KEY = "tsv_path_index"
     # tsv_fnameを表すキー
     TSV_FNAME_KEY = "tsv_fname"
+    # original_output_root_dir
+    ORIGINAL_OUTPUT_ROOT_DIR_KEY = "original_output_root_dir"
 
     # グローバルYAMLファイルを表すキー
     GLOBAL_YAML_FNAME_KEY = "global_yaml_fname"
@@ -93,29 +95,48 @@ module Mkspec
       raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
 
-      @data_top_dir_pn = global_yaml_pn.parent
+      o = OpenStruct.new
+      @o = o
+      @o.data_top_dir_pn = global_yaml_pn.parent
+
+      valid_original_output_root_dir = false
+      @o.original_root_output_dir = @specific_hash[ get_key_of_original_root_output_dir ]
+      if @o.original_root_output_dir != nil
+        @o.original_root_output_dir_pn = Pathname.new(@o.original_root_output_dir)
+        if @o.original_root_output_dir_pn.exist?
+          valid_original_root_output_dir = true
+        end
+      end
+      if valid_original_root_output_dir
+        @o.output_data_top_dir_pn = @o.original_root_output_dir_pn
+      else
+        @o.output_data_top_dir_pn = @o.data_top_dir_pn
+      end
+      @o.output_data_top_dir = @o.output_data_top_dir_pn.to_s
+
+      raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless @o.original_root_output_dir_pn
+      raise(Mkspec::MkspecDebugError, "globalconfig.rb X2") unless global_yaml_pn.parent
+      raise(Mkspec::MkspecDebugError, "globalconfig.rb X") unless @o.data_top_dir_pn
+
+
       @global_hash[SPECIFIC_YAML_FNAME_KEY] = specific_yaml_pn.to_s
 
       @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pn.to_s
       #
       @global_hash[ORIGINAL_SPEC_FILE_PATH_KEY] = original_spec_file_path
 
-      o = OpenStruct.new
-      @o = o
-      o.data_top_dir_pn = @data_top_dir_pn
-      o.data_top_dir = @data_top_dir_pn.to_s
-      o.target_cmd_1 = target_cmd_1
-      o.target_cmd_2 = target_cmd_2
-      basic_setup(o)
+      @o.target_cmd_1 = target_cmd_1
+      @o.target_cmd_2 = target_cmd_2
+      basic_setup(@o)
       if original_spec_file_path
-        spec_file_setup(o, original_spec_file_path)
+        spec_file_setup(@o, original_spec_file_path)
       else
         unless Util.not_empty_string?(top_dir).first
           raise(MkspecAppError, "globalconfig.rb 4")
         end
-        o.top_dir = top_dir.to_s
-        o.top_dir_pn = Pathname.new(top_dir)
-        raise(MkspecAppError, "globalconfig.rb 5") unless o.top_dir_pn.exist?
+        @o.top_dir = top_dir.to_s
+        @o.top_dir_pn = Pathname.new(top_dir)
+        raise(MkspecAppError, "globalconfig.rb 5") unless @o.top_dir_pn.exist?
       end
 
       if target_cmd_1
@@ -124,12 +145,12 @@ module Mkspec
         raise(MkspecAppError, "globalconfig.rb 7") if target_cmd_2
       end
       if target_cmd_1 && target_cmd_2
-        _tmp, o.target_cmd_1_pn, o.target_cmd_2_pn = Util.get_path(o.top_dir_pn, ".", target_cmd_1, target_cmd_2)
-        o.bin_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = Util.get_path(o.top_dir_pn, "bin", target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
-        o.exe_dir_pn, o.target_cmd_1_pn, o.target_cmd_2_pn = Util.get_path(o.top_dir_pn, "exe", target_cmd_1, target_cmd_2) unless o.target_cmd_1_pn
+        _tmp, @o.target_cmd_1_pn, @o.target_cmd_2_pn = Util.get_path(@o.top_dir_pn, ".", target_cmd_1, target_cmd_2)
+        @o.bin_dir_pn, @o.target_cmd_1_pn, @o.target_cmd_2_pn = Util.get_path(o.top_dir_pn, "bin", target_cmd_1, target_cmd_2) unless @o.target_cmd_1_pn
+        @o.exe_dir_pn, @o.target_cmd_1_pn, @o.target_cmd_2_pn = Util.get_path(o.top_dir_pn, "exe", target_cmd_1, target_cmd_2) unless @o.target_cmd_1_pn
         #o.make_arg_basename = 'make_cmdline_1'
       end
-      setup(o)
+      setup(@o)
     end
 
     def basic_setup(o)
@@ -175,7 +196,7 @@ module Mkspec
       Loggerxcm.debug("GlobalConfig.initialize @root_output_dir=#{@root_output_dir}")
       raise( Mkspec::MkspecAppError , "@global_hash['root_output_dir']") unless @global_hash["root_output_dir"]
       raise( Mkspec::MkspecAppError , "o.root_output_dir") unless o.root_output_dir
-      o.original_output_dir = @global_hash[ORIGINAL_OUTPUT_DIR_KEY]
+      o.original_output_dir = @global_hash[ get_key_of_original_output_dir ]
       o.test_case_dir = @global_hash[TEST_CASE_DIR_KEY]
       o.tad_dir_index = @global_hash["tad_dir_index"]
       o.tad_dir_array = @global_hash["tad_dir_array"]
@@ -225,13 +246,22 @@ module Mkspec
       raise(Mkspec::MkspecAppError , "o.root_output_dir is nil") unless o.root_output_dir
 
 #      o.test_root_dir_pn = o.top_dir_pn.join(o.root_output_dir)
-      o.test_root_dir_pn = o.data_top_dir_pn.join(TEST_DIR)
+      o.test_root_dir_pn = o.output_data_top_dir_pn.join(TEST_DIR)
       o.test_root_dir = o.test_root_dir_pn.to_s
 
-      if o.original_output_dir != nil
-        o.target_parent_dir_pn = o.test_root_dir_pn.join(o.original_output_dir)
+      if o.original_output_root_dir != nil
+        original_output_root_dir_pn = Pathname.new(o.original_output_root_dir)
+        if o.original_output_dir != nil
+          o.target_parent_dir_pn = original_output_root_dir_pn.join(o.original_output_dir)
+        else
+          o.target_parent_dir_pn = original_ouput_root_dir_pn.join("test_data2", "test_case")
+        end
       else
-        o.target_parent_dir_pn = o.test_root_dir_pn.join("test_data2", "test_case")
+        if o.original_output_dir != nil
+          o.target_parent_dir_pn = o.test_root_dir_pn.join(o.original_output_dir)
+        else
+          o.target_parent_dir_pn = o.test_root_dir_pn.join("test_data2", "test_case")
+        end
       end
       o.target_parent_dir = o.target_parent_dir_pn
       o.result = RESULT_FNAME
@@ -262,10 +292,6 @@ module Mkspec
 
     def arrange(o)
       @global_hash.map { |x| o[x[0]] = x[1] if o[x[0]] == nil || o[x[0]] =~ /^\s*$/ }
-    end
-
-    def output_dir
-      @global_hash[ORIGINAL_OUTPUT_DIR_KEY]
     end
 
     def tsv_path
@@ -336,6 +362,10 @@ module Mkspec
       TECSPATH_CMD_PATH_KEY
     end
 
+    def get_key_of_original_root_output_dir
+      ORIGINAL_OUTPUT_ROOT_DIR_KEY
+    end
+
     def get_key_of_original_output_dir
       ORIGINAL_OUTPUT_DIR_KEY
     end
@@ -366,6 +396,10 @@ module Mkspec
 
     def get_key_of_top_dir
       TOP_DIR_KEY
+    end
+
+    def output_dir
+      @global_hash[ get_key_of_original_output_dir ]
     end
   end
 end

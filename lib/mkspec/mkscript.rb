@@ -4,6 +4,8 @@ module Mkspec
   class Mkscript
     require "optparse"
 
+    attr_accessor :gc
+
     def initialize(argv)
       check_cli_options(argv)
       init if STATE.success?
@@ -101,10 +103,9 @@ module Mkspec
       @lt_id = -1
       @gc = GlobalConfig.new(@specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil, @original_top_dir)
 
-      config = Config.new(@gc.o.top_dir_pn, @gc.o.data_top_dir_pn, @output_dir, @script_dir, @tad_dir)
+      config = Config.new(@gc.o.top_dir_pn, @gc.o.data_top_dir_pn, @gc.o.output_data_top_dir_pn, @output_dir, @script_dir, @tad_dir)
       @config = config.setup
       @tsv_path = Pathname.new(@tsv_fname)
-      output_dir = @gc.output_dir
       Loggerxcm.debug("### Mkscript init 0 @tad_dir=#{@tad_dir}")
       return unless STATE.success?
 

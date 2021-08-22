@@ -19,15 +19,17 @@ module Mkspec
     # test_output/template_and_data
     #
 
-    def initialize(spec_dir, data_top_dir, output_dir, script_dir, tad_dir, test_case_dir = nil)
+    def initialize(spec_dir, data_top_dir, output_data_top_dir, output_dir, script_dir, tad_dir, test_case_dir = nil)
       @setup_count = 0
       @spec_dir_pn = Pathname.new(spec_dir)
       @data_top_dir_pn = Pathname.new(data_top_dir)
+      @output_data_top_dir_pn = Pathname.new(output_data_top_dir)
+      @output_test_dir_pn = @output_data_top_dir_pn.join(GlobalConfig::TEST_DIR)
       @test_dir_pn = @data_top_dir_pn.join(GlobalConfig::TEST_DIR)
 
       @misc_dir_pn = @test_dir_pn.join(GlobalConfig::MISC_DIR)
       top_pn = @spec_dir_pn.parent
-      @root_output_dir_pn = top_pn.join(GlobalConfig::ROOT_OUTPUT_DIR)
+      @root_output_dir_pn = @data_top_dir_pn.join(GlobalConfig::ROOT_OUTPUT_DIR)
 
       @output_dir = output_dir
       @script_dir = script_dir
