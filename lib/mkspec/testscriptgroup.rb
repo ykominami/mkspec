@@ -4,12 +4,12 @@ module Mkspec
   class TestScriptGroup
     attr_reader :testscripts, :name
 
-    #                 test_1 test_1_value                test_2    test_2_value
-    DEFAULT_VALUES = ['to',  'be_successfully_executed', 'not_to', 'have_output(/error:/)'].freeze
+    #                 test_1 test_1_value                test_1_message,         test_1_tag,            test_2    test_2_value             test_2_message                test_2_tag
+    DEFAULT_VALUES = ['to',  'be_successfully_executed', 'execute successfully', 'test_normal_sh:true', 'not_to', 'have_output(/error:/)', "don't have error in output", 'test_normal_sh_out:true'].freeze
 
     def initialize(tsv_path, start_char, limit, make_arg_basename)
       @tsv_path = tsv_path
-      raise( MkspecAppError, "testscriptgroup.rb 1 start_char.class=#{start_char.class}") unless start_char.instance_of?(String)
+      raise( MkspecAppError, "testscriptgroup.rb 1 start_char.class=#{start_char.class}") unless Util.not_empty_string?(start_char).first
       @name = start_char
       @limit = limit
       @make_arg_basename = make_arg_basename
@@ -38,15 +38,23 @@ module Mkspec
       Util.check_numeric_and_raise(tmp, 2 , MkspecAppError)
 
       Util.check_numeric_and_raise(tmp, 3 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 4 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 5 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 6 , MkspecAppError)
+
+      Util.check_numeric_and_raise(tmp, 7 , MkspecAppError)
       # Loggerxcm.debug("tmp=#{tmp}")
       tgroup = tgroup.tr('-', '_').tr('.', '_')
       testgroup = (state[tgroup] ||= TestGroup.new(tgroup, @make_arg_basename))
       tcase = tcase.tr('-', '_').tr('.', '_')
-      array = DEFAULT_VALUES.zip(tmp[0, 4]).map { |lh, rh| rh.nil? ? lh : rh }
+      array = DEFAULT_VALUES.zip(tmp[0, 8]).map { |lh, rh| rh.nil? ? lh : rh }
       extra = tmp[4, tmp.size]
       # Loggerxcm.debug("array=#{array}")
-      test_1, test_1_value, test_2, test_2_value = array
-      testgroup.add_test_case("#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_2, test_2_value, extra)
+      test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag = array
+      testgroup.add_test_case("#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag, extra)
       self
     end
 

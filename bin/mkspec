@@ -13,6 +13,12 @@ require 'pp'
 
 # require 'irb'
 # IRB.start(__FILE__)
+def output_error_message(mes)
+  pp(mes)
+  Mkspec::Loggerxcm.error(mes)
+  Mkspec::Loggerxcmcli.error(mes)
+  Mkspec::Loggerxcmspec.error(mes)
+end
 
 exit_code = nil
 mkscript = Mkspec::Mkscript.new(ARGV)
@@ -21,31 +27,32 @@ exit(exit_code) if exit_code
 begin
   mkscript.create_files
 rescue Mkspec::MkspecDebugError => e
-  pp e.message
-  pp e.backtrace.join("\n")
+  output_error_message(e.message)
+  output_error_message(e.backtrace.join("\n"))
   if Mkspec::STATE.success?
-    exit_code = Mkspec::MKSPEC_DEBUG_ERROR
+     puts "1"
+   exit_code = Mkspec::MKSPEC_DEBUG_ERROR
   else
+    puts "2"
     exit_code = Mkspec::STATE.show_message
   end
   # exit(exit_code)
 rescue Mkspec::MkspecAppError => e
-  pp e.message
-  pp e.backtrace.join("\n")
+  output_error_message(e.message)
+  output_error_message(e.backtrace.join("\n"))
   if Mkspec::STATE.success?
+    puts "3"
     exit_code = Mkspec::MKSPEC_APP_ERROR
   else
+    puts "4"
     exit_code = Mkspec::STATE.show_message
   end
-  # exit(exit_code)
 rescue => e
-  # pp "###################### 1"
+  output_error_message("###################### 1")
+  output_error_message(e.message)
+  output_error_message(e.backtrace.join("\n"))
+  puts "5"
   exit_code = Mkspec::STATE.show_message
 end
-if exit_code != nil
-  # pp "###################### 2"
-  exit_code = Mkspec::STATE.show_message
-else
-  exit_code = 0
-end
+exit_code = 0 unless exit_code
 exit(exit_code)

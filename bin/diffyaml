@@ -1,0 +1,35 @@
+#!/bin/bash
+
+tad=template_and_data
+src_tad=${tad}_2
+
+bin_dir=$(cd $(dirname $0) && pwd)
+top_dir=$(dirname $bin_dir)
+. ${bin_dir}/functions
+output_dir=$(get_output_dir $GLOBAL_YAML_FNAME "data_dir_0" "sub_data_dir_1" "sub_data_dir_2")
+
+dest_dir=$(dirname $GLOBAL_YAML_FNAME)/${tad}
+src_dir=${top_dir}/test_auto/${output_dir}/${src_tad}
+if [ -d ${src_dir} ]; then
+#	echo diff ${src_dir}/a/a.yml ${dest_dir}/a/a.yml
+	for n in a b c
+	do
+		diff ${src_dir}/${n}/${n}.yml ${dest_dir}/${n}/${n}.yml
+		#echo $n
+	done
+	for n in $(find ${src_dir} -name "content.txt")
+	do
+		parent_dir=$(basename $(dirname $n))
+		left_file=${src_dir}/${parent_dir}/content.txt
+		right_file=${dest_dir}//${parent_dir}/content.txt
+		echo diff $left_file $right_file
+		diff $left_file $right_file
+
+		left_yaml_file=${src_dir}/${parent_dir}/${parent_dir}.yml
+		right_yaml_file=${dest_dir}/${parent_dir}/${parent_dir}.yml
+		echo ${left_yaml_file} ${right_yaml_file}
+		diff ${left_yaml_file} ${right_yaml_file}
+	done
+
+fi
+

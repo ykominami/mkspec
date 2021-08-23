@@ -1,0 +1,31 @@
+#!/bin/bash
+
+tad=template_and_data
+src_tad=${tad}_2
+
+bin_dir=$(cd $(dirname $0) && pwd)
+src_top_dir=$(dirname $bin_dir)
+. ${bin_dir}/functions
+output_dir=$(get_output_dir $GLOBAL_YAML_FNAME "data_dir_0" "sub_data_dir_1" "sub_data_dir_2")
+
+dest_top_dir=$(dirname $GLOBAL_YAML_FNAME)
+dest_dir=${dest_top_dir}/${tad}
+src_dir=${src_top_dir}/test_auto/${output_dir}/${src_tad}
+
+test_archive_dir=_test_archive
+src_test_archive_dir=${src_top_dir}/spec/test/${test_archive_dir}
+dest_test_archive_dir=${dest_top_dir}/${test_archive_dir}
+
+if [ -d $src_dir ]; then
+	rm -rf ${dest_dir}/*
+	cp -r ${src_dir}/* ${dest_dir}
+else
+	echo "not exist $src_dir"
+fi
+
+if [ -d $src_test_archive_dir ]; then
+  rm -rf $dest_test_archive_dir/*
+  cp -r $src_test_archive_dir/* ${dest_test_archive_dir}
+else
+	echo "not exist $src_test_archive_dir"
+fi

@@ -18,27 +18,18 @@ module Mkspec
     # test_output/test_case
     # test_output/template_and_data
     #
-    SPEC_DIR = 'spec'
-    TEST_DIR = 'test'
 
-    TEST_ARCHIVE_DIR = '_test_archive'
-    TEST_CASE_ARCHIVE_DIR = '_test_case_archive'
-    MISC_DIR = 'misc'
-
-    ROOT_OUTPUT_DIR = 'test_auto'
-    OUTPUT_SCRIPT_DIR = 'script'
-    OUTPUT_TEST_CASE_DIR = 'test_case'
-    OUTPUT_TEMPLATE_AND_DATA_DIR = 'template_and_data'
-
-    def initialize(spec_dir, output_dir, script_dir, tad_dir, test_case_dir = nil)
+    def initialize(spec_dir, data_top_dir, output_data_top_dir, output_dir, script_dir, tad_dir, test_case_dir = nil)
       @setup_count = 0
       @spec_dir_pn = Pathname.new(spec_dir)
+      @data_top_dir_pn = Pathname.new(data_top_dir)
+      @output_data_top_dir_pn = Pathname.new(output_data_top_dir)
+      @output_test_dir_pn = @output_data_top_dir_pn.join(GlobalConfig::TEST_DIR)
+      @test_dir_pn = @data_top_dir_pn.join(GlobalConfig::TEST_DIR)
 
-      @test_dir_pn = @spec_dir_pn.join(TEST_DIR)
-
-      @misc_dir_pn = @test_dir_pn.join(MISC_DIR)
+      @misc_dir_pn = @test_dir_pn.join(GlobalConfig::MISC_DIR)
       top_pn = @spec_dir_pn.parent
-      @root_output_dir_pn = top_pn.join(ROOT_OUTPUT_DIR)
+      @root_output_dir_pn = @data_top_dir_pn.join(GlobalConfig::ROOT_OUTPUT_DIR)
 
       @output_dir = output_dir
       @script_dir = script_dir
@@ -64,11 +55,11 @@ module Mkspec
       @tad_absolute_dir_pn = check_absolute_dir(@tad_dir)
       @test_case_absolute_dir_pn = check_absolute_dir(@test_case_dir) 
 
-      @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, OUTPUT_SCRIPT_DIR)
-      @output_template_and_data_dir_pn = setup_dir(@tad_absolute_dir_pn, @tad_dir, OUTPUT_TEMPLATE_AND_DATA_DIR)
-      @output_test_case_dir_pn = setup_dir(@test_case_absolute_dir_pn, @test_case_dir, OUTPUT_TEST_CASE_DIR)
+      @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, GlobalConfig::OUTPUT_SCRIPT_DIR)
+      @output_template_and_data_dir_pn = setup_dir(@tad_absolute_dir_pn, @tad_dir, GlobalConfig::OUTPUT_TEMPLATE_AND_DATA_DIR)
+      @output_test_case_dir_pn = setup_dir(@test_case_absolute_dir_pn, @test_case_dir, GlobalConfig::OUTPUT_TEST_CASE_DIR)
 
-      @test_case_archive_dir_pn = @test_dir_pn.join(TEST_CASE_ARCHIVE_DIR) 
+      @test_case_archive_dir_pn = @test_dir_pn.join(GlobalConfig::TEST_CASE_ARCHIVE_DIR) 
       Loggerxcm.debug("@test_case_archive_dir_pn=#{@test_case_archive_dir_pn}")
       if @output_template_and_data_dir_pn.exist?
         setup_dir_content(@test_case_archive_dir_pn, @output_test_case_dir_pn)
@@ -77,7 +68,7 @@ module Mkspec
         raise(Mkspec::MkspecDebugError, "config.rg 1")
       end
 
-      @archive_dir_pn = @test_dir_pn.join(TEST_ARCHIVE_DIR)
+      @archive_dir_pn = @test_dir_pn.join(GlobalConfig::TEST_ARCHIVE_DIR)
       if @archive_dir_pn.exist?
         setup_dir_content(@archive_dir_pn, @output_template_and_data_dir_pn)
       else
