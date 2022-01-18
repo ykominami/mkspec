@@ -48,7 +48,7 @@ module Mkspec
 
       def to_string(value)
         if value.instance_of?(Array)
-          value.join("\n")
+          value.join("\n\n")
         else
           value
         end

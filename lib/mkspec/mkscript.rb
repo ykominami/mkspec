@@ -46,7 +46,7 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n")
+          e.backtrace.join("\n\n")
         ]
         #Loggerxcm.fatal(message)
         return STATE.change(Mkspec::INVALID_CMDLINE_OPTION_ERROR, "Invalid command line option")
@@ -214,10 +214,11 @@ module Mkspec
         rescue StandardError => e
           message = [
             e.message,
-            e.backtrace.join("\n"),
+            e.backtrace.join("\n\n"),
           ]
-          Loggerxcm.fatal(message)
-          STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can't make a spec file(message=#{message}")
+          message2 = message.join("\n")
+          Loggerxcm.fatal(message2)
+          STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can't make a spec file(message=#{message2}")
           exit_flag = true
         end
         break if exit_flag
@@ -232,7 +233,7 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n"),
+          e.backtrace.join("\n\n"),
           '-- str S',
           str,
           '-- str E',
@@ -254,7 +255,7 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n"),
+          e.backtrace.join("\n\n"),
           "Can't convert for #{spec_file_pn}"
         ]
         Loggerxcm.fatal(message)
@@ -278,11 +279,12 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n"),
+          e.backtrace.join("\n\n"),
         ]
-        Loggerxcm.fatal(message)
+        message2 = message.join("\n")
+        Loggerxcm.fatal(message2)
 #        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, "Can not make a ruby script from data_yaml_path(#{data_yaml_path.to_s})")
-        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, message)
+        STATE.change(Mkspec::CANNOT_MAKE_SPEC_FILE, message2)
      end
 
       raise(MkspecAppError , "mkscript.rb 7 #{STATE.message}") unless STATE.success?
@@ -297,7 +299,7 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n"),
+          e.backtrace.join("\n\n"),
         ]
         Loggerxcm.fatal(message)
         STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script(#{spec_file_pn.to_s})")
