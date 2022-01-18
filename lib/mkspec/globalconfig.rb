@@ -114,7 +114,7 @@ module Mkspec
       end
       @o.output_data_top_dir = @o.output_data_top_dir_pn.to_s
 
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless @o.original_root_output_dir_pn
+      # raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless @o.original_root_output_dir_pn
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X2") unless global_yaml_pn.parent
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X") unless @o.data_top_dir_pn
 
@@ -156,59 +156,9 @@ module Mkspec
     def basic_setup(o)
       o.global_yaml_fname = @global_hash[GLOBAL_YAML_FNAME_KEY]
       o.specific_yaml_fname = @global_hash[SPECIFIC_YAML_FNAME_KEY]
-=begin
-  make_arg: make_arg
-  tecsgen_base: <%= tecsgen_top_dir %>/tecsgen/tecsgen
-  tecsgen_cmd: tecsgen
-  tecsmerge_cmd: tecsmerge
-  tecsgen_cmd_path: <%= tecsgen_base %>/tecsgen
-  tecsmerge_cmd_path: <%= tecsgen_base %>/<%= tecsmerge_cmd %>
-  tecsgen_path: <%= tecsgen_base %>
-  tecspath: <%= tecsgen_base %>/tecslib
-  data_dir_0: _DATA
-  sub_data_dir_1: hier4
-  sub_data_dir_2: hier1
-  root_output_dir: test_auto
-  original_output_dir: _DATA/hier4
-  test_case_dir: test_case
-  tad_dir_index: 0
-  tad_dir_array:
-  - template_and_data
-  - template_and_data_2
-  script_dir_index: 0
-  script_dir_array:
-  - script
-  - script_2
-
-=end
       o.make_arg = MAKE_ARG_KEY
-      o.tecsgen_base = @global_hash["tecsgen_base"]
-      o.tecsgen_cmd = @global_hash["tecsgen_cmd"]
-      o.tecsmerge_cmd = @global_hash["tecsmerge_cmd"]
-      o.tecsgen_cmd_path = @global_hash[TECSGEN_CMD_PATH_KEY]
-      o.tecsmerge_cmd_path = @global_hash["tecsmerge_cmd_path"]
-      o.tecsgen_path = @global_hash["tecsgen_path"]
-      o.tecspath = @global_hash["tecspath"]
-      o.data_dir_0 = @global_hash["data_dir_0"]
-      o.sub_data_dir_1 = @global_hash["sub_data_dir_1"]
-      o.sub_data_dir_2 = @global_hash["sub_data_dir_2"]
-      o.root_output_dir = @global_hash["root_output_dir"]
-      Loggerxcm.debug("GlobalConfig.initialize @root_output_dir=#{@root_output_dir}")
-      raise( Mkspec::MkspecAppError , "@global_hash['root_output_dir']") unless @global_hash["root_output_dir"]
-      raise( Mkspec::MkspecAppError , "o.root_output_dir") unless o.root_output_dir
       o.original_output_dir = @global_hash[ get_key_of_original_output_dir ]
-      o.test_case_dir = @global_hash[TEST_CASE_DIR_KEY]
-      o.tad_dir_index = @global_hash["tad_dir_index"]
-      o.tad_dir_array = @global_hash["tad_dir_array"]
-      o.script_dir_index = @global_hash["script_dir_index"]
-      o.script_dir_array = @global_hash["script_dir_array"]
-=begin
-      o. = @global_hash[""]
-      o. = @global_hash[""]
-      o. = @global_hash[""]
-      o. = @global_hash[""]
-      o. = @global_hash[""]
-=end
+      Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
     end
 
     def spec_file_setup(o, original_spec_file_path)
@@ -243,25 +193,14 @@ module Mkspec
     end
 
     def setup(o)
-      raise(Mkspec::MkspecAppError , "o.root_output_dir is nil") unless o.root_output_dir
-
-#      o.test_root_dir_pn = o.top_dir_pn.join(o.root_output_dir)
       o.test_root_dir_pn = o.output_data_top_dir_pn.join(TEST_DIR)
       o.test_root_dir = o.test_root_dir_pn.to_s
 
       if o.original_output_root_dir != nil
         original_output_root_dir_pn = Pathname.new(o.original_output_root_dir)
-        if o.original_output_dir != nil
-          o.target_parent_dir_pn = original_output_root_dir_pn.join(o.original_output_dir)
-        else
-          o.target_parent_dir_pn = original_ouput_root_dir_pn.join("test_data2", "test_case")
-        end
+        o.target_parent_dir_pn = original_output_root_dir_pn.join(o.original_output_dir)
       else
-        if o.original_output_dir != nil
-          o.target_parent_dir_pn = o.test_root_dir_pn.join(o.original_output_dir)
-        else
-          o.target_parent_dir_pn = o.test_root_dir_pn.join("test_data2", "test_case")
-        end
+        o.target_parent_dir_pn = o.test_root_dir_pn.join(o.original_output_dir)
       end
       o.target_parent_dir = o.target_parent_dir_pn
       o.result = RESULT_FNAME
