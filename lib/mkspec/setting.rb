@@ -94,7 +94,7 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n\n"),
+          e.backtrace,
         ]
         Loggerxcm.fatal(message)
         STATE.change(Mkspec::CANNOT_WRITE_YAML_FILE)

@@ -1,81 +1,87 @@
 module Mkspec
   class GlobalConfig
     attr_accessor :o, :specific_hash
+=begin
 
-    TEST_DIR = "test"
-
-    TEST_ARCHIVE_DIR = '_test_archive'
-    TEST_CASE_ARCHIVE_DIR = "_test_case_archive"
-    MISC_DIR = "misc"
-    TEST_DATA_DIR = "_test_data"
-    TEST_INCLUDE_DIR = "_test_include"
-    TEST_CYGWIN_DIR = "_test_cygwin"
-    TEST_CYGWIN3_DIR = "_test_cygwin3"
-    TEST_MISC_DIR = "_test_misc"
     _TEST_TEMPLATE_AND_DATA = "_test_template_and_data"
 
-    TSV_FNAME = "testlist-x.txt"
-    TSV_FNAME_2 = "t.txt"
 
-    ROOT_OUTPUT_DIR = "test_auto"
-    OUTPUT_SCRIPT_DIR = "script"
-    OUTPUT_TEST_CASE_DIR = "test_case"
-    OUTPUT_TEMPLATE_AND_DATA_DIR = "template_and_data"
     INCLUDE_DIR = "_test_include"
     #
-    RESULT_FNAME = "result.txt"
-    CONTENT_FNAME = "content.txt"
-    TESTDATA_FNAME = "testdata.txt"
-    YAML_FNAME = "a.yml"
     # SPEC_DIRを表すキー
     SPEC_DIR_KEY = "SPEC_DIR"
-    # top_dirを表すキー
-    TOP_DIR_KEY = "top_dir"
-    # original_spec_file_pathを表すキー
-    ORIGINAL_SPEC_FILE_PATH_KEY = "original_spec_file_path"
-    # tecsgenコマンドを表すキー
-    TECSGEN_CMD_KEY = "tecsgen_cmd"
-    # tecsgen_cmdのパスを表すキー
-    TECSGEN_CMD_PATH_KEY = "tecsgen_cmd"
-    # コマンドライン作成を表すキー
-    MAKE_CMDLINE_1_KEY = "make_cmdline_1"
     # ターゲットコマンド1のPathnameを表すキー
     TARGET_CMD_1_PN_KEY = "target_cmd_1_pn"
     # ターゲットコマンド2のPathnameを表すキー
     TARGET_CMD_2_PN_KEY = "target_cmd_2_pn"
-    # ターゲットコマンド1のパスを表すキー
-    TARGET_CMD_1_KEY = "target_cmd_1"
-    # ターゲットコマンド2のパスを表すキー
-    TARGET_CMD_2_KEY = "target_cmd_2"
-    # コマンドライン作成を表すキー
-    MAKE_ARG_KEY = "make_arg"
-    # 拡張コマンドライン作成を表すキー
-    MAKE_ARG_X_KEY = "make_arg_x"
-    # テストケースディレクトリを表すキー
-    TEST_CASE_DIR_KEY = "test_case_dir"
     # tsv_fname_indexを表すキー
     TSV_FNAME_INDEX_KEY = "tsv_fname_index"
     # tsv_fname_arrayを表すキー
     TSV_FNAME_ARRAY_KEY = "tsv_fname_array"
-    # tsv_pathを表すキー
-    TSV_PATH_KEY = "tsv_path"
-    # tsv_path_indexを表すキー
-    TSV_PATH_INDEX_KEY = "tsv_path_index"
     # tsv_fnameを表すキー
     TSV_FNAME_KEY = "tsv_fname"
+
+=end
     # original_output_root_dir
     ORIGINAL_OUTPUT_ROOT_DIR_KEY = "original_output_root_dir"
-
-    # グローバルYAMLファイルを表すキー
-    GLOBAL_YAML_FNAME_KEY = "global_yaml_fname"
     # スペシフィックYAMLファイルを表すキー
     SPECIFIC_YAML_FNAME_KEY = "specific_yaml_fname"
+    # グローバルYAMLファイルを表すキー
+    GLOBAL_YAML_FNAME_KEY = "global_yaml_fname"
+    # original_spec_file_pathを表すキー
+    ORIGINAL_SPEC_FILE_PATH_KEY = "original_spec_file_path"
+    # コマンドライン作成を表すキー
+    MAKE_ARG_KEY = "make_arg"
     # オリジナル出力ディレクトリを表すキー
     ORIGINAL_OUTPUT_DIR_KEY = "original_output_dir"
+
+    TEST_DIR = "test"
+    #TEST_DIR = "test2"
+    RESULT_FNAME = "result.txt"
+    TEST_DATA_DIR = "_test_data"
+    MISC_DIR = "misc"
+    TSV_FNAME = "testlist-x.txt"
+    TSV_FNAME_2 = "t.txt"
+    CONTENT_FNAME = "content.txt"
+    TESTDATA_FNAME = "testdata.txt"
+    YAML_FNAME = "a.yml"
+    ROOT_OUTPUT_DIR = "test_auto"
+    OUTPUT_SCRIPT_DIR = "script"
+    OUTPUT_TEMPLATE_AND_DATA_DIR = "template_and_data"
+    OUTPUT_TEST_CASE_DIR = "test_case"
+    TEST_CASE_ARCHIVE_DIR = "_test_case_archive"
+    TEST_ARCHIVE_DIR = '_test_archive'
+    # tsv_path_indexを表すキー
+    TSV_PATH_INDEX_KEY = "tsv_path_index"
+    # tsv_pathを表すキー
+    TSV_PATH_KEY = "tsv_path"
+    # 拡張コマンドライン作成を表すキー
+    MAKE_ARG_X_KEY = "make_arg_x"
+    # top_dirを表すキー
+    TOP_DIR_KEY = "top_dir"
+    # コマンドライン作成を表すキー
+    MAKE_CMDLINE_1_KEY = "make_cmdline_1"
+    # ターゲットコマンド1のパスを表すキー
+    TARGET_CMD_1_KEY = "target_cmd_1"
+    # ターゲットコマンド2のパスを表すキー
+    TARGET_CMD_2_KEY = "target_cmd_2"
     # tecspathを表すキー
     TECSPATH_KEY = "tecspath"
     # tecspath_cmd_pathを表すキー
     TECSPATH_CMD_PATH_KEY = "tecspath_cmd_path"
+    # tecsgen_cmdのパスを表すキー
+    TECSGEN_CMD_PATH_KEY = "tecsgen_cmd"
+    # テストケースディレクトリを表すキー
+    TEST_CASE_DIR_KEY = "test_case_dir"
+    # tecsgenコマンドを表すキー
+    TECSGEN_CMD_KEY = "tecsgen_cmd"
+
+    ###############
+    TEST_MISC_DIR = "_test_misc"
+    TEST_INCLUDE_DIR = "_test_include"
+    TEST_CYGWIN_DIR = "_test_cygwin"
+    TEST_CYGWIN3_DIR = "_test_cygwin3"
+
 
     def initialize(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil, top_dir)
       unless Util.nil_or_not_empty_string?(top_dir)

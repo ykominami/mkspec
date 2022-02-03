@@ -52,7 +52,7 @@ module Mkspec
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace.join("\n\n")
+          e.backtrace,
         ]
         Loggerxcm.error(message)
         ret = false
