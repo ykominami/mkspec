@@ -172,14 +172,13 @@ module Mkspec
       raise( MkspecDebugError, "mkscript.rb 3 #{STATE.message}") unless STATE.success?
       Loggerxcm.debug("spec=#{spec}")
       if spec && STATE.success?
-        errors = create_all_spec_file(@config, @setting_and_testscript_array)
-        Loggerxcm.debug("errors.size=#{errors.size}")
-        if errors.size > 0
-          errors.map { |element|
-            setting, testscript = element
-          }
-          raise( MkspecDebugError, "mkscript.rb 4")
-        end
+        ret = create_all_spec_file(@config, @setting_and_testscript_array)
+        Loggerxcm.debug("ret=#{ret}")
+      else
+        ret = false
+      end
+      unless ret
+        raise( MkspecDebugError, "mkscript.rb 4")
       end
 
       [template_and_data, spec, data_dir_index]
@@ -224,6 +223,7 @@ module Mkspec
         break if exit_flag
       end
       raise( Mkspec::MkspecDebugError, "mkscript.rb 10 #{STATE.message}") unless STATE.success?
+      ret
     end
 
     def format_ruby_script(spec_file_pn, str)
