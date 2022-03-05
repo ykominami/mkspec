@@ -1,0 +1,16 @@
+require 'spec_helper'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+  <%= mruby_mrubycellplugin %>
+    <%= _mruby_mrubycellplugin %>
+    <%= mruby_mrubycellplugin_1 %>
+  <%= rspec_describe_context_end %>
+  <%= mruby_mrubyinfobridge %>
+    <%= _mruby_mrubyinfobridge %>
+    <%= mruby_mrubyinfobridge_SimpleSample %>
+    <%= mruby_mrubyinfobridge_test %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

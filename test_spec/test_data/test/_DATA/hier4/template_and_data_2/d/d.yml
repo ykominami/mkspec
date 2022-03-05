@@ -1,0 +1,137 @@
+---
+path: d/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  top_dir: "/home/ykominami/repo/mkspec"
+  original_output_dir: _DATA/hier4
+  target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
+  target_cmd_2: "/home/ykominami/repo/mkspec/bin"
+  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: tecsgen
+  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  test_case_dir: test_case
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+factory:
+  path: rspec_describe_context/content.txt
+  context: factory
+  tecsgen_cmd: tecsgen
+_factory:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+factory_1:
+  path: rspec_describe_context_context/content.txt
+  context: factory_1
+  dir: '1'
+  cdlfile: factory.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 56
+  tc_1: 57
+import_C:
+  path: rspec_describe_context/content.txt
+  context: import_C
+  tecsgen_cmd: tecsgen
+_import_C:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+import_C_1:
+  path: rspec_describe_context_context/content.txt
+  context: import_C_1
+  dir: '1'
+  cdlfile: import_C.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 58
+  tc_1: 59
+import_C_2:
+  path: rspec_describe_context_context/content.txt
+  context: import_C_2
+  dir: '2'
+  cdlfile: import_C.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 60
+  tc_1: 61
+import_C_3:
+  path: rspec_describe_context_context/content.txt
+  context: import_C_3
+  dir: '3'
+  cdlfile: import_C.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 62
+  tc_1: 63
+import_C_4:
+  path: rspec_describe_context_context/content.txt
+  context: import_C_4
+  dir: '4'
+  cdlfile: import_C.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 64
+  tc_1: 65
+init:
+  path: rspec_describe_context/content.txt
+  context: init
+  tecsgen_cmd: tecsgen
+_init:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+init_1:
+  path: rspec_describe_context_context/content.txt
+  context: init_1
+  dir: '1'
+  cdlfile: init.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 66
+  tc_1: 67
