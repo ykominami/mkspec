@@ -8,8 +8,8 @@ module Mkspec
   class TestConf
     attr_reader :o
 
-    def initialize(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
-      @globalconfig = Mkspec::GlobalConfig.new(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
+    def initialize(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
+      @globalconfig = Mkspec::GlobalConfig.new(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
       o = @globalconfig.o
       setup(o)
     end

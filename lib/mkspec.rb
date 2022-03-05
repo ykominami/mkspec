@@ -39,6 +39,8 @@ module Mkspec
   Mkspec::CMDLINE_OPTION_ERROR_TT = 20
   # エラーコード：コマンドラインLLオプションエラー
   CMDLINE_OPTION_ERROR_LL = 21
+  # エラーコード：コマンドラインDDオプションエラー
+  CMDLINE_OPTION_ERROR_DD = 22
 
   # エラーコード：SPECファイル作成失敗
   CANNOT_MAKE_SPEC_FILE = 24

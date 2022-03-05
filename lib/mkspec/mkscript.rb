@@ -26,7 +26,7 @@ module Mkspec
       #
       @opt = opt
       #
-      opt.banner = "Usage: ruby #{$PROGRAM_NAME} -o output_dir -d script_dir -i tad_dir -t tsv_fname -T original_top_dir -c (all|tad|scr) -s char -l limit -L log_dir -x original_output_dir -y target_cmd_1_pn -z target_cmd_1_pn"
+      opt.banner = "Usage: ruby #{$PROGRAM_NAME} -o output_dir -d script_dir -i tad_dir -t tsv_fname -T original_top_dir -c (all|tad|scr) -s char -l limit -L log_dir -D top_dir_yaml -g global_yaml -G specifc_yaml -x original_output_dir -y target_cmd_1_pn -z target_cmd_1_pn"
       opt.on("-o output_dir", "output directory") { |x| @output_dir = x }
       opt.on("-d script_dir", "script directory") { |x| @script_dir = x }
       opt.on("-i tad_dir", "limit") { |x| @tad_dir = x }
@@ -36,6 +36,7 @@ module Mkspec
       opt.on("-s ch", "start-char") { |x| @start_char = x }
       opt.on("-l limit", "limit") { |x| @limit = x.to_i }
       opt.on("-L log_dir", "limit") { |x| @log_dir = x }
+      opt.on("-D top_dir_yaml", "top dir yamlfile") { |x| @top_dir_yaml_fname = x }
       opt.on("-g global_yaml", "global yamlfile") { |x| @global_yaml_fname = x }
       opt.on("-G specific_yaml", "specific yamlfile") { |x| @specific_yaml_fname = x }
       opt.on("-x original_output_dir", "original output dir") { |x| @original_output_dir = x }
@@ -61,6 +62,10 @@ module Mkspec
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless cmd_options.find { |it| @cmd == it }
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
+
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "not specified -D") unless @top_dir_yaml_fname
+      @global_yaml_pn = Pathname.new(@top_dir_yaml_fname)
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "invalid -D") unless @top_dir_yaml_pn.exist?
 
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
       @specific_yaml_pn = Pathname.new(@specific_yaml_fname)
@@ -101,7 +106,7 @@ module Mkspec
 
     def init
       @lt_id = -1
-      @gc = GlobalConfig.new(@specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil, @original_top_dir)
+      @gc = GlobalConfig.new(@top_dir_yaml_pn, @specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil, @original_top_dir)
 
       config = Config.new(@gc.o.top_dir_pn, @gc.o.data_top_dir_pn, @gc.o.output_data_top_dir_pn, @output_dir, @script_dir, @tad_dir)
       @config = config.setup

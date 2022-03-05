@@ -13,7 +13,7 @@ RSpec.describe 'command-line', type: :aruba do
     Mkspec::Loggerxcm.fatal("#### mkspec_cli_spec.rb ####")
     @top_dir = Pathname.new(__FILE__).parent.to_s
 #    @top_dir = nil
-    @conf = Mkspec::TestConf.new(ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], 'mkspec', '', nil, @top_dir)
+    @conf = Mkspec::TestConf.new(ENV['MKSPEC_TOP_DIR_YAML_FNAME'], ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], 'mkspec', '', nil, @top_dir)
     @o = @conf.o
   }
 

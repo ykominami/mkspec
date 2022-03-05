@@ -83,12 +83,15 @@ module Mkspec
     TEST_CYGWIN3_DIR = "_test_cygwin3"
 
 
-    def initialize(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil, top_dir)
-      unless Util.nil_or_not_empty_string?(top_dir)
-        raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
-      end
+    def initialize(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil, top_dir)
+      #unless Util.nil_or_not_empty_string?(top_dir)
+      #  raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
+      #end
+      top_dir_yaml_pn = Pathname.new(top_dir_yaml)
+      @top_dir_hash = Util.extract_in_yaml_file(top_dir_yaml_pn)
+
       specific_yaml_pn = Pathname.new(specific_yaml)
-      @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn)
+      @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn, @top_dir_hash)
       ret, kind = Util.not_empty_hash?(@specific_hash)
       unless ret
         Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{@specific_hash.class}")
