@@ -13,7 +13,7 @@ RSpec.describe 'command-line', type: :aruba do
     Mkspec::Loggerxcm.fatal("#### mkspec_cli_spec.rb ####")
     @top_dir = Pathname.new(__FILE__).parent.to_s
 #    @top_dir = nil
-    @conf = Mkspec::TestConf.new(ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], 'mkspec', '', nil, @top_dir)
+    @conf = Mkspec::TestConf.new(ENV['MKSPEC_TOP_DIR_YAML_FNAME'], ENV['MKSPEC_SPECIFIC_YAML_FNAME'], ENV['MKSPEC_GLOBAL_YAML_FNAME'], 'mkspec', '', nil, @top_dir)
     @o = @conf.o
   }
 
@@ -35,7 +35,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -t #{@o.tsv_fname} -c all -s #{@o.start_char}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -t #{@o.tsv_fname} -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn.to_s} -z #{@o.target_cmd_2_pn.to_s} -T #{@o.top_dir}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
@@ -56,7 +56,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         tsv_fname = @o.misc_tsv_fname
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i #{@o.tad_2_dir} -t #{@o.tsv_fname} -c tad -s #{@o.start_char}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i #{@o.tad_2_dir} -t #{@o.tsv_fname} -c tad -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]
 
@@ -78,7 +78,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         tsv_fname = @o.misc_tsv_fname
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i #{@o.tad_2_dir} -d #{@o.script_3_dir} -t #{@o.tsv_fname}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i #{@o.tad_2_dir} -d #{@o.script_3_dir} -t #{@o.tsv_fname}
                -c spec -s #{@o.start_char} -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn}
                -T #{@o.top_dir}
               ]
@@ -93,7 +93,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files to scriptx' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadx' -d 'scriptx' -t #{@o.tsv_fname} -c all -s #{@o.start_char}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadx' -d 'scriptx' -t #{@o.tsv_fname} -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
@@ -107,7 +107,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files to scripty' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tady' -d 'scripty' -t #{@o.tsv_fname} 
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tady' -d 'scripty' -t #{@o.tsv_fname} 
                -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]
@@ -122,7 +122,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files to scripty only' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tady' -d 'scripty' -t #{@o.tsv_fname}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tady' -d 'scripty' -t #{@o.tsv_fname}
                -c spec -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]
@@ -138,7 +138,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files to scriptx' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadv' -d 'scriptv' -t #{@o.tsv_fname} -c all -s #{@o.start_char}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadv' -d 'scriptv' -t #{@o.tsv_fname} -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]
         cmdline = make_cmdline_1(test_case_dir, argv)
@@ -152,7 +152,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files to scripty' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadw' -d 'scriptw' -t #{@o.tsv_fname} 
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadw' -d 'scriptw' -t #{@o.tsv_fname} 
                -c all -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]
@@ -167,7 +167,7 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files to scripty only' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[ -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadw' -d 'scriptw' -t #{@o.tsv_fname}
+        argv = %W[ -D #{@o.top_dir_yaml_fname} -G #{@o.specific_yaml_fname} -g #{@o.global_yaml_fname} -o #{@o.output_dir} -i 'tadw' -d 'scriptw' -t #{@o.tsv_fname}
                -c spec -s #{@o.start_char}
                -l #{@o.limit} -x #{@o.original_output_dir} -y #{@o.target_cmd_1_pn} -z #{@o.target_cmd_2_pn} -T #{@o.top_dir}
                ]

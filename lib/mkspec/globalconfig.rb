@@ -24,6 +24,8 @@ module Mkspec
 =end
     # original_output_root_dir
     ORIGINAL_OUTPUT_ROOT_DIR_KEY = "original_output_root_dir"
+    # TOP DIR YAMLファイルを表すキー
+    TOP_DIR_YAML_FNAME_KEY = "top_dir_yaml_fname"
     # スペシフィックYAMLファイルを表すキー
     SPECIFIC_YAML_FNAME_KEY = "specific_yaml_fname"
     # グローバルYAMLファイルを表すキー
@@ -83,12 +85,16 @@ module Mkspec
     TEST_CYGWIN3_DIR = "_test_cygwin3"
 
 
-    def initialize(specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil, top_dir)
-      unless Util.nil_or_not_empty_string?(top_dir)
-        raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
-      end
+    def initialize(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil, top_dir)
+      #unless Util.nil_or_not_empty_string?(top_dir)
+      #  raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
+      #end
+      top_dir_yaml_pn = Pathname.new(top_dir_yaml)
+      @top_dir_hash = Util.extract_in_yaml_file(top_dir_yaml_pn)
+      top_dir = @top_dir_hash[TOP_DIR_KEY]
+
       specific_yaml_pn = Pathname.new(specific_yaml)
-      @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn)
+      @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn, @top_dir_hash)
       ret, kind = Util.not_empty_hash?(@specific_hash)
       unless ret
         Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{@specific_hash.class}")
@@ -125,6 +131,8 @@ module Mkspec
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X") unless @o.data_top_dir_pn
 
 
+      @global_hash[TOP_DIR_YAML_FNAME_KEY] = top_dir_yaml_pn.to_s
+
       @global_hash[SPECIFIC_YAML_FNAME_KEY] = specific_yaml_pn.to_s
 
       @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pn.to_s
@@ -160,6 +168,7 @@ module Mkspec
     end
 
     def basic_setup(o)
+      o.top_dir_yaml_fname = @global_hash[TOP_DIR_YAML_FNAME_KEY]
       o.global_yaml_fname = @global_hash[GLOBAL_YAML_FNAME_KEY]
       o.specific_yaml_fname = @global_hash[SPECIFIC_YAML_FNAME_KEY]
       o.make_arg = MAKE_ARG_KEY

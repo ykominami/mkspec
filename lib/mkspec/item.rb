@@ -16,7 +16,6 @@ module Mkspec
       @local_hash = {}
       @config = config
       Util.dump_var(:yaml_path, yaml_path)
-      Util.dump_var(:yaml_path, yaml_path)
       Util.dump_var(:content_path, content_path)
       @yaml_pn , kind_1 = ensure_path(yaml_path.to_s)
       @content_pn , kind_2 = ensure_path(content_path.to_s)
@@ -25,7 +24,7 @@ module Mkspec
       Util.dump_var(:@content_pn, @content_pn)
       Util.dump_var(:kind_2, kind_2)
 #      raise(Mkspec::MkspecDebugError, "item.rb 1") unless @yaml_pn
-      raise(Mkspec::MkspecDebugError, "item.rb 2") unless @content_pn
+      raise(Mkspec::MkspecDebugError, "item.rb 2 content_path=#{content_path}") unless @content_pn
 
       @children = {}
       Loggerxcm.debug("Item.new @yaml_pn=#{@yaml_pn}")

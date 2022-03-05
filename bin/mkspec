@@ -15,8 +15,8 @@ require 'pp'
 # IRB.start(__FILE__)
 def output_error_message(mes)
   pp(mes)
-  Mkspec::Loggerxcm.error(mes)
-  Mkspec::Loggerxcmcli.error(mes)
+  #Mkspec::Loggerxcm.error(mes)
+  #Mkspec::Loggerxcmcli.error(mes)
   Mkspec::Loggerxcmspec.error(mes)
 end
 

@@ -48,7 +48,7 @@ module Mkspec
         #if value_0.instance_of?(String) || value_0.instance_of?(Integer) || value_0.instance_of?(Array) || value_0.instance_of?(Hash)
         unless Util.valid_instance?( value_0, String, Integer, Array, Hash)
           Loggerxcm.debug("Util#adjust_hash_sub util.rb adjust_hash_sub value_0=#{value_0} value_0.class=#{value_0.class} key_0=#{key_0}")
-          raise(Mkspec::MkspecDebugError, "util.rb adjust_hash_sub 1")
+          raise(Mkspec::MkspecDebugError, "util.rb adjust_hash_sub 1 key_0=#{key_0}")
         else
           tag_x_ary = tag_analyze_for_string(value_0)
           if tag_x_ary.size > 0
