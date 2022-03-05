@@ -11,7 +11,7 @@ module Mkspec
     @log_stdout ||= nil
     @stdout_backup = $stdout
     @stringio = StringIO.new( +"", 'w+')
-    
+
     class << self
       def init(prefix, fname, log_dir, stdout_flag, level = :info)
         unless @log_file
@@ -33,18 +33,21 @@ module Mkspec
           obj = proc do |_, _, _, msg| "#{msg}\n" end
           register_log_format(obj)
           register_log_level(level_hs[level])
+
+          @stdout_backup ||= $stdout
+          @stringio ||= StringIO.new( +"", 'w+')
         end
-        @stdout_backup ||= $stdout
+=begin
+        @stderr_backup ||= $stderr
         @stringio ||= StringIO.new( +"", 'w+')
-        @stdout_backup ||= $stdout
-        @stringio ||= StringIO.new( +"", 'w+')
+=end
       end
 
       def register_log_format(obj)
         @log_file&.formatter = obj
         @log_stdout&.formatter = obj
       end
- 
+
       def register_log_level(level)
         @log_file&.level = level
         @log_stdout&.level = level
@@ -55,7 +58,10 @@ module Mkspec
 
       def to_string(value)
         if value.instance_of?(Array)
+          @stdout_backup = $stdout unless @stdout_backup
+          @stringio = StringIO.new( +"", 'w+') unless @stringio
           $stdout = @stringio
+          pp value
           $stdout = @stdout_backup
           str = @stringio.read
           @stringio.truncate(0)
