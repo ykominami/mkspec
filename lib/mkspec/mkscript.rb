@@ -64,7 +64,7 @@ module Mkspec
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
 
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "not specified -D") unless @top_dir_yaml_fname
-      @global_yaml_pn = Pathname.new(@top_dir_yaml_fname)
+      @top_dir_yaml_pn = Pathname.new(@top_dir_yaml_fname)
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "invalid -D") unless @top_dir_yaml_pn.exist?
 
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
@@ -148,6 +148,7 @@ module Mkspec
       when "tad"
         template_and_data = true
         data_dir_index = 0
+        spec = false
       when "spec"
         spec = true
         data_dir_index = 0
@@ -158,6 +159,7 @@ module Mkspec
       when "tad-2"
         template_and_data = true
         data_dir_index = 1
+        spec = false
       when "spec-2"
         spec = true
         data_dir_index = 1
@@ -174,13 +176,16 @@ module Mkspec
         create_all_template_and_data(@setting_and_testscript_array)
         raise(MkspecDebugError, "mkscript.rb 2 #{STATE.message}") unless STATE.success?
       end
-      raise( MkspecDebugError, "mkscript.rb 3 #{STATE.message}") unless STATE.success?
+      #raise( MkspecDebugError, "mkscript.rb 3 #{STATE.message}") unless STATE.success?
       Loggerxcm.debug("spec=#{spec}")
+
+      ret = true
       if spec && STATE.success?
         ret = create_all_spec_file(@config, @setting_and_testscript_array)
-        Loggerxcm.debug("ret=#{ret}")
-      else
-        ret = false
+        Loggerxcm.debug("1 ret=#{ret} spec=#{spec}")
+      #else
+      #  Loggerxcm.debug("2 ret=#{ret} spec=#{spec} STATE.success?=#{STATE.success?}")
+      #  ret = false
       end
       unless ret
         raise( MkspecDebugError, "mkscript.rb 4")
