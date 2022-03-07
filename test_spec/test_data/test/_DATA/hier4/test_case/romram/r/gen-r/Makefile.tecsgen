@@ -38,7 +38,7 @@
 #  CELLTYPE_domain_SRCS     .c files of celltype.c files for each domain
 
 TECS_IMPORT_CDLS = romram.cdl
-TECS_IMPORT_HEADERS = /home/ykominami/repo/mkspec_data/test/_test_include/RUNTIME/tecs-runtime/include/tecs.h
+TECS_IMPORT_HEADERS = $(TECSPATH)/tecs.h
 TECS_IMPORTS = $(TECS_IMPORT_CDLS) $(TECS_IMPORT_HEADERS)
 
 SIGNATURE_HEADERS = \

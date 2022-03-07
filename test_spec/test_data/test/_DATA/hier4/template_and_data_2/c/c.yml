@@ -7,9 +7,9 @@ rspec_describe_head:
   original_output_dir: _DATA/hier4
   target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
   target_cmd_2: "/home/ykominami/repo/mkspec/bin"
-  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
   tecspath_cmd_path: tecsgen
-  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -22,7 +22,7 @@ singleton:
 _singleton:
   path: make_arg/content.txt
   func_name: make_cmdline_1
-  option_list: []
+  option_list: ["-IRUNTIME/tecs-runtime/include"]
 singleton_1:
   path: rspec_describe_context_context/content.txt
   context: singleton_1
@@ -46,7 +46,7 @@ portarray:
 _portarray:
   path: make_arg/content.txt
   func_name: make_cmdline_1
-  option_list: []
+  option_list: ["-IRUNTIME/tecs-runtime/include"]
 portarray_1:
   path: rspec_describe_context_context/content.txt
   context: portarray_1
@@ -63,19 +63,19 @@ portarray_1:
   func_name: make_cmdline_1
   tc_0: 44
   tc_1: 45
-cmoposite_1:
+composite_1:
   path: rspec_describe_context/content.txt
-  context: cmoposite_1
+  context: composite_1
   tecsgen_cmd: tecsgen
-_cmoposite_1:
+_composite_1:
   path: make_arg/content.txt
   func_name: make_cmdline_1
   option_list: []
-cmoposite_1_1:
+composite_1_1:
   path: rspec_describe_context_context/content.txt
-  context: cmoposite_1_1
+  context: composite_1_1
   dir: '1'
-  cdlfile: cmoposite_1.cdl
+  cdlfile: composite.cdl
   test_1: to
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
@@ -94,7 +94,7 @@ recursive_composite:
 _recursive_composite:
   path: make_arg/content.txt
   func_name: make_cmdline_1
-  option_list: []
+  option_list: ["-IRUNTIME/tecs-runtime/include"]
 recursive_composite_1:
   path: rspec_describe_context_context/content.txt
   context: recursive_composite_1

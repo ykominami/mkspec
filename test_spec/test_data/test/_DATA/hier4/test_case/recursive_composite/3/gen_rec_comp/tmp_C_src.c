@@ -35,4 +35,4 @@
 /* va_list is not supported in C_parser.y.rb */
 typedef struct { int dummy; } va_list;
 
-#include "cygwin_tecs.h"
+#include "tecs.h"

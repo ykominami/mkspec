@@ -7,9 +7,9 @@ rspec_describe_head:
   original_output_dir: _DATA/hier4
   target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
   target_cmd_2: "/home/ykominami/repo/mkspec/bin"
-  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
   tecspath_cmd_path: tecsgen
-  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -37,8 +37,8 @@ merge_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 134
-  tc_1: 135
+  tc_0: 132
+  tc_1: 133
 merge_2:
   path: rspec_describe_context_context/content.txt
   context: merge_2
@@ -53,8 +53,8 @@ merge_2:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 136
-  tc_1: 137
+  tc_0: 134
+  tc_1: 135
 merge_3:
   path: rspec_describe_context_context/content.txt
   context: merge_3
@@ -69,8 +69,8 @@ merge_3:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 138
-  tc_1: 139
+  tc_0: 136
+  tc_1: 137
 merge_4:
   path: rspec_describe_context_context/content.txt
   context: merge_4
@@ -85,8 +85,8 @@ merge_4:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 140
-  tc_1: 141
+  tc_0: 138
+  tc_1: 139
 merge_5:
   path: rspec_describe_context_context/content.txt
   context: merge_5
@@ -101,8 +101,8 @@ merge_5:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 142
-  tc_1: 143
+  tc_0: 140
+  tc_1: 141
 merge_6:
   path: rspec_describe_context_context/content.txt
   context: merge_6
@@ -117,8 +117,8 @@ merge_6:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 144
-  tc_1: 145
+  tc_0: 142
+  tc_1: 143
 merge_6_2:
   path: rspec_describe_context_context/content.txt
   context: merge_6_2
@@ -133,5 +133,5 @@ merge_6_2:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 146
-  tc_1: 147
+  tc_0: 144
+  tc_1: 145

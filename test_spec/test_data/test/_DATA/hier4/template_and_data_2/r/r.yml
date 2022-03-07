@@ -7,9 +7,9 @@ rspec_describe_head:
   original_output_dir: _DATA/hier4
   target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
   target_cmd_2: "/home/ykominami/repo/mkspec/bin"
-  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
   tecspath_cmd_path: tecsgen
-  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -37,8 +37,8 @@ mruby_mrubybridge_ASP:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 218
-  tc_1: 219
+  tc_0: 216
+  tc_1: 217
 mruby_mrubybridge_ASP3:
   path: rspec_describe_context_context/content.txt
   context: mruby_mrubybridge_ASP3
@@ -53,8 +53,8 @@ mruby_mrubybridge_ASP3:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 220
-  tc_1: 221
+  tc_0: 218
+  tc_1: 219
 mruby_mrubybridge_SimpleSample:
   path: rspec_describe_context_context/content.txt
   context: mruby_mrubybridge_SimpleSample
@@ -69,8 +69,8 @@ mruby_mrubybridge_SimpleSample:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 222
-  tc_1: 223
+  tc_0: 220
+  tc_1: 221
 mruby_mrubybridge_TECSInfo:
   path: rspec_describe_context_context/content.txt
   context: mruby_mrubybridge_TECSInfo
@@ -85,8 +85,8 @@ mruby_mrubybridge_TECSInfo:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 224
-  tc_1: 225
+  tc_0: 222
+  tc_1: 223
 mruby_mrubybridge_TECSInfoCompo:
   path: rspec_describe_context_context/content.txt
   context: mruby_mrubybridge_TECSInfoCompo
@@ -101,8 +101,8 @@ mruby_mrubybridge_TECSInfoCompo:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 226
-  tc_1: 227
+  tc_0: 224
+  tc_1: 225
 mruby_mrubybridge_region:
   path: rspec_describe_context_context/content.txt
   context: mruby_mrubybridge_region
@@ -117,8 +117,8 @@ mruby_mrubybridge_region:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 228
-  tc_1: 229
+  tc_0: 226
+  tc_1: 227
 mruby_mrubybridge_test:
   path: rspec_describe_context_context/content.txt
   context: mruby_mrubybridge_test
@@ -133,5 +133,5 @@ mruby_mrubybridge_test:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 230
-  tc_1: 231
+  tc_0: 228
+  tc_1: 229

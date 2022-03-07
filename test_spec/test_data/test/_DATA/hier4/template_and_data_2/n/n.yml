@@ -7,9 +7,9 @@ rspec_describe_head:
   original_output_dir: _DATA/hier4
   target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
   target_cmd_2: "/home/ykominami/repo/mkspec/bin"
-  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
   tecspath_cmd_path: tecsgen
-  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -37,8 +37,8 @@ domainPlugin_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 172
-  tc_1: 173
+  tc_0: 170
+  tc_1: 171
 reverse_join:
   path: rspec_describe_context/content.txt
   context: reverse_join
@@ -61,8 +61,8 @@ reverse_join_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 174
-  tc_1: 175
+  tc_0: 172
+  tc_1: 173
 proto:
   path: rspec_describe_context/content.txt
   context: proto
@@ -85,8 +85,8 @@ proto_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 176
-  tc_1: 177
+  tc_0: 174
+  tc_1: 175
 cp_omit:
   path: rspec_describe_context/content.txt
   context: cp_omit
@@ -109,8 +109,8 @@ cp_omit_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 178
-  tc_1: 179
+  tc_0: 176
+  tc_1: 177
 cp_omit_2:
   path: rspec_describe_context_context/content.txt
   context: cp_omit_2
@@ -125,8 +125,8 @@ cp_omit_2:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 180
-  tc_1: 181
+  tc_0: 178
+  tc_1: 179
 notificationPlugin:
   path: rspec_describe_context/content.txt
   context: notificationPlugin
@@ -149,5 +149,5 @@ notificationPlugin_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 182
-  tc_1: 183
+  tc_0: 180
+  tc_1: 181

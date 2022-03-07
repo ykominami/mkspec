@@ -7,9 +7,9 @@ rspec_describe_head:
   original_output_dir: _DATA/hier4
   target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
   target_cmd_2: "/home/ykominami/repo/mkspec/bin"
-  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
   tecspath_cmd_path: tecsgen
-  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -37,8 +37,8 @@ dataqueue_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 148
-  tc_1: 149
+  tc_0: 146
+  tc_1: 147
 through:
   path: rspec_describe_context/content.txt
   context: through
@@ -61,8 +61,8 @@ through_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 150
-  tc_1: 151
+  tc_0: 148
+  tc_1: 149
 rpc:
   path: rspec_describe_context/content.txt
   context: rpc
@@ -85,8 +85,8 @@ rpc_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 152
-  tc_1: 153
+  tc_0: 150
+  tc_1: 151
 sharedRPC:
   path: rspec_describe_context/content.txt
   context: sharedRPC
@@ -109,8 +109,8 @@ sharedRPC_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 154
-  tc_1: 155
+  tc_0: 152
+  tc_1: 153
 opaqueRPC:
   path: rspec_describe_context/content.txt
   context: opaqueRPC
@@ -133,8 +133,8 @@ opaqueRPC_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 156
-  tc_1: 157
+  tc_0: 154
+  tc_1: 155
 opaqueMarshaler:
   path: rspec_describe_context/content.txt
   context: opaqueMarshaler
@@ -157,5 +157,5 @@ opaqueMarshaler_1:
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
   func_name: make_cmdline_1
-  tc_0: 158
-  tc_1: 159
+  tc_0: 156
+  tc_1: 157

@@ -1,9 +1,12 @@
-require 'spec_helper'
+
+# frozen_string_literal: true
+require 'spec_helper_3'
 require 'aruba/rspec'
 require 'pathname'
 
 RSpec.describe '<%= desc %>', type: :aruba do
   <%= rspec_describe_head %>
+
   <%= singleton %>
     <%= _singleton %>
     <%= singleton_1 %>
@@ -12,9 +15,9 @@ RSpec.describe '<%= desc %>', type: :aruba do
     <%= _portarray %>
     <%= portarray_1 %>
   <%= rspec_describe_context_end %>
-  <%= cmoposite_1 %>
-    <%= _cmoposite_1 %>
-    <%= cmoposite_1_1 %>
+  <%= composite_1 %>
+    <%= _composite_1 %>
+    <%= composite_1_1 %>
   <%= rspec_describe_context_end %>
   <%= recursive_composite %>
     <%= _recursive_composite %>

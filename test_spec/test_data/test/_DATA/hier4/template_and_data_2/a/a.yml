@@ -7,9 +7,9 @@ rspec_describe_head:
   original_output_dir: _DATA/hier4
   target_cmd_1: "/home/ykominami/repo/mkspec/bin/mkspec"
   target_cmd_2: "/home/ykominami/repo/mkspec/bin"
-  tecspath: "/home/ykominami/repo/mkspec/tecsgen/tecsgen/tecslib"
+  tecspath: "/home/ykominami/repo/ns4-tecsgen/tecsgen/tecsgen/tecslib"
   tecspath_cmd_path: tecsgen
-  global_yaml_fname: "/home/ykominami/repo/mkspec/test_spec/test_config/global.yml"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -67,12 +67,12 @@ data_flat_1:
   path: rspec_describe_context_context/content.txt
   context: data_flat_1
   dir: '1'
-  cdlfile: data_flat.cdl
-  test_1: to
+  cdlfile: jsp_flat.sig.CPP , sample1_flat.blt.CPP,  sample1_flat.ct.CPP
+  test_1: to_not
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
   test_1_tag: test_normal_sh:true
-  test_2: not_to
+  test_2: to
   test_2_value: have_output(/error:/)
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
@@ -92,11 +92,11 @@ data_abnormal_1:
   context: data_abnormal_1
   dir: '1'
   cdlfile: data_abnormal.cdl
-  test_1: to
+  test_1: to_not
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
   test_1_tag: test_normal_sh:true
-  test_2: not_to
+  test_2: to
   test_2_value: have_output(/error:/)
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
@@ -108,11 +108,11 @@ data_abnormal_2:
   context: data_abnormal_2
   dir: '2'
   cdlfile: data_abnormal.cdl
-  test_1: to
+  test_1: to_not
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
   test_1_tag: test_normal_sh:true
-  test_2: not_to
+  test_2: to
   test_2_value: have_output(/error:/)
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
@@ -124,11 +124,11 @@ data_abnormal_3:
   context: data_abnormal_3
   dir: '3'
   cdlfile: data_abnormal.cdl
-  test_1: to
+  test_1: to_not
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
   test_1_tag: test_normal_sh:true
-  test_2: not_to
+  test_2: to
   test_2_value: have_output(/error:/)
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
@@ -140,11 +140,11 @@ data_abnormal_4:
   context: data_abnormal_4
   dir: '4'
   cdlfile: data_abnormal.cdl
-  test_1: to
+  test_1: to_not
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
   test_1_tag: test_normal_sh:true
-  test_2: not_to
+  test_2: to
   test_2_value: have_output(/error:/)
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
@@ -156,11 +156,11 @@ data_abnormal_5:
   context: data_abnormal_5
   dir: '5'
   cdlfile: data_abnormal.cdl
-  test_1: to
+  test_1: to_not
   test_1_value: be_successfully_executed
   test_1_message: execute successfully
   test_1_tag: test_normal_sh:true
-  test_2: not_to
+  test_2: to
   test_2_value: have_output(/error:/)
   test_2_message: don't have error in output
   test_2_tag: test_normal_sh_out:true
