@@ -11,8 +11,15 @@ module Mkspec
     @log_stdout ||= nil
     @stdout_backup = $stdout
     @stringio = StringIO.new( +"", 'w+')
+    #@limit_of_num_of_files ||= 3
 
     class << self
+      def ensure_quantum_log_files( log_dir_pn, limit_of_num_of_files , prefix)
+        list = log_dir_pn.children.select{|item| item.basename.to_s.match?("^#{prefix}") }.sort_by{|pn| pn.mtime }
+        latest_index = list.size - limit_of_num_of_files
+        list[ 0, latest_index ].map{|ent| ent.unlink } if latest_index > 0
+      end
+
       def init(prefix, fname, log_dir, stdout_flag, level = :info)
         unless @log_file
           level_hs = {
@@ -23,6 +30,11 @@ module Mkspec
             fatal: Logger::FATAL,
             unknown: Logger::UNKNOWN
           }
+          @log_dir_pn = Pathname.new(log_dir)
+
+          @limit_of_num_of_files ||= 5
+
+          ensure_quantum_log_files( @log_dir_pn, @limit_of_num_of_files , prefix )
 
           fname = nil if fname == false
           fname = prefix + LOG_FILENAME_BASE if fname == :default
