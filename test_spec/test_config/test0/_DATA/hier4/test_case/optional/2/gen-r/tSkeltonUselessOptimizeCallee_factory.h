@@ -1,3 +1,0 @@
-#ifndef tSkeltonUselessOptimizeCallee_FACTORY_H
-#define tSkeltonUselessOptimizeCallee_FACTORY_H
-#endif /* tSkeltonUselessOptimizeCallee_FACTORY_H */

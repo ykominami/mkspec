@@ -1,5 +1,0 @@
-def <%= func_name %>(test_case_dir, *file_list)
-  option_extra = [ <%= option_list.map { |x| %Q! "#{x}" ! }.join(',') %> ]
-
-  @cmdline.make_cmdline_1(test_case_dir, o.result, option_extra.join(' '), file_list)
-end
