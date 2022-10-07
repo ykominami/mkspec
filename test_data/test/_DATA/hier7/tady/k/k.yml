@@ -1,0 +1,137 @@
+---
+path: k/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  top_dir: "/home/ykominami/repo/mkspec_ruby27"
+  original_output_dir: _DATA/hier7
+  target_cmd_1: "/home/ykominami/repo/mkspec_ruby27/bin/mkspec"
+  target_cmd_2: "/home/ykominami/repo/mkspec_ruby27/bin"
+  tecspath: "/home/ykominami/repo/tecsgen/trunk/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: tecsgen
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data_ex2/global.yml"
+  test_case_dir: test_case
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+merge:
+  path: rspec_describe_context/content.txt
+  context: merge
+  tecsgen_cmd: tecsgen
+_merge:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+merge_1:
+  path: rspec_describe_context_context/content.txt
+  context: merge_1
+  dir: '1'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 134
+  tc_1: 135
+merge_2:
+  path: rspec_describe_context_context/content.txt
+  context: merge_2
+  dir: '2'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 136
+  tc_1: 137
+merge_3:
+  path: rspec_describe_context_context/content.txt
+  context: merge_3
+  dir: '3'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 138
+  tc_1: 139
+merge_4:
+  path: rspec_describe_context_context/content.txt
+  context: merge_4
+  dir: '4'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 140
+  tc_1: 141
+merge_5:
+  path: rspec_describe_context_context/content.txt
+  context: merge_5
+  dir: '5'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 142
+  tc_1: 143
+merge_6:
+  path: rspec_describe_context_context/content.txt
+  context: merge_6
+  dir: '6'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 144
+  tc_1: 145
+merge_6_2:
+  path: rspec_describe_context_context/content.txt
+  context: merge_6_2
+  dir: '6_2'
+  cdlfile: merge.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 146
+  tc_1: 147
