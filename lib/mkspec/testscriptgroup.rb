@@ -5,11 +5,15 @@ module Mkspec
     attr_reader :testscripts, :name
 
     #                 test_1 test_1_value                test_1_message,         test_1_tag,            test_2    test_2_value             test_2_message                test_2_tag
-    DEFAULT_VALUES = ['to',  'be_successfully_executed', 'execute successfully', 'test_normal_sh:true', 'not_to', 'have_output(/error:/)', "don't have error in output", 'test_normal_sh_out:true'].freeze
+    DEFAULT_VALUES = ['to',  'be_successfully_executed', 'execute successfully', 'test_normal_sh:true', 'not_to',
+                      'have_output(/error:/)', "don't have error in output", 'test_normal_sh_out:true'].freeze
 
     def initialize(tsv_path, start_char, limit, make_arg_basename)
       @tsv_path = tsv_path
-      raise( MkspecAppError, "testscriptgroup.rb 1 start_char.class=#{start_char.class}") unless Util.not_empty_string?(start_char).first
+      unless Util.not_empty_string?(start_char).first
+        raise( MkspecAppError,
+               "testscriptgroup.rb 1 start_char.class=#{start_char.class}")
+      end
       @name = start_char
       @limit = limit
       @make_arg_basename = make_arg_basename
@@ -17,9 +21,9 @@ module Mkspec
       @current_testscript = make_testscript(@name)
     end
 
-    def setup_test_group(l, state)
+    def setup_test_group(line, state)
       # tgroup, tcase, tmp = l.chomp.split(/\s+|\t+/)
-      tgroup, tcase, *tmp = l.chomp.split("\t")
+      tgroup, tcase, *tmp = line.chomp.split("\t")
       raise( MkspecAppError, "testscriptgroup.rb 2 tgroup=#{tgroup}") if tgroup.nil?
 
       Loggerxcm.debug("tgroup=#{tgroup}|")
@@ -54,7 +58,8 @@ module Mkspec
       extra = tmp[4, tmp.size]
       # Loggerxcm.debug("array=#{array}")
       test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag = array
-      testgroup.add_test_case("#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag, extra)
+      testgroup.add_test_case("#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_1_message, test_1_tag, test_2,
+                              test_2_value, test_2_message, test_2_tag, extra)
       self
     end
 
@@ -62,6 +67,7 @@ module Mkspec
       File.readlines(@tsv_path).each_with_object({}) do |l, state|
         next if l =~ /^\s*#/
         next if l =~ /^\s*$/
+
         setup_test_group(l, state)
       end
     end

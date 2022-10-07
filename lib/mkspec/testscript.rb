@@ -6,6 +6,7 @@ module Mkspec
 
     def initialize(name, limit)
       raise(MkspecAppError, "testscript.rb 1 name.class=#{name.class}") unless Util.not_empty_string?(name).first
+
       @name = name
       @script_name = Util.make_spec_filename(name)
       @limit = limit

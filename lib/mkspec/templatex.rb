@@ -46,13 +46,11 @@ module Mkspec
     def output
       ret = true
       begin
-        File.open(@template_path, "w") do |file|
-          file.write(@content)
-        end
+        File.write(@template_path, @content)
       rescue StandardError => e
         message = [
           e.message,
-          e.backtrace,
+          e.backtrace
         ]
         Loggerxcm.error(message)
         ret = false
