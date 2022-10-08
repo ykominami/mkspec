@@ -95,7 +95,11 @@ module Mkspec
       #unless Util.nil_or_not_empty_string?(top_dir)
       #  raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
       #end
+      puts "top_dir_yaml=#{top_dir_yaml}"
+      puts "resolved_top_dir_yaml=#{resolved_top_dir_yaml}"
       @top_dir_pna, top_dir_yaml_pna, resolved_top_dir_yaml_pna = setup_top_dir(top_dir_yaml, resolved_top_dir_yaml)
+      # exit(1000)
+
       @top_dir_hash = {}
       @top_dir_hash[TOP_DIR_KEY] = @top_dir_pna.to_s
 
@@ -166,8 +170,9 @@ module Mkspec
         puts "Found @ost.top_dir_pn=#{@ost.top_dir_pn}"
       else
         puts "Not Found @ost.top_dir_pn=#{@ost.top_dir_pn}"
-        exit(200)
-      end
+        # exit(200)
+        raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
+    end
       # raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn
 
@@ -260,7 +265,7 @@ module Mkspec
         top_dir_pna = Pathname.new(top_dir)
         if top_dir_pna.relative?
           hash = ensure_absolute_top_dir(top_dir_pna)
-          save_info(top_dir_yaml_pna, hash)
+          save_info(resolved_top_dir_yaml_pna, hash)
         end
       end
       top_dir_pna ||= Pathname.new(top_dir)
