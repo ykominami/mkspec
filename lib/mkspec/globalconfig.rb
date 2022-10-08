@@ -104,7 +104,7 @@ module Mkspec
         Loggerxcm.debug("GlobalConfig.initialize kind=#{kind}")
         raise(Mkspec::MkspecDebugError, "globalconfig.rb 1")
       end
-      @specific_hash.merge!(@top_dir_hash)
+      # @specific_hash.merge!(@top_dir_hash)
 
       global_yaml_pna = Pathname.new(global_yaml)
       raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
@@ -115,11 +115,12 @@ module Mkspec
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
 
       @global_hash.merge!(@specific_hash)
-
+      @global_hash.keys.map{ |key| puts("#{key}|#{@global_hash[key]}")}
       ost = OpenStruct.new
       @ost = ost
-      @ost.top_dir = @global_hash[TOP_DIR_KEY]
-      @ost.top_dir_pn = Pathname.new(@ost.top_dir)
+      @ost.top_dir = @top_dir_pna.to_s
+      # @ost.top_dir = @global_hash[TOP_DIR_KEY]
+      @ost.top_dir_pn = @top_dir_pna
       @ost.log_dir = @global_hash[LOG_DIR_KEY]
       @ost.log_dir_pn = Pathname.new(@ost.log_dir).expand_path
       @ost.log_dir = @ost.log_dir_pn.to_s
@@ -188,6 +189,9 @@ module Mkspec
         end
       end
       setup(@ost)
+
+      ost_h = @ost.to_h
+      ost_h.keys.map{ |key| puts %(#{key}|#{ost_h[key]}) }
     end
 
     def load_info(path)
