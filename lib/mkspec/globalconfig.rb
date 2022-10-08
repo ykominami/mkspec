@@ -114,11 +114,12 @@ module Mkspec
       global_yaml_pna = Pathname.new(global_yaml)
       puts "global_yaml=#{global_yaml}"
       if global_yaml_pna.exist?
-
+        puts "Found global_yaml=#{global_yaml}"
       else
         # raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
         exit(100)
       end
+      raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
 
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
       raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
@@ -158,6 +159,8 @@ module Mkspec
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless global_yaml_pna.parent
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X2") unless @ost.data_top_dir_pn
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X3") unless @ost.top_dir_pn
+
+      puts(@ost.top_dir_pn.to_s)
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn
 

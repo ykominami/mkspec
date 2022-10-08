@@ -52,11 +52,11 @@ RSpec.describe 'command-line', type: :aruba do
         cmdline = make_cmdline_1(test_case_dir, argv)
         run_command("bash #{cmdline}")
       end
-      it 'execute successfully', test_normal_sh: true, cmd: 2, cli: true do
+      it 'execute successfully', test_normal_sh: true, cmd: 1, cli: true do
         expect(last_command_started).to be_successfully_executed
       end
 
-      it 'do not output error string', test_normal_sh_out: true, cmd: 3, cli: true do
+      it 'do not output error string', test_normal_sh_out: true, cmd: 2, cli: true do
         expect(last_command_started).not_to have_output(/error:/)
       end
   #      it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
@@ -90,11 +90,11 @@ RSpec.describe 'command-line', type: :aruba do
         cmdline = make_cmdline_1(test_case_dir, argv)
         run_command("bash #{cmdline}")
       end
-      it 'execute successfully', test_normal_sh: true, cmd: 4, cli: true do
+      it 'execute successfully', test_normal_sh: true, cmd: 3, cli: true do
         expect(last_command_started).to be_successfully_executed
       end
 
-      it 'do not output error string', test_normal_sh_out: true, cmd: 5, cli: true do
+      it 'do not output error string', test_normal_sh_out: true, cmd: 4, cli: true do
         expect(last_command_started).not_to have_output(/error:/)
       end
       # it '', test_normal_sh_out_error:true do expect(last_command_started).to have_output(/error:/) end
