@@ -1,4 +1,5 @@
 require 'pp'
+require 'fileutils'
 
 module Mkspec
   class GlobalConfig
@@ -26,6 +27,8 @@ module Mkspec
     ORIGINAL_OUTPUT_ROOT_DIR_KEY = "original_output_root_dir".freeze
     # TOP DIR YAMLファイルを表すキー
     TOP_DIR_YAML_FNAME_KEY = "top_dir_yaml_fname".freeze
+    # RESOLVED TOP DIR YAMLファイルを表すキー
+    RESOLVED_TOP_DIR_YAML_FNAME_KEY = "resolved_top_dir_yaml_fname".freeze
     # スペシフィックYAMLファイルを表すキー
     SPECIFIC_YAML_FNAME_KEY = "specific_yaml_fname".freeze
     # グローバルYAMLファイルを表すキー
@@ -86,11 +89,15 @@ module Mkspec
     TEST_CYGWIN_DIR = "_test_cygwin".freeze
     TEST_CYGWIN3_DIR = "_test_cygwin3".freeze
 
-    def initialize(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil)
+    DEFAULT_TOP_DIR = ".".freeze
+
+    def initialize(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil)
       #unless Util.nil_or_not_empty_string?(top_dir)
       #  raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
       #end
-      @top_dir_pna, top_dir_yaml_pna = setup_top_dir(top_dir_yaml)
+      @top_dir_pna, top_dir_yaml_pna, resolved_top_dir_yaml_pna = setup_top_dir(top_dir_yaml, resolved_top_dir_yaml)
+      @top_dir_hash = {}
+      @top_dir_hash[TOP_DIR_KEY] = @top_dir_pna.to_s
 
       specific_yaml_pn = Pathname.new(specific_yaml)
       @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn, @top_dir_hash)
@@ -105,7 +112,7 @@ module Mkspec
       # puts "@specific_hash[TOP_DIR_KEY]=#{@specific_hash[TOP_DIR_KEY]}"
 
       global_yaml_pna = Pathname.new(global_yaml)
-      raise(Mkspec::MkspecAppError, "globalconfig.rb 2") unless global_yaml_pna.exist?
+      raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
 
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
       raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
@@ -152,7 +159,7 @@ module Mkspec
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X41") unless ret
 
       @global_hash[TOP_DIR_YAML_FNAME_KEY] = top_dir_yaml_pna.to_s
-
+      @global_hash[RESOLVED_TOP_DIR_YAML_FNAME_KEY] = resolved_top_dir_yaml_pna.to_s
       @global_hash[SPECIFIC_YAML_FNAME_KEY] = specific_yaml_pn.to_s
 
       @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pna.to_s
@@ -193,39 +200,63 @@ module Mkspec
       setup(@ost)
     end
 
-    def setup_top_dir(top_dir_yaml)
-      top_dir_yaml_pna = Pathname.new(top_dir_yaml)
-      @top_dir_hash = Util.extract_in_yaml_file(top_dir_yaml_pna)
-      top_dir = @top_dir_hash[TOP_DIR_KEY]
+    def load_info(path)
+      pna = Pathname.new(path)
+      if pna.exist?
+        hash = Util.extract_in_yaml_file(pna)
+      else
+        hash = {}
+      end
+      [hash, pna]
+    end
 
-      rewrite_file_flag = false
-      if top_dir
+    def save_info(path, hash)
+      content = YAML.dump(hash)
+      File.write(path, content)
+    end
+
+    def load_resolved_top_dir(resolved_top_dir_yaml)
+      hash, pna = load_info(resolved_top_dir_yaml)
+      [hash[TOP_DIR_KEY], pna]
+    end
+
+    def load_top_dir(top_dir_yaml)
+      hash, pna = load_info(top_dir_yaml)
+      [hash[TOP_DIR_KEY], pna]
+    end
+
+    def ensure_absolute_top_dir(pna)
+      pna = pna.expand_path
+      FileUtils.mkdir_p(pna.to_s)
+      hash = {}
+      hash[TOP_DIR_KEY] = pna.to_s
+      hash
+    end
+
+    def setup_top_dir(top_dir_yaml, resolved_top_dir_yaml)
+      top_dir_pna = nil
+      top_dir_yaml_pna = Pathname.new(top_dir_yaml)
+      resolved_top_dir_yaml_pna = Pathname.new(resolved_top_dir_yaml)
+      top_dir, resolved_top_dir_yaml_pna = load_resolved_top_dir(resolved_top_dir_yaml)
+      if top_dir.nil?
+        top_dir, top_dir_yaml_pna = load_top_dir(top_dir_yaml)
+        top_dir ||= DEFAULT_TOP_DIR
         top_dir_pna = Pathname.new(top_dir)
         if top_dir_pna.relative?
-          top_dir_pna = top_dir_pna.expand_path
-          @top_dir_hash[TOP_DIR_KEY] = top_dir_pna.to_s
-          content = YAML.dump(@top_dir_hash)
-          rewrite_file_flag = true
+          hash = ensure_absolute_top_dir(top_dir_pna)
+          save_info(top_dir_yaml_pna, hash)
         end
-      else
-        top_dir = DEFAULT_LOG_DIR
-        FileUtls.mkdir_p(top_dir)
-        top_dir_pna = Pathname.new(top_dir).expand_path
-        @top_dir_hash[TOP_DIR_KEY] = top_dir_pna.to_s
-        content = YAML.dump(@top_dir_hash)
-        rewrite_file_flag = true
       end
+      top_dir_pna ||= Pathname.new(top_dir)
 
-      if rewrite_file_flag
-        File.write(top_dir_yaml_pna, content)
-      end
-
-      [top_dir_pna, top_dir_yaml_pna]
+      [top_dir_pna, top_dir_yaml_pna, resolved_top_dir_yaml_pna]
     end
 
     def basic_setup(ost)
       ost.top_dir_yaml_fname = @global_hash[TOP_DIR_YAML_FNAME_KEY]
       ost.global_yaml_fname = @global_hash[GLOBAL_YAML_FNAME_KEY]
+      ost.resolved_top_dir_yaml_fname
+
       ost.specific_yaml_fname = @global_hash[SPECIFIC_YAML_FNAME_KEY]
       ost.make_arg = MAKE_ARG_KEY
       ost.original_output_dir = @global_hash[get_key_of_original_output_dir]

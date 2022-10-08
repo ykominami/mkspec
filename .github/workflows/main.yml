@@ -20,6 +20,7 @@ jobs:
       BUNDLE_WITH: test development
       MKSPEC_GLOBAL_YAML_FNAME: ./test_data/global.yml
       MKSPEC_TOP_DIR_YAML_FNAME: ./test_data/top_dir.yml
+      MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME: ./test_data/_resolved/top_dir.yml
       MKSPEC_SPECIFIC_YAML_FNAME: ./test_data/specific.yml
       MKSPEC_LOG_DIR: ./logs
 

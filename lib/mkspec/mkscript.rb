@@ -24,7 +24,7 @@ module Mkspec
       @opt = opt
       @version = nil
 
-      opt.banner = "Usage: ruby #{$PROGRAM_NAME} -o output_dir -t tsv -c cmd -s ch -l limit -d script_dir -i tad_dir -g global_yaml -x original_output_dir -y target_cmd1 -z target_cmd2 -D top_dir_yaml -G specific_yaml -L log_dir"
+      opt.banner = "Usage: ruby #{$PROGRAM_NAME} -o output_dir -t tsv -c cmd -s ch -l limit -d script_dir -r resolved_top_dir_yaml -i tad_dir -g global_yaml -x original_output_dir -y target_cmd1 -z target_cmd2 -D top_dir_yaml -G specific_yaml -L log_dir"
 
       opt.on("-o output_dir", "output directory") { |x| @output_dir = x }
       opt.on("-t tsv", "tsv file") { |x| @tsv_fname = x }
@@ -32,6 +32,7 @@ module Mkspec
       opt.on("-s ch", "start-char") { |x| @start_char = x }
       opt.on("-l limit", "limit") { |x| @limit = x.to_i }
       opt.on("-d script_dir", "script directory") { |x| @script_dir = x }
+      opt.on("-r resolved_top_dir_yaml", "resolved top dir yamlfile") { |x| @resolved_top_dir_yaml_fname = x }
       opt.on("-i tad_dir", "limit") { |x| @tad_dir = x }
       opt.on("-g global_yaml", "global yamlfile") { |x| @global_yaml_fname = x }
       opt.on("-x original_output_dir", "original output dir") { |x| @original_output_dir = x }
@@ -80,6 +81,8 @@ module Mkspec
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "invalid -D") unless @top_dir_yaml_pn.exist?
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
 
+      @resolved_top_dir_yaml_pn = Pathname.new(@resolved_top_dir_yaml_fname) if @resolved_top_dir_yaml_fname
+
       @specific_yaml_pn = Pathname.new(@specific_yaml_fname)
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "invalid -G") unless @specific_yaml_pn.exist?
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_LL, "not specified -L") unless @log_dir
@@ -123,7 +126,7 @@ module Mkspec
 
     def init
       @lt_id = -1
-      @gco = GlobalConfig.new(@top_dir_yaml_pn, @specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil)
+      @gco = GlobalConfig.new(@top_dir_yaml_pn, @resolved_top_dir_yaml_pn, @specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil)
 
       config = Config.new(@gco.ost.top_dir, @gco.ost.data_top_dir, @gco.ost.output_data_top_dir, @output_dir, @script_dir,
                           @tad_dir)

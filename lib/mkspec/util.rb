@@ -192,7 +192,8 @@ module Mkspec
                 "util.rb extract_in_yaml 17 hash_x=#{hash_y}")
         end
         extracted_text = extract_with_eruby(yaml_str, hash_y)
-        raise(Mkspec::MkspecDebugError, "extract_in_yaml 2") unless Util.not_empty_string?(extracted_text).first
+        array = Util.not_empty_string?(extracted_text)
+        raise(Mkspec::MkspecDebugError, "extract_in_yaml 2 #{array} ") unless array.first
 
         #raise(Mkspec::MkspecDebugError, "extract_in_yaml 1")
         YAML.safe_load(extracted_text)

@@ -6,6 +6,7 @@ require 'pathname'
 require 'pry'
 require 'rufo'
 require 'clitest'
+require 'fileutils'
 
 require_relative 'mkspec/loggerxcm'
 

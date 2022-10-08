@@ -32,10 +32,18 @@ RSpec.describe 'command-line', type: :aruba do
     context 'create all files' do
       before(:each) do
         test_case_dir = 1
-        argv = %W[-D #{@ost.top_dir_yaml_fname} -G #{@ost.specific_yaml_fname}
-                  -g #{@ost.global_yaml_fname} -o #{@ost.output_dir} -t #{@ost.tsv_fname} -c all -s #{@ost.start_char}
-                  -l #{@ost.limit} -x #{@ost.original_output_dir}
-                  -y #{@ost.target_cmd_1_pn} -z #{@ost.target_cmd_2_pn}
+        argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
+                  -G #{@ost.specific_yaml_fname}
+                  -g #{@ost.global_yaml_fname}
+                  -o #{@ost.output_dir}
+                  -t #{@ost.tsv_fname}
+                  -c all
+                  -s #{@ost.start_char}
+                  -l #{@ost.limit}
+                  -x #{@ost.original_output_dir}
+                  -y #{@ost.target_cmd_1_pn}
+                  -z #{@ost.target_cmd_2_pn}
                   -L #{@ost.log_dir}]
         cmdline = make_cmdline_1(test_case_dir, argv)
         run_command("bash #{cmdline}")
@@ -59,11 +67,19 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         tsv_fname = @ost.misc_tsv_fname
-        argv = %W[-D #{@ost.top_dir_yaml_fname} -G #{@ost.specific_yaml_fname}
-                  -g #{@ost.global_yaml_fname} -o #{@ost.output_dir}
-                  -i #{@ost.tad_2_dir} -t #{@ost.tsv_fname} -c tad -s #{@ost.start_char}
-                  -l #{@ost.limit} -x #{@ost.original_output_dir}
-                  -y #{@ost.target_cmd_1_pn} -z #{@ost.target_cmd_2_pn}
+        argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
+                  -G #{@ost.specific_yaml_fname}
+                  -g #{@ost.global_yaml_fname}
+                  -o #{@ost.output_dir}
+                  -i #{@ost.tad_2_dir}
+                  -t #{@ost.tsv_fname}
+                  -c tad
+                  -s #{@ost.start_char}
+                  -l #{@ost.limit}
+                  -x #{@ost.original_output_dir}
+                  -y #{@ost.target_cmd_1_pn}
+                  -z #{@ost.target_cmd_2_pn}
                   -L #{@ost.log_dir}]
 
         cmdline = make_cmdline_1(test_case_dir, argv)
@@ -90,6 +106,7 @@ RSpec.describe 'command-line', type: :aruba do
         test_case_dir = 1
         tsv_fname = @ost.misc_tsv_fname
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}
@@ -119,6 +136,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}
@@ -148,6 +166,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}
@@ -177,6 +196,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}
@@ -206,6 +226,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}
@@ -235,6 +256,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}
@@ -265,6 +287,7 @@ RSpec.describe 'command-line', type: :aruba do
       before(:each) do
         test_case_dir = 1
         argv = %W[-D #{@ost.top_dir_yaml_fname}
+                  -r #{@ost.resolved_top_dir_yaml_fname}
                   -G #{@ost.specific_yaml_fname}
                   -g #{@ost.global_yaml_fname}
                   -o #{@ost.output_dir}

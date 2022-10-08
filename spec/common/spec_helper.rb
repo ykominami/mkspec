@@ -3,6 +3,7 @@
 require 'pathname'
 require 'bundler/setup'
 require 'mkspec'
+require 'pp'
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __dir__)
 
@@ -40,10 +41,11 @@ class TestHelp
 
   def self.adjust_paths
     @top_dir_yaml_pna ||= Pathname.new( ENV['MKSPEC_TOP_DIR_YAML_FNAME'] ).expand_path
+    @resolved_top_dir_yaml_pna ||= Pathname.new( ENV['MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME'] ).expand_path
     @specific_yaml_pna ||= Pathname.new( ENV['MKSPEC_SPECIFIC_YAML_FNAME'] ).expand_path
     @global_yaml_pna ||= Pathname.new( ENV['MKSPEC_GLOBAL_YAML_FNAME'] ).expand_path
 
-    [@top_dir_yaml_pna, @specific_yaml_pna, @global_yaml_pna]
+    [@top_dir_yaml_pna, @resolved_top_dir_yaml_pna, @specific_yaml_pna, @global_yaml_pna]
   end
 
   def self.make_testconf
@@ -52,6 +54,7 @@ class TestHelp
     pna = Pathname.new(original_spec_file_path).expand_path
     @conf ||= Mkspec::TestConf.new(
       @top_dir_yaml_pna,
+      @resolved_top_dir_yaml_pna,
       @specific_yaml_pna,
       @global_yaml_pna,
       'mkspec',

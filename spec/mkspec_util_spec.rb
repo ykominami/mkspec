@@ -41,10 +41,10 @@ RSpec.describe 'Mkspec::Util' do
       end
       context 'extract_in_yaml_file' do
         before(:all) do
-          top_dir_yaml_pna_absolute, specific_yaml_pna_absolute, global_yaml_pna_absolute = TestHelp.adjust_paths
+          top_dir_yaml_pna, resolved_top_dir_yaml_pna, specific_yaml_pna, global_yaml_pna = TestHelp.adjust_paths
           Mkspec::STATE.change(Mkspec::SUCCESS, nil)
           @expected_ret_hash = @expected_hash_base
-          @ret_hash = Mkspec::Util.extract_in_yaml_file(specific_yaml_pna_absolute)
+          @ret_hash = Mkspec::Util.extract_in_yaml_file(specific_yaml_pna)
         end
 
         it 'result' , tc: 1000, cmd: 1000 do
@@ -55,10 +55,10 @@ RSpec.describe 'Mkspec::Util' do
       context 'extract_in_yaml_file 2' do
         context 'YAML file and nil' do
           before(:all) do
-            top_dir_yaml_pna_absolute, specific_yaml_pna_absolute, global_yaml_pna_absolute = TestHelp.adjust_paths
+            top_dir_yaml_pna, resolved_top_dir_yaml_pna, specific_yaml_pna, global_yaml_pna = TestHelp.adjust_paths
             Mkspec::STATE.change(Mkspec::SUCCESS, nil)
             @expected_ret_hash = nil
-            @cret_hash = Mkspec::Util.extract_in_yaml_file(specific_yaml_pna_absolute)
+            @cret_hash = Mkspec::Util.extract_in_yaml_file(specific_yaml_pna)
           end
 
           it '@ret_hash' , cmd: 1010 do
@@ -72,11 +72,9 @@ RSpec.describe 'Mkspec::Util' do
   context 'extract_in_yaml_file double' do
     context "File" do
       before(:all) do
-        top_dir_yaml_pna_absolute, specific_yaml_pna_absolute, global_yaml_pna_absolute = TestHelp.adjust_paths
-        specific_yaml_pn = specific_yaml_pna_absolute
-        specific_hash = Mkspec::Util.extract_in_yaml_file(specific_yaml_pn)
-        global_yaml_pn = global_yaml_pna_absolute
-        @global_hash = Mkspec::Util.extract_in_yaml_file(global_yaml_pn, specific_hash)
+        top_dir_yaml_pna, resolved_top_dir_yaml_pna, specific_yaml_pna, global_yaml_pna = TestHelp.adjust_paths
+        specific_hash = Mkspec::Util.extract_in_yaml_file(specific_yaml_pna)
+        @global_hash = Mkspec::Util.extract_in_yaml_file(global_yaml_pna, specific_hash)
       end
 
       it 'double' , cmd: 1100 do

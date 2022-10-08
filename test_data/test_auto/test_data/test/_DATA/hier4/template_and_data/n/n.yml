@@ -1,0 +1,153 @@
+---
+path: n/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  top_dir: "/home/ykominami/repo/ykominami/mkspec"
+  original_output_dir: _DATA/hier4
+  target_cmd_1: "/home/ykominami/repo/ykominami/mkspec/bin/mkspec"
+  target_cmd_2: "/home/ykominami/repo/ykominami/mkspec/bin"
+  tecspath: "/home/ykominami/repo/tecsgen/trunk/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: tecsgen
+  global_yaml_fname: "/home/ykominami/repo/ykominami/mkspec/test_data/global.yml"
+  test_case_dir: test_case
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+domainPlugin:
+  path: rspec_describe_context/content.txt
+  context: domainPlugin
+  tecsgen_cmd: tecsgen
+_domainPlugin:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+domainPlugin_1:
+  path: rspec_describe_context_context/content.txt
+  context: domainPlugin_1
+  dir: '1'
+  cdlfile: domainPlugin.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 172
+  tc_1: 173
+reverse_join:
+  path: rspec_describe_context/content.txt
+  context: reverse_join
+  tecsgen_cmd: tecsgen
+_reverse_join:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+reverse_join_1:
+  path: rspec_describe_context_context/content.txt
+  context: reverse_join_1
+  dir: '1'
+  cdlfile: reverse_join.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 174
+  tc_1: 175
+proto:
+  path: rspec_describe_context/content.txt
+  context: proto
+  tecsgen_cmd: tecsgen
+_proto:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+proto_1:
+  path: rspec_describe_context_context/content.txt
+  context: proto_1
+  dir: '1'
+  cdlfile: proto.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 176
+  tc_1: 177
+cp_omit:
+  path: rspec_describe_context/content.txt
+  context: cp_omit
+  tecsgen_cmd: tecsgen
+_cp_omit:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+cp_omit_1:
+  path: rspec_describe_context_context/content.txt
+  context: cp_omit_1
+  dir: '1'
+  cdlfile: cp_omit.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 178
+  tc_1: 179
+cp_omit_2:
+  path: rspec_describe_context_context/content.txt
+  context: cp_omit_2
+  dir: '2'
+  cdlfile: cp_omit.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 180
+  tc_1: 181
+notificationPlugin:
+  path: rspec_describe_context/content.txt
+  context: notificationPlugin
+  tecsgen_cmd: tecsgen
+_notificationPlugin:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+notificationPlugin_1:
+  path: rspec_describe_context_context/content.txt
+  context: notificationPlugin_1
+  dir: '1'
+  cdlfile: notificationPlugin.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 182
+  tc_1: 183

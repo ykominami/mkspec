@@ -164,13 +164,13 @@ RSpec.describe Mkspec do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @conf = TestHelp.make_testconf
-        top_dir_yaml, specific_yaml, global_yaml = TestHelp.adjust_paths
+        top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml = TestHelp.adjust_paths
         target_cmd_1 = "tecsgen"
         target_cmd_2 = "tecsmerge"
         original_spec_file_path = __FILE__
         Mkspec::Util.dump_var(:specific_yaml, specific_yaml )
         top_dir = nil
-        @ret = Mkspec::GlobalConfig.new(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2,
+        @ret = Mkspec::GlobalConfig.new(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2,
                                         original_spec_file_path)
       end
 
