@@ -112,11 +112,12 @@ module Mkspec
       # puts "@specific_hash[TOP_DIR_KEY]=#{@specific_hash[TOP_DIR_KEY]}"
 
       global_yaml_pna = Pathname.new(global_yaml)
-      puts "global_yaml=#{global_yaml}"
+      # puts "global_yaml=#{global_yaml}"
       if global_yaml_pna.exist?
         puts "Found global_yaml=#{global_yaml}"
       else
         # raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
+        puts "Not Found global_yaml=#{global_yaml}"
         exit(100)
       end
       raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
@@ -160,8 +161,14 @@ module Mkspec
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X2") unless @ost.data_top_dir_pn
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X3") unless @ost.top_dir_pn
 
-      puts(@ost.top_dir_pn.to_s)
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
+      # puts(@ost.top_dir_pn.to_s)
+      if @ost.top_dir_pn.exist?
+        puts "Found @ost.top_dir_pn=#{@ost.top_dir_pn}"
+      else
+        puts "Not Found @ost.top_dir_pn=#{@ost.top_dir_pn}"
+        exit(200)
+      end
+      # raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn
 
       ret = @ost.log_dir_pn.exist?
