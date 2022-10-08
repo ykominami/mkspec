@@ -1,7 +1,6 @@
 _output/
 result.txt
 *.log
-global.yml
 *.code-workspace
 rubocop-cof.yml
 *.gem

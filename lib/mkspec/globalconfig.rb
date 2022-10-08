@@ -112,7 +112,13 @@ module Mkspec
       # puts "@specific_hash[TOP_DIR_KEY]=#{@specific_hash[TOP_DIR_KEY]}"
 
       global_yaml_pna = Pathname.new(global_yaml)
-      raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
+      puts "global_yaml=#{global_yaml}"
+      if global_yaml_pna.exist?
+
+      else
+        # raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
+        exit(100)
+      end
 
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
       raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
