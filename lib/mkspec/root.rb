@@ -5,10 +5,11 @@ module Mkspec
 
   class Root
     def initialize(yml_fname, config)
-      yml_pn = Pathname.new(yml_fname)
-      yml_pn = config.make_path_under_misc_dir(yml_pn) unless yml_pn.exist?
+      yml_0_pn = Pathname.new(yml_fname)
+      basename = yml_0_pn.basename
+      yml_pn = yml_0_pn.exist? ? yml_0_pn : config.make_path_under_misc_dir(basename)
       # puts "root.rb Root.initialize yml_pn=#{yml_pn}"
-      raise( Mkspec::MkspecDebugError, "root.rb initialize yml_pn=#{yml_pn}") unless yml_pn.exist?
+      raise( Mkspec::MkspecDebugError, "root.rb initialize yml_0_pn=#{yml_0_pn} yml_pn=#{yml_pn}") unless yml_pn.exist?
 
       Loggerxcm.debug("Util.extract_in_yaml_file yml_pn=#{yml_pn}")
       @setting_hash = Util.extract_in_yaml_file(yml_pn)

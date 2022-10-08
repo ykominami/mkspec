@@ -151,24 +151,33 @@ module Mkspec
     def create_files
       case @cmd
       when "all"
+        # template_and_data の後 spec
         template_and_data = true
         spec = true
       when "tad"
+        # template_and_data のみ
         template_and_data = true
         data_dir_index = 0
         spec = false
       when "spec"
+        # spec のみ
         spec = true
         data_dir_index = 0
       when "all-2"
+        # template_and_data の後 spec
+        # 2番目のデータディレクトリを使用
         template_and_data = true
         spec = true
         data_dir_index = 1
       when "tad-2"
+        # template_and_data のみ
+        # 2番目のデータディレクトリを使用
         template_and_data = true
         data_dir_index = 1
         spec = false
       when "spec-2"
+        # spec のみ
+        # 2番目のデータディレクトリを使用
         spec = true
         data_dir_index = 1
       else

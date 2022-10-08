@@ -92,14 +92,7 @@ module Mkspec
     DEFAULT_TOP_DIR = ".".freeze
 
     def initialize(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path = nil)
-      #unless Util.nil_or_not_empty_string?(top_dir)
-      #  raise(Mkspec::MkspecAppError, "globalconfig.rb initialize 1")
-      #end
-      puts "top_dir_yaml=#{top_dir_yaml}"
-      puts "resolved_top_dir_yaml=#{resolved_top_dir_yaml}"
       @top_dir_pna, top_dir_yaml_pna, resolved_top_dir_yaml_pna = setup_top_dir(top_dir_yaml, resolved_top_dir_yaml)
-      # exit(1000)
-
       @top_dir_hash = {}
       @top_dir_hash[TOP_DIR_KEY] = @top_dir_pna.to_s
 
@@ -113,17 +106,7 @@ module Mkspec
       end
       @specific_hash.merge!(@top_dir_hash)
 
-      # puts "@specific_hash[TOP_DIR_KEY]=#{@specific_hash[TOP_DIR_KEY]}"
-
       global_yaml_pna = Pathname.new(global_yaml)
-      # puts "global_yaml=#{global_yaml}"
-      if global_yaml_pna.exist?
-        puts "Found global_yaml=#{global_yaml}"
-      else
-        # raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
-        puts "Not Found global_yaml=#{global_yaml}"
-        exit(100)
-      end
       raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
 
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
@@ -131,11 +114,7 @@ module Mkspec
 
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
 
-      # puts "@global_hash[TOP_DIR_KEY]=#{@global_hash[TOP_DIR_KEY]}"
       @global_hash.merge!(@specific_hash)
-      # puts "=="
-      # puts "@global_hash[TOP_DIR_KEY]=#{@global_hash[TOP_DIR_KEY]}"
-      # @global_hash.map{|key, value| puts "#{key}=#{value}"}
 
       ost = OpenStruct.new
       @ost = ost
@@ -164,15 +143,8 @@ module Mkspec
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless global_yaml_pna.parent
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X2") unless @ost.data_top_dir_pn
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X3") unless @ost.top_dir_pn
+      raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
 
-      # puts(@ost.top_dir_pn.to_s)
-      if @ost.top_dir_pn.exist?
-        puts "Found @ost.top_dir_pn=#{@ost.top_dir_pn}"
-      else
-        puts "Not Found @ost.top_dir_pn=#{@ost.top_dir_pn}"
-        # exit(200)
-        raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
-    end
       # raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn
 
@@ -185,10 +157,7 @@ module Mkspec
 
       @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pna.to_s
       @global_hash[ORIGINAL_SPEC_FILE_PATH_KEY] = original_spec_file_path
-#       @global_hash.map{ |k,v|
-#         puts "key=#{k}"
-#         puts " #{v}"
-#       }
+
       @ost.target_cmd_1 = target_cmd_1
       @ost.target_cmd_2 = target_cmd_2
       basic_setup(@ost)

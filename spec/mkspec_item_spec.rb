@@ -2,6 +2,8 @@
 
 require 'spec_helper_1'
 
+logger_init( "./logs" )
+
 RSpec.describe Mkspec do
   context 'call instance methods of Iem class' do
     before(:all) do

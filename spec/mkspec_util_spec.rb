@@ -2,7 +2,8 @@
 
 require 'spec_helper_1'
 require 'pry'
-require 'pp'
+
+logger_init( "./logs" )
 
 RSpec.describe 'Mkspec::Util' do
   context 'get_file_content' do

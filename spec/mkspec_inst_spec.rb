@@ -2,7 +2,7 @@
 
 require 'spec_helper_1'
 
-logger_init( "spec/logs" )
+logger_init( "./logs" )
 
 RSpec.describe Mkspec do
   context 'format' do

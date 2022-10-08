@@ -131,7 +131,9 @@ module Mkspec
     end
 
     def make_path_under_misc_dir(fname)
-      @misc_dir_pn.join(fname)
+      new_pn = @misc_dir_pn.join(fname)
+      puts("Config#make_path_under_misc_dir fname=#{fnam} new_pn=#{new_pn}")
+      new_pn
     end
 
     def make_path_under_template_and_data_dir(fname)

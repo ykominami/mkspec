@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'spec_helper_1'
-require 'pp'
+
+logger_init( "./logs" )
 
 RSpec.describe Mkspec do
   context 'call methods of Root class' do
