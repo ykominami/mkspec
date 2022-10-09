@@ -145,6 +145,9 @@ module Mkspec
       @ost.original_output_root_dir = @global_hash['original_output_root_dir']
       @ost.log_dir = @global_hash[LOG_DIR_KEY]
       @ost.log_dir_pn = Pathname.new(@ost.log_dir)
+      parent_dir = @ost.log_dir_pn.parent.to_s
+      FileUtils.mkdir_p( parent_dir )
+
 
       @ost.top_dir = @top_dir_pna.to_s
       @ost.top_dir_pn = @top_dir_pna
@@ -228,6 +231,8 @@ module Mkspec
 
     def save_info(path, hash)
       content = YAML.dump(hash)
+      parent_dir = Pathname.new(path).parent.to_s
+      FileUtils.mkdir_p( parent_dir )
       File.write(path, content)
     end
 

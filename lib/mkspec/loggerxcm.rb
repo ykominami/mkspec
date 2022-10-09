@@ -23,6 +23,7 @@ module Mkspec
       def init(prefix, fname, log_dir, stdout_flag, level = :info)
         return if @log_file
 
+        @error_count = 0
         level_hs = {
           debug: Logger::DEBUG,
           info: Logger::INFO,
@@ -37,15 +38,39 @@ module Mkspec
 
         ensure_quantum_log_files( @log_dir_pn, @limit_of_num_of_files , prefix )
 
+        @log_stdout = setup_logger_stdout(@log_stdout) if stdout_flag
+
         fname = nil if fname == false
         fname = prefix + LOG_FILENAME_BASE if fname == :default
-        filepath = Pathname.new(log_dir).join(fname)
-        @log_file ||= Logger.new(filepath) unless fname.nil?
-        @log_stdout ||= Logger.new($stdout) if stdout_flag
+        @log_file = setup_logger_file(@log_file, log_dir, fname) if fname
 
         obj = proc do |_, _, _, msg| "#{msg}\n" end
         register_log_format(obj)
         register_log_level(level_hs[level])
+      end
+
+      def setup_logger_stdout(log_stdout)
+        return log_stdout unless log_stdout.nil?
+        begin
+          log_stdout = Logger.new($stdout)
+        rescue
+          @error_count += 1
+        end
+        log_stdout
+      end
+
+      def setup_logger_file(log_file, log_dir, fname)
+        filepath = Pathname.new(log_dir).join(fname)
+        if log_file.nil?
+          begin
+            log_file = Logger.new(filepath)
+          rescue Errno::EACCES
+            @error_count += 1
+          rescue
+            @error_count += 1
+          end
+        end
+        log_file
       end
 
       def register_log_format(obj)
