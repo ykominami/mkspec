@@ -34,7 +34,7 @@ RSpec.describe 'Mkspec::Util' do
           "original_output_root_dir" => "./test_data",
           "top_dir" => ".",
           "tsv_path_index" => 0,
-          "tsv_path" => [
+          "tsv_path_array" => [
             "./test_data/test/misc/testlist-x.txt",
             "./test_data/test/misc/t.txt"
           ]

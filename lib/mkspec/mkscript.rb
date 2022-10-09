@@ -109,7 +109,7 @@ module Mkspec
       path && path.strip.size.positive? && Pathname.new(path).exist?
     end
 
-    def init_sub(gco, config, tsv_path, tad_dir,  start_char, limit, make_arg_x, cmd = nil)
+    def init_sub(gco, config, tsv_path, tad_dir, start_char, limit, make_arg, cmd = nil)
       @cmd = cmd if cmd
       @config = config.setup
       Loggerxcm.debug("### Mkscript init 0 tad_dir=#{tad_dir}")
@@ -118,7 +118,7 @@ module Mkspec
       @tsv_path = tsv_path
       @tsv_path = @config.make_path_under_misc_dir(@tsv_path) unless @tsv_path.exist?
 
-      @tsg = Mkspec::TestScriptGroup.new(@tsv_path, start_char, limit, make_arg_x).setup
+      @tsg = Mkspec::TestScriptGroup.new(@tsv_path, start_char, limit, make_arg).setup
       return unless STATE.success?
 
       @setting_and_testscript_array = make_array_of_setting_and_testscript(gco, @tsg, @config)
@@ -130,7 +130,7 @@ module Mkspec
 
       config = Config.new(@gco.ost.top_dir, @gco.ost.data_top_dir, @gco.ost.output_data_top_dir, @output_dir, @script_dir,
                           @tad_dir)
-      init_sub(@gco, config, @gco.tsv_path, @tad_dir,  @start_char, @limit, @gco.make_arg_x)
+      init_sub(@gco, config, @gco.tsv_path, @tad_dir, @start_char, @limit, @gco.make_arg)
     end
 
     def make_array_of_setting_and_testscript(gco, tsg, config)

@@ -65,4 +65,3 @@ class TestHelp
     @conf
   end
 end
-

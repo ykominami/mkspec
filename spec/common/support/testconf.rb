@@ -68,14 +68,14 @@ module Mkspec
       # "all-2"
       # "tad-2"
       # "spec-2"
-      @ost._mkscript.init_sub(@globalconfig, @ost._config, @globalconfig.tsv_path, @ost.tad_dir,  @ost.start_char, @ost.limit, @globalconfig.make_arg_x, cmd)
+      @ost._mkscript.init_sub(@globalconfig, @ost._config, @globalconfig.tsv_path, @ost.tad_dir, @ost.start_char, @ost.limit, @globalconfig.make_arg, cmd)
       @ost._mkscript.create_files
     end
 
     def mkscript_0
       config_0
       @ost.mkscript_0 = Mkspec::Mkscript.new
-      @ost.mkscript_0.init_sub(@ost._config, @globalconfig.tsv_path, @ost.tad_dir,  @ost.start_char, @ost.limit, @globalconfig.make_arg_x)
+      @ost.mkscript_0.init_sub(@ost._config, @globalconfig.tsv_path, @ost.tad_dir, @ost.start_char, @ost.limit, @globalconfig.make_arg)
     end
 
     def _config

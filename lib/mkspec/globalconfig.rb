@@ -35,8 +35,6 @@ module Mkspec
     GLOBAL_YAML_FNAME_KEY = "global_yaml_fname".freeze
     # original_spec_file_pathを表すキー
     ORIGINAL_SPEC_FILE_PATH_KEY = "original_spec_file_path".freeze
-    # コマンドライン作成を表すキー
-    MAKE_ARG_KEY = "make_arg".freeze
     # オリジナル出力ディレクトリを表すキー
     ORIGINAL_OUTPUT_DIR_KEY = "original_output_dir".freeze
 
@@ -59,9 +57,9 @@ module Mkspec
     # tsv_path_indexを表すキー
     TSV_PATH_INDEX_KEY = "tsv_path_index".freeze
     # tsv_pathを表すキー
-    TSV_PATH_KEY = "tsv_path".freeze
+    TSV_PATH_ARRAY_KEY = "tsv_path_array".freeze
     # 拡張コマンドライン作成を表すキー
-    MAKE_ARG_X_KEY = "make_arg_x".freeze
+    MAKE_ARG_KEY = "make_arg".freeze
     # top_dirを表すキー
     TOP_DIR_KEY = "top_dir".freeze
     # log_dirを表すキー
@@ -115,20 +113,46 @@ module Mkspec
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
 
       @global_hash.merge!(@specific_hash)
-      @global_hash.keys.map{ |key| puts("#{key}|#{@global_hash[key]}")}
+
       ost = OpenStruct.new
       @ost = ost
-      @ost.top_dir = @top_dir_pna.to_s
-      # @ost.top_dir = @global_hash[TOP_DIR_KEY]
-      @ost.top_dir_pn = @top_dir_pna
+
+      @ost.make_arg = @global_hash[MAKE_ARG_KEY]
+      @ost.tecsgen_base = @global_hash['tecsgen_base']
+      @ost.tecsgen_cmd = @global_hash[TECSGEN_CMD_KEY]
+      @ost.tecsmerge_cmd = @global_hash['tecsmerge_cmd']
+      @ost.tecsgen_cmd_path = @global_hash['tecsgen_cmd_path']
+      @ost.tecsmerge_cmd_path = @global_hash['tecsmerge_cmd_path']
+      @ost.tecsgen_path = @global_hash['tecsgen_path']
+      @ost.tecspath = @global_hash[TECSPATH_KEY]
+      @ost.data_dir_0 = @global_hash['data_dir_0']
+      @ost.sub_data_dir_1 = @global_hash['sub_data_dir_1']
+      @ost.sub_data_dir_2 = @global_hash['sub_data_dir_2']
+      @ost.original_output_dir = @global_hash[ORIGINAL_OUTPUT_DIR_KEY]
+      @ost.test_case_dir = @global_hash['test_case_dir']
+      @ost.tad_dir_index = @global_hash['tad_dir_index']
+      @ost.tad_dir_array = @global_hash['tad_dir_array']
+      @ost.script_dir_index = @global_hash['script_dir_index']
+      @ost.script_dir_array = @global_hash['script_dir_array']
+      @ost.tecsgen_top_dir = @global_hash['tecsgen_top_dir']
+      @ost.asp_dir = @global_hash['asp_dir']
+      @ost.asp3_dir = @global_hash['asp3_dir']
+      @ost.top_dir = @global_hash['top_dir']
+      @ost.tsv_path_index = @global_hash['tsv_path_index']
+      @ost.tsv_path_array = @global_hash['tsv_path_array']
+      @ost.original_output_dir = @global_hash[get_key_of_original_output_dir]
+
+      @ost.original_output_root_dir = @global_hash['original_output_root_dir']
       @ost.log_dir = @global_hash[LOG_DIR_KEY]
-      @ost.log_dir_pn = Pathname.new(@ost.log_dir).expand_path
-      @ost.log_dir = @ost.log_dir_pn.to_s
+      @ost.log_dir_pn = Pathname.new(@ost.log_dir)
+
+      @ost.top_dir = @top_dir_pna.to_s
+      @ost.top_dir_pn = @top_dir_pna
       @ost.data_top_dir_pn = global_yaml_pna.parent
       @ost.data_top_dir = @ost.data_top_dir_pn.to_s
+      @ost.resolved_top_dir_yaml_fname = resolved_top_dir_yaml_pna.to_s
 
       valid_original_output_root_dir = false
-      @ost.original_root_output_dir = @specific_hash[get_key_of_original_root_output_dir]
       unless @ost.original_root_output_dir.nil?
         @ost.original_root_output_dir_pn = Pathname.new(@ost.original_root_output_dir)
         valid_original_root_output_dir = true if @ost.original_root_output_dir_pn.exist?
@@ -146,29 +170,30 @@ module Mkspec
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X3") unless @ost.top_dir_pn
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
 
+      # puts "@ost.log_dir_pn=#{@ost.log_dir_pn}"
       # raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn
+      raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn.exist?
 
       ret = @ost.log_dir_pn.exist?
       raise(Mkspec::MkspecDebugError, "globalconfig.rb X41") unless ret
 
-      @global_hash[TOP_DIR_YAML_FNAME_KEY] = top_dir_yaml_pna.to_s
-      @global_hash[RESOLVED_TOP_DIR_YAML_FNAME_KEY] = resolved_top_dir_yaml_pna.to_s
-      @global_hash[SPECIFIC_YAML_FNAME_KEY] = specific_yaml_pn.to_s
+      @ost.top_dir_yaml_pna = top_dir_yaml_pna
+      @ost.top_dir_yaml_fname = top_dir_yaml_pna.to_s
+      @ost.resolved_top_dir_yaml_pma = resolved_top_dir_yaml_pna
+      @ost.resolved_top_dir_yaml = resolved_top_dir_yaml_pna.to_s
+      @ost.specific_yaml_fname = specific_yaml_pn.to_s
 
-      @global_hash[GLOBAL_YAML_FNAME_KEY] = global_yaml_pna.to_s
-      @global_hash[ORIGINAL_SPEC_FILE_PATH_KEY] = original_spec_file_path
+      @ost.global_yaml_pna = global_yaml_pna
+      @ost.global_yaml_fname = global_yaml_pna.to_s
+      @ost.original_spec_file = original_spec_file_path
 
       @ost.target_cmd_1 = target_cmd_1
       @ost.target_cmd_2 = target_cmd_2
-      basic_setup(@ost)
+      # basic_setup(@ost)
       if original_spec_file_path
         spec_file_setup(@ost, original_spec_file_path)
       else
         raise(MkspecAppError, "globalconfig.rb 4") unless Util.not_empty_string?(top_dir).first
-
-        @ost.top_dir = top_dir.to_s
-        @ost.top_dir_pn = Pathname.new(top_dir)
         raise(MkspecAppError, "globalconfig.rb 5") unless @ost.top_dir_pn.exist?
       end
 
@@ -189,9 +214,6 @@ module Mkspec
         end
       end
       setup(@ost)
-
-      ost_h = @ost.to_h
-      ost_h.keys.map{ |key| puts %(#{key}|#{ost_h[key]}) }
     end
 
     def load_info(path)
@@ -244,17 +266,6 @@ module Mkspec
       top_dir_pna ||= Pathname.new(top_dir)
 
       [top_dir_pna, top_dir_yaml_pna, resolved_top_dir_yaml_pna]
-    end
-
-    def basic_setup(ost)
-      ost.top_dir_yaml_fname = @global_hash[TOP_DIR_YAML_FNAME_KEY]
-      ost.global_yaml_fname = @global_hash[GLOBAL_YAML_FNAME_KEY]
-      ost.resolved_top_dir_yaml_fname
-
-      ost.specific_yaml_fname = @global_hash[SPECIFIC_YAML_FNAME_KEY]
-      ost.make_arg = MAKE_ARG_KEY
-      ost.original_output_dir = @global_hash[get_key_of_original_output_dir]
-      Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
     end
 
     def spec_file_setup(ost, original_spec_file_path)
@@ -321,50 +332,39 @@ module Mkspec
     end
 
     def arrange(ost)
-      @global_hash.map { |x| ost[x[0]] = x[1] if ost[x[0]].nil? || ost[x[0]] =~ /^\s*$/ }
+      # @global_hash.map { |x| ost[x[0]] = x[1] if ost[x[0]].nil? || ost[x[0]] =~ /^\s*$/ }
+      @global_hash.map { |key, value| ost[key] = value if ost[key].nil? || ost[key] =~ /^\s*$/ }
     end
 
     def tsv_path
-      index = @specific_hash[TSV_PATH_INDEX_KEY]
-      tsv_path_array = @specific_hash[TSV_PATH_KEY]
+      index = @ost.tsv_path_index
+      tsv_path_array = @ost.tsv_path_array
       tsv_path = tsv_path_array[index]
       Pathname.new(tsv_path)
     end
 
-    def make_arg_x
-      @global_hash[MAKE_ARG_X_KEY]
-    end
-
     def make_arg
-      @global_hash[MAKE_ARG_KEY]
-    end
-
-    def target_cmd_1_pn
-      @ost.target_cmd_1_pn
-    end
-
-    def target_cmd_2_pn
-      @ost.target_cmd_2_pn
+      @ost.make_arg
     end
 
     def tecspath
-      @global_hash[TECSPATH_KEY]
+      @ost.tecspath
     end
 
     def tecsgen_cmd_path
-      @global_hash[TECSGEN_CMD_PATH_KEY]
+      @ost.tecsgen_cmd_path
     end
 
     def global_yaml_fname
-      @global_hash[GLOBAL_YAML_FNAME_KEY]
+      @ost.global_yaml_fname
     end
 
     def test_case_dir
-      @global_hash[TEST_CASE_DIR_KEY]
+      @ost.test_case_dir
     end
 
     def tecsgen_cmd
-      @global_hash[TECSGEN_CMD_KEY]
+      @ost.tecsgen_cmd
     end
 
     def target_cmd_1
@@ -381,6 +381,10 @@ module Mkspec
       @ost.top_dir.to_s
     end
 
+    def output_dir
+      @ost.original_output_dir
+    end
+
     def get_key_of_global_yaml_fname
       GLOBAL_YAML_FNAME_KEY
     end
@@ -393,20 +397,8 @@ module Mkspec
       TECSPATH_CMD_PATH_KEY
     end
 
-    def get_key_of_original_root_output_dir
-      ORIGINAL_OUTPUT_ROOT_DIR_KEY
-    end
-
     def get_key_of_original_output_dir
       ORIGINAL_OUTPUT_DIR_KEY
-    end
-
-    def get_key_of_target_cmd_1_pn
-      TARGET_CMD_1_PN_KEY
-    end
-
-    def get_key_of_target_cmd_2_pn
-      TARGET_CMD_2_PN_KEY
     end
 
     def get_key_of_target_cmd_1
@@ -421,16 +413,8 @@ module Mkspec
       TEST_CASE_DIR_KEY
     end
 
-    def get_key_of_tecsgen_cmd
-      TECSGEN_CMD_KEY
-    end
-
     def get_key_of_top_dir
       TOP_DIR_KEY
-    end
-
-    def output_dir
-      @global_hash[get_key_of_original_output_dir]
     end
   end
 end

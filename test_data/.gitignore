@@ -1,0 +1,7 @@
+*
+!.gitignore
+!_resolved
+!global.yml
+!specific.yml
+!top_dir.yml
+
