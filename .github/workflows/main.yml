@@ -31,5 +31,9 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - name: Run the default task
-        run: bundle exec rake
+      - name: ls ./test_data/
+        run: |
+          ls -al ${{ github.workspace}}/test_data
+        run: echo "This job's status is ${{ job.status }}"
+#      - name: Run the default task
+#        run: bundle exec rake
