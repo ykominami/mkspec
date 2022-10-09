@@ -34,6 +34,7 @@ jobs:
       - name: ls ./test_data/
         run: |
           ls -al ${{ github.workspace}}/test_data
+      - name: echo
         run: echo "This job's status is ${{ job.status }}"
 #      - name: Run the default task
 #        run: bundle exec rake
