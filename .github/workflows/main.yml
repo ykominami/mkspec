@@ -22,7 +22,7 @@ jobs:
       MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME: ./test_data/_resolved/top_dir.yml
       MKSPEC_TOP_DIR_YAML_FNAME: ./test_data/top_dir.yml
       MKSPEC_SPECIFIC_YAML_FNAME: ./test_data/specific.yml
-      MKSPEC_LOG_DIR: ./logs
+      MKSPEC_LOG_DIR: ./test_data/logs
 
     steps:
       - uses: actions/checkout@v2
