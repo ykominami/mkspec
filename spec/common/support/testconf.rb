@@ -6,53 +6,85 @@ module Mkspec
   require "clitest"
 
   class TestConf
-    attr_reader :o
+    attr_reader :ost
 
-    def initialize(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
-      @globalconfig = Mkspec::GlobalConfig.new(top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path, top_dir)
-      o = @globalconfig.o
-      setup(o)
+    def initialize(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path)
+      @globalconfig = Mkspec::GlobalConfig.new(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path)
+      @ost = @globalconfig.ost
+      raise unless @ost.data_top_dir
+      raise unless @ost.output_data_top_dir
+      raise unless @ost.output_dir
+
+      setup(@ost)
+
+      raise unless @ost.data_top_dir
+      raise unless @ost.output_data_top_dir
+      raise unless @ost.output_dir
     end
 
-    def setup(o)
-      o._output_dir_pn = o.test_root_dir_pn.join("_output")
-      o._output_dir = o._output_dir_pn.to_s
-      o._test_case_dir_pn = o._output_dir_pn.join("test_case")
-      o._test_case_dir = o._test_case_dir_pn.to_s
-      o._template_and_data_dir_pn = o._output_dir_pn.join("template_and_data")
-      o._template_and_data_dir = o._template_and_data_dir_pn.to_s
-      o._script_dir_pn = o._output_dir_pn.join("script")
-      o._script_dir = o._script_dir_pn.to_s
-      o._yaml_fname = "a.yml"
-      o._data_dir_pn = o._template_and_data_dir_pn.join("a")
-      #
-      o.data_dir_pn = o.output_template_and_data_dir_pn.join("a")
-      o.tad_2_dir = "template_and_data_2"
-      o.script_3_dir = "script_3"
-      #
-      o.start_char = "a"
-      o.limit = 6
-      o.test_1 = "test_1"
-      o.test_2 = "test_2"
-      o.format_fname = "format.txt"
-      o.number_of_testgroup = 59
-      o.number_of_testscript = 19
-      o.number_of_testgroup_of_first_testscript = 3
-      o.tgroup_0_name = "mruby-MrubyBridge"
-      o.tgroup_0_name_normalize = "mruby_MrubyBridge"
-      o.cmdline_0 = Clitest::Cmdline.new(nil, nil, o.target_parent_dir_pn, o.target_cmd_1_pn)
-      #
-      @globalconfig.arrange(o)
-      #
-      @o = o
+    def setup_for_test_specific_data(ost)
+      ost._output_dir_pn = ost.test_root_dir_pn.join("_output")
+      ost._output_dir = ost._output_dir_pn.to_s
+      ost._output_data_top_dir_pn = ost.test_root_dir_pn.join("_output")
+      ost._output_data_top_dir = ost._output_dir_pn.to_s
+
+      ost._test_case_dir_pn = ost._output_dir_pn.join("test_case")
+      ost._test_case_dir = ost._test_case_dir_pn.to_s
+      ost._template_and_data_dir_pn = ost._output_dir_pn.join("template_and_data")
+      ost._template_and_data_dir = ost._template_and_data_dir_pn.to_s
+      ost._script_dir_pn = ost._output_dir_pn.join("script")
+      ost._script_dir = ost._script_dir_pn.to_s
+      ost._yaml_fname = "a.yml"
+      ost._data_dir_pn = ost._template_and_data_dir_pn.join("a")
+    end
+
+    def setup(ost)
+      raise unless ost.output_data_top_dir
+
+      setup_for_test_specific_data(ost)
+      ost.data_dir_pn = ost.output_template_and_data_dir_pn.join("a")
+      ost.tad_2_dir = "template_and_data_2"
+      ost.script_3_dir = "script_3"
+      ost.start_char = "a"
+      ost.limit = 6
+      ost.test_1 = "test_1"
+      ost.test_2 = "test_2"
+      ost.format_fname = "format.txt"
+      ost.number_of_testgroup = 59
+      ost.number_of_testscript = 19
+      ost.number_of_testgroup_of_first_testscript = 3
+      ost.tgroup_0_name = "mruby-MrubyBridge"
+      ost.tgroup_0_name_normalize = "mruby_MrubyBridge"
+      ost.cmdline_0 = Clitest::Cmdline.new(nil, nil, ost.target_parent_dir_pn, ost.target_cmd_1_pn)
+      @globalconfig.arrange(ost)
+    end
+
+    def _mkscript
+      _config
+      @ost._mkscript = Mkspec::Mkscript.new
+      cmd = "all"
+      # "tad"
+      # "spec"
+      # "all-2"
+      # "tad-2"
+      # "spec-2"
+      @ost._mkscript.init_sub(@globalconfig, @ost._config, @globalconfig.tsv_path, @ost.tad_dir, @ost.start_char, @ost.limit, @globalconfig.make_arg, cmd)
+      @ost._mkscript.create_files
+    end
+
+    def mkscript_0
+      config_0
+      @ost.mkscript_0 = Mkspec::Mkscript.new
+      @ost.mkscript_0.init_sub(@ost._config, @globalconfig.tsv_path, @ost.tad_dir, @ost.start_char, @ost.limit, @globalconfig.make_arg)
     end
 
     def _config
-      @o._config = Mkspec::Config.new(@o.spec_dir, @o.data_top_dir, @o._output_dir, nil, nil).setup
+      @ost._config = Mkspec::Config.new(@ost.spec_dir, @ost.data_top_dir, @ost._output_data_top_dir, @ost._output_dir, nil,
+                                        nil).setup
     end
 
     def config_0
-      @o.config_0 = Mkspec::Config.new(@o.spec_dir, @o.data_top_dir, @o.output_dir, nil, nil).setup
+      @ost.config_0 = Mkspec::Config.new(@ost.spec_dir, @ost.data_top_dir, @ost.output_dir, nil, nil).setup
     end
 
     def make_script_name(name)
@@ -64,10 +96,10 @@ module Mkspec
       if target_parent_dir
         target_parent_pn = Pathname.new(target_parent_dir)
         absolute_path = if test_case_dir && test_case_dir !~ /^\s*$/
-            target_parent_pn.join(test_case_dir).realpath
-          else
-            target_parent_pn.realpath
-          end
+                          target_parent_pn.join(test_case_dir).realpath
+                        else
+                          target_parent_pn.realpath
+                        end
       elsif test_case_dir && test_case_dir !~ /^\s*$/
         absolute_path = Pathname.new(test_case_dir.to_s).realpath
       end
@@ -80,10 +112,10 @@ module Mkspec
       if target_dir
         target_pn = Pathname.new(target_dir)
         ret = if result
-            target_pn.join(result)
-          else
-            target_pn
-          end
+                target_pn.join(result)
+              else
+                target_pn
+              end
       elsif result
         result_pn = Pathname.new(result)
         ret = result_pn
@@ -100,28 +132,36 @@ module Mkspec
     end
 
     def create_instance_of_config
-      Config.new(@o.spec_dir, @o.data_top_dir, @o.output_dir, nil, nil).setup
+      # raise unless @ost.spec_dir
+      raise unless @ost.data_top_dir
+      raise unless @ost.output_data_top_dir
+      raise unless @ost.output_dir
+
+      Mkspec::Config.new(@ost.spec_dir, @ost.data_top_dir, @ost.output_data_top_dir, @ost.output_dir, nil, nil).setup
     end
 
     def _create_instance_of_config
-      Mkspec::Config.new(@o.spec_dir, @o.data_top_dir, @o._output_dir, nil, nil).setup
+      Mkspec::Config.new(@ost.spec_dir, @ost.data_top_dir, @ost.output_data_top_dir, @ost._output_dir, nil, nil).setup
     end
 
     def create_instance_of_root
-      yml_path = Pathname.new("a").join(@o.yaml_fname).to_s
-      #      yml_path = @o.config_0.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
-      Mkspec::Root.new(yml_path, @o.config_0)
+      yml_path = Pathname.new("a").join(@ost.yaml_fname).to_s
+      #      yml_path = @ost.config_0.make_path_under_template_and_data_dir(Pathname.new("a").join(@ost.yaml_fname))
+      Mkspec::Root.new(yml_path, @ost.config_0)
     end
 
     def _create_instance_of_root
-      _config()
-      #      yml_path = @o._config.make_path_under_template_and_data_dir(Pathname.new("a").join(@o.yaml_fname))
-      raise(Mkspec::MkspecDebugErrorunless, "testconf.rb _create_instance_of @o.yaml_fname=#{@o.yaml_fname}") unless Util.not_empty_string?(@o.yaml_fname)
-      #yml_path = @o.spec_test_test_misc_dir_pn.join("a.yml").to_s
-      yml_path = @o._config.make_path_under_template_and_data_dir("a").join("a.yml").to_s
-      # yml_path = Pathname.new("a").join(@o.yaml_fname).to_s
+      _mkscript
+      #      yml_path = @ost._config.make_path_under_template_and_data_dir(Pathname.new("a").join(@ost.yaml_fname))
+      unless Util.not_empty_string?(@ost.yaml_fname)
+        raise(Mkspec::MkspecDebugErrorunless,
+              "testconf.rb _create_instance_of @ost.yaml_fname=#{@ost.yaml_fname}")
+      end
+      #yml_path = @ost.spec_test_test_misc_dir_pn.join("a.yml").to_s
+      yml_path = @ost._config.make_path_under_template_and_data_dir("a").join("a.yml").to_s
+      # yml_path = Pathname.new("a").join(@ost.yaml_fname).to_s
       Util.dump_var(:yml_path, "#{yml_path}|")
-      Mkspec::Root.new(yml_path, @o._config)
+      Mkspec::Root.new(yml_path, @ost._config)
     end
 
     def create_instance_of_item(content_path, yaml_path)
@@ -129,8 +169,9 @@ module Mkspec
       tag = "make_arg_data_flat"
       hash = {}
       #              (size,  name, outer_hash,   content_path, yaml_path, config)
-      @o._config.setup
-      Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @o._config)
+      # @ost._config.setup
+      _mkscript
+      Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @ost._config)
     end
 
     def _create_instance_of_item(content_path, yaml_path)
@@ -138,51 +179,53 @@ module Mkspec
       tag = "make_arg_data_flat"
       hash = {}
       #              (size,  name, outer_hash,   content_path, yaml_path, config)
-      _config()
-      @o._config.setup
-      Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @o._config)
+      #_config
+      #@ost._config.setup
+      _mkscript
+      Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @ost._config)
     end
 
     def create_instance_of_setting
       testscript = create_instance_of_testscript
       config = create_instance_of_config
-      func_name_of_make_arg = o.make_arg_basename
+      func_name_of_make_arg = @ost.make_arg_basename
       Mkspec::Setting.new(testscript, config, func_name_of_make_arg)
     end
 
     def _create_instance_of_setting
       testscript = create_instance_of_testscript
-      _config = _create_instance_of_config
-      func_name_of_make_arg = o.make_arg_basename
+      config_l = _create_instance_of_config
+      func_name_of_make_arg = ost.make_arg_basename
       lt_id = -1
-      Mkspec::Setting.new(o, testscript, _config, lt_id)
+      Mkspec::Setting.new(ost, testscript, config_l, lt_id)
     end
 
     def create_instance_of_testscript
-      name = o.start_char
-      limit = o.limit
+      name = @ost.start_char
+      limit = @ost.limit
       Mkspec::TestScript.new(name, limit)
     end
 
-    def create_instance_of_templatex
+    def create_instance_of_templatex(config)
       setting = create_instance_of_setting
-      Mkspec::Templatex.new(setting)
+      Mkspec::Templatex.new(setting, config)
     end
 
-    def _create_instance_of_templatex
+    def _create_instance_of_templatex(config)
       setting = _create_instance_of_setting
-      Mkspec::Templatex.new(setting)
+
+      Mkspec::Templatex.new(setting, config)
     end
 
     def create_instance_of_testgroup_0
-      make_arg_basename = o.make_arg_basename
-      tgroup_0 = o.tgroup_0_name
+      make_arg_basename = @ost.make_arg_basename
+      tgroup_0 = @ost.tgroup_0_name
       tgroup = tgroup_0.tr("-", "_").tr(".", "_")
       Mkspec::TestGroup.new(tgroup, make_arg_basename)
     end
 
     def create_instance_of_testcase
-      make_arg_basename = o.make_arg_basename
+      make_arg_basename = @ost.make_arg_basename
       tgroup_0 = "mruby-MrubyBridge"
       tgroup = tgroup_0.tr("-", "_").tr(".", "_")
       test_group = create_instance_of_testgroup(tgroup, make_arg_basename)
@@ -202,28 +245,17 @@ module Mkspec
       Mkspec::TestGroup.new(tgroup, make_arg_basename)
     end
 
-    def create_instance_of_testscript
-      name = o.start_char
-      limit = o.limit
-      Mkspec::TestScript.new(name, limit)
-    end
-
     def create_instance_of_testscriptgroup
-      fname = @o.misc_tsv_fname
-      start_char = o.start_char
-      limit = o.limit
-      make_arg_basename = o.make_arg_basename
+      fname = @ost.misc_tsv_fname
+      start_char = @ost.start_char
+      limit = @ost.limit
+      make_arg_basename = @ost.make_arg_basename
       Mkspec::TestScriptGroup.new(fname, start_char, limit, make_arg_basename)
     end
 
-    def create_instance_of_testscript
-      name = o.start_char
-      limit = o.limit
-      Mkspec::TestScript.new(name, limit)
-    end
-
     def create_instance_of_mkscript(argv)
-      Mkspec::Mkscript.new(argv)
+      mkscript = Mkspec::Mkscript.new
+      mkscript.check_cli_options(argv)
     end
   end
 end

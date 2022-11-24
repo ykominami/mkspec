@@ -1,0 +1,8 @@
+*
+!.gitignore
+!_resolved
+!global.yml
+!specific.yml
+!top_dir.yml
+!.env_for_test
+

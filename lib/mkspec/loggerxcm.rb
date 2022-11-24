@@ -6,53 +6,71 @@ module Mkspec
     require 'fileutils'
     require 'stringio'
 
-    LOG_FILENAME_BASE ||= "#{Time.now.strftime("%Y%m%d-%H%M%S")}.log"
-    @log_file ||= nil
-    @log_stdout ||= nil
+    LOG_FILENAME_BASE = "#{Time.now.strftime('%Y%m%d-%H%M%S')}.log"
+    @log_file = nil
+    @log_stdout = nil
     @stdout_backup = $stdout
     @stringio = StringIO.new( +"", 'w+')
     #@limit_of_num_of_files ||= 3
 
     class << self
       def ensure_quantum_log_files( log_dir_pn, limit_of_num_of_files , prefix)
-        list = log_dir_pn.children.select{|item| item.basename.to_s.match?("^#{prefix}") }.sort_by{|pn| pn.mtime }
+        list = log_dir_pn.children.select { |item| item.basename.to_s.match?("^#{prefix}") }.sort_by(&:mtime)
         latest_index = list.size - limit_of_num_of_files
-        list[ 0, latest_index ].map{|ent| ent.unlink } if latest_index > 0
+        list[0, latest_index].map(&:unlink) if latest_index.positive?
       end
 
       def init(prefix, fname, log_dir, stdout_flag, level = :info)
-        unless @log_file
-          level_hs = {
-            debug: Logger::DEBUG,
-            info: Logger::INFO,
-            warn: Logger::WARN,
-            error: Logger::ERROR,
-            fatal: Logger::FATAL,
-            unknown: Logger::UNKNOWN
-          }
-          @log_dir_pn = Pathname.new(log_dir)
+        return if @log_file
 
-          @limit_of_num_of_files ||= 5
+        @error_count = 0
+        level_hs = {
+          debug: Logger::DEBUG,
+          info: Logger::INFO,
+          warn: Logger::WARN,
+          error: Logger::ERROR,
+          fatal: Logger::FATAL,
+          unknown: Logger::UNKNOWN
+        }
+        @log_dir_pn = Pathname.new(log_dir)
 
-          ensure_quantum_log_files( @log_dir_pn, @limit_of_num_of_files , prefix )
+        @limit_of_num_of_files ||= 5
 
-          fname = nil if fname == false
-          fname = prefix + LOG_FILENAME_BASE if fname == :default
-          filepath = Pathname.new(log_dir).join(fname)
-          @log_file ||= Logger.new(filepath) unless fname.nil?
-          @log_stdout ||= Logger.new(STDOUT) if stdout_flag
+        ensure_quantum_log_files( @log_dir_pn, @limit_of_num_of_files , prefix )
 
-          obj = proc do |_, _, _, msg| "#{msg}\n" end
-          register_log_format(obj)
-          register_log_level(level_hs[level])
+        @log_stdout = setup_logger_stdout(@log_stdout) if stdout_flag
 
-          @stdout_backup ||= $stdout
-          @stringio ||= StringIO.new( +"", 'w+')
+        fname = nil if fname == false
+        fname = prefix + LOG_FILENAME_BASE if fname == :default
+        @log_file = setup_logger_file(@log_file, log_dir, fname) if fname
+
+        obj = proc do |_, _, _, msg| "#{msg}\n" end
+        register_log_format(obj)
+        register_log_level(level_hs[level])
+      end
+
+      def setup_logger_stdout(log_stdout)
+        return log_stdout unless log_stdout.nil?
+        begin
+          log_stdout = Logger.new($stdout)
+        rescue
+          @error_count += 1
         end
-=begin
-        @stderr_backup ||= $stderr
-        @stringio ||= StringIO.new( +"", 'w+')
-=end
+        log_stdout
+      end
+
+      def setup_logger_file(log_file, log_dir, fname)
+        filepath = Pathname.new(log_dir).join(fname)
+        if log_file.nil?
+          begin
+            log_file = Logger.new(filepath)
+          rescue Errno::EACCES
+            @error_count += 1
+          rescue
+            @error_count += 1
+          end
+        end
+        log_file
       end
 
       def register_log_format(obj)
@@ -70,11 +88,11 @@ module Mkspec
 
       def to_string(value)
         if value.instance_of?(Array)
-          @stdout_backup = $stdout unless @stdout_backup
-          @stringio = StringIO.new( +"", 'w+') unless @stringio
+          @stdout_backup ||= $stdout
+          @stringio ||= StringIO.new( +"", 'w+')
           $stdout = @stringio
-          pp value
           $stdout = @stdout_backup
+          @stringio.rewind
           str = @stringio.read
           @stringio.truncate(0)
           str
@@ -84,17 +102,22 @@ module Mkspec
       end
 
       def show(value)
-        str = to_string(value)
-        @log_file&.error(str)
-        @log_stdout&.error(str)
-        puts(str) unless @log_stdout
+        puts(value)
+        str = error_sub(value)
+        # puts(str) unless @log_stdout
+        puts(str) #unless @log_stdout
         true
       end
 
-      def error(value)
+      def error_sub(value)
         str = to_string(value)
         @log_file&.error(str)
         @log_stdout&.error(str)
+        str
+      end
+
+      def error(value)
+        error_sub(value)
         true
       end
 

@@ -1,0 +1,11 @@
+tecsgen_top_dir: /home/ykominami/repo/tecsgen/trunk
+asp_dir: /mnt/e/v/ext2/svn-toppers/asp/trunk
+asp3_dir: /mnt/e/v/ext2/svn-toppers/asp3/trunk
+top_dir: '.'
+#top_dir: <%= top_dir %>
+tsv_path_index: 0
+tsv_path_array:
+  - <%= top_dir %>/test_data/test/misc/testlist-x.txt
+  - <%= top_dir %>/test_data/test/misc/t.txt
+original_output_root_dir: <%= top_dir %>/test_data
+log_dir: <%= top_dir %>/test_data/logs

@@ -1,7 +1,7 @@
+top_dir.yml
 _output/
 result.txt
 *.log
-global.yml
 *.code-workspace
 rubocop-cof.yml
 *.gem
@@ -79,4 +79,7 @@ package-lock.json
 
 #/test_auto/_output
 gen
+.ruby-version
+.xinit
+.xinit2
 

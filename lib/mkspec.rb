@@ -6,6 +6,7 @@ require 'pathname'
 require 'pry'
 require 'rufo'
 require 'clitest'
+require 'fileutils'
 
 require_relative 'mkspec/loggerxcm'
 
@@ -13,6 +14,8 @@ require_relative 'mkspec/loggerxcm'
 module Mkspec
   # エラーコード：成功
   SUCCESS = 0
+  # エラーコード：修了
+  FINISH = 1
   # エラーコード：コマンドラインオプションエラー
   INVALID_CMDLINE_OPTION_ERROR = 9
   # エラーコード：コマンドラインOオプションエラー
@@ -25,22 +28,24 @@ module Mkspec
   CMDLINE_OPTION_ERROR_S = 13
   # エラーコード：コマンドラインLオプションエラー
   CMDLINE_OPTION_ERROR_L = 14
+  # エラーコード：コマンドラインDオプションエラー
+  CMDLINE_OPTION_ERROR_D = 15
   # エラーコード：コマンドラインGオプションエラー
-  CMDLINE_OPTION_ERROR_G = 15
+  CMDLINE_OPTION_ERROR_G = 16
   # エラーコード：コマンドラインXオプションエラー
-  CMDLINE_OPTION_ERROR_X = 16
+  CMDLINE_OPTION_ERROR_X = 17
   # エラーコード：コマンドラインYオプションエラー
-  CMDLINE_OPTION_ERROR_Y = 17
+  CMDLINE_OPTION_ERROR_Y = 18
   # エラーコード：コマンドラインZオプションエラー
-  CMDLINE_OPTION_ERROR_Z = 18
-  # エラーコード：コマンドラインGGオプションエラー
-  CMDLINE_OPTION_ERROR_GG = 19
-  # エラーコード：コマンドラインTTオプションエラー
-  Mkspec::CMDLINE_OPTION_ERROR_TT = 20
-  # エラーコード：コマンドラインLLオプションエラー
-  CMDLINE_OPTION_ERROR_LL = 21
+  CMDLINE_OPTION_ERROR_Z = 19
   # エラーコード：コマンドラインDDオプションエラー
-  CMDLINE_OPTION_ERROR_DD = 22
+  CMDLINE_OPTION_ERROR_DD = 20
+  # エラーコード：コマンドラインGGオプションエラー
+  CMDLINE_OPTION_ERROR_GG = 21
+  # エラーコード：コマンドラインLLオプションエラー
+  CMDLINE_OPTION_ERROR_LL = 22
+  # エラーコード：コマンドラインTTオプションエラー
+  CMDLINE_OPTION_ERROR_TT = 23
 
   # エラーコード：SPECファイル作成失敗
   CANNOT_MAKE_SPEC_FILE = 24
@@ -60,7 +65,9 @@ module Mkspec
   MKSPEC_DEBUG_ERROR = 100
   # MkspecAppError発生
   MKSPEC_APP_ERROR = 101
-  # 
+
+  # デフォルトのログディレクトリ
+  DEFAULT_LOG_DIR = "./logs"
 
   # 非Stringインスタンスエラークラス
   class NotStringInstError < StandardError

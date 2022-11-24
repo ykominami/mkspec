@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module Mkspec
-
   class State
-     attr_accessor :message, :exit_code
+    attr_accessor :message, :exit_code
+
 #    attr_accessor :message
 
     def initialize
@@ -12,6 +12,10 @@ module Mkspec
 
     def success?
       @exit_code == SUCCESS
+    end
+
+    def finish?
+      @exit_code == FINISH
     end
 
     def change(exit_code, message = nil)

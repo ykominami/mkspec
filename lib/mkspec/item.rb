@@ -13,6 +13,7 @@ module Mkspec
       @name = name
       @outer_hash = outer_hash
       raise(Mkspec::MkspecDebugError, "item.rb initialize 1") unless Util.validate_hash(@outer_hash, "top_dir", String)
+
       @local_hash = {}
       @config = config
       Util.dump_var(:yaml_path, yaml_path)
@@ -44,7 +45,7 @@ module Mkspec
           pn = @config.make_path_under_template_and_data_dir(pn)
           kind = 2
           unless pn.exist?
-            pn = nil 
+            pn = nil
             kind = 3
           end
         end
@@ -56,7 +57,7 @@ module Mkspec
     end
 
     def prepare
-      Loggerxcm.debug("Item#setup @yaml_pn=#{@yaml_pn.to_s}")
+      Loggerxcm.debug("Item#setup @yaml_pn=#{@yaml_pn}")
       Loggerxcm.debug("Item#setup @content_pn=#{@content_pn}")
       @local_hash = Util.extract_in_yaml_file(@yaml_pn) if @yaml_pn&.exist?
       raise(Mkspec::MkspecDebugError, "item.rb prepare 1") unless Util.validate_hash(@local_hash, "top_dir", String)
@@ -64,6 +65,7 @@ module Mkspec
 
       @content_lines = Util.get_file_content_lines(@content_pn)
       raise(MkspecAppError, "item.rb 5") unless Util.valid_array?(@content_lines)
+
       @tag_table = Util.analyze(@content_lines)
 #      @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
       if @local_hash.size.positive?
@@ -84,17 +86,18 @@ module Mkspec
     end
 
     def check_kind_of_hash
-      if @hash == @logcal_hash
-        h = "local_hash"
-      else
-        h = "outer_hash"
-      end
+      h = if @hash == @logcal_hash
+            "local_hash"
+          else
+            "outer_hash"
+          end
       Loggerxcm.debug("Item#result ## item.result h=#{h}")
     end
 
     def result
       Loggerxcm.debug(%(################################## Item#result @content_pn=#{@content_pn}))
       raise( MkspecAppError, "item.rb 5 Item#result @content_pn=#{@content_pn}") unless @content_pn&.exist?
+
       check_kind_of_hash
       content = @content_lines.join("\n")
       @extracted = Util.extract_with_eruby(content, @hash)
@@ -102,7 +105,7 @@ module Mkspec
     end
 
     def add_indent(hash)
-      indent = @indent_level * INDENT_UNIT_SIZE + @extra_indent
+      indent = (@indent_level * INDENT_UNIT_SIZE) + @extra_indent
 
       hash.keys do |key|
         content_lines = []

@@ -1,0 +1,52 @@
+name: Ruby
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }}
+    strategy:
+      matrix:
+        ruby:
+          - '2.7'
+
+    env:
+      BUNDLE_WITH: test development
+      MKSPEC_GLOBAL_YAML_FNAME: ./test_data/global.yml
+      MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME: ./test_data/_resolved/top_dir.yml
+      MKSPEC_TOP_DIR_YAML_FNAME: ./test_data/top_dir.yml
+      MKSPEC_SPECIFIC_YAML_FNAME: ./test_data/specific.yml
+      MKSPEC_LOG_DIR: ./test_data/logs
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: ls ./test_data/
+        run: |
+          ls -al ${{ github.workspace}}/test_data
+      - name: ls ./test_data/_resolved
+        run: |
+          ls -al ${{ github.workspace}}/test_data/_resolved
+      - name: cat ./test_data/top_dir.yml
+        run: |
+          cat ${{ github.workspace}}/test_data/top_dir.yml
+      - name: cat ./test_data/global.yml
+        run: |
+          cat ${{ github.workspace}}/test_data/global.yml
+      - name: cat ./test_data/specific.yml
+        run: |
+          cat ${{ github.workspace}}/test_data/specific.yml
+      - name: echo
+        run: echo "This job's status is ${{ job.status }}"
+#      - name: Run the default task
+#        run: bundle exec rake

@@ -4,6 +4,8 @@
 require 'bundler/setup'
 require 'mkspec'
 require 'pp'
+# require 'mkspec/loggerxcm'
+
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
@@ -21,17 +23,23 @@ def output_error_message(mes)
 end
 
 exit_code = nil
-mkscript = Mkspec::Mkscript.new(ARGV)
+mkscript = Mkspec::Mkscript.new
+mkscript.check_cli_options(ARGV)
 exit_code = mkscript.check_state_and_show_useage_and_state_message
+# Mkspec::Loggerxcm.show("exit_code=#{exit_code}")
+puts("exit_code=#{exit_code}")
 exit(exit_code) if exit_code
+
+mkscript.init
+
 begin
   mkscript.create_files
 rescue Mkspec::MkspecDebugError => e
   output_error_message(e.message)
   output_error_message(e.backtrace.join("\n"))
   if Mkspec::STATE.success?
-     puts "1"
-   exit_code = Mkspec::MKSPEC_DEBUG_ERROR
+    puts "1"
+    exit_code = Mkspec::MKSPEC_DEBUG_ERROR
   else
     puts "2"
     exit_code = Mkspec::STATE.show_message
@@ -47,12 +55,12 @@ rescue Mkspec::MkspecAppError => e
     puts "4"
     exit_code = Mkspec::STATE.show_message
   end
-rescue => e
+rescue StandardError => e
   output_error_message("###################### 1")
   output_error_message(e.message)
   output_error_message(e.backtrace.join("\n"))
   puts "5"
   exit_code = Mkspec::STATE.show_message
 end
-exit_code = 0 unless exit_code
+exit_code ||= 0
 exit(exit_code)
