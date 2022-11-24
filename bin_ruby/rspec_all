@@ -1,0 +1,2 @@
+#!/bin/bash
+RUBY_VER=$1 RUBYLIB=$MKSPEC_DIR/lib rspec _DATA/hier4/script/

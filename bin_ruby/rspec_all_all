@@ -1,0 +1,6 @@
+#!/bin/bash
+ruby_vers="30 27 26 25 24 23 22 21 20"
+for n in $ruby_vers
+do
+	RUBY_VER=${n} RUBYLIB=$MKSPEC_DIR/lib rspec _DATA/hier4/script/
+done

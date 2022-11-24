@@ -1,0 +1,6 @@
+#!/bin/bash
+# RUBY_VER=27 RUBYLIB=$MKSPEC_DIR/lib rspec _DATA/hier4/script_3/a_spec.rb
+dir=$(dirname $0)
+RUBY_VER=21 ${dir}/tecsgen
+
+
