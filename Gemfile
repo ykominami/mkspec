@@ -8,7 +8,7 @@ gemspec
 gem 'bundler'
 gem 'erubis', '~> 2.7.0'
 gem 'pre-commit'
-gem 'rake', '~> 13.0'
+gem 'rake', '~> 12.3.3'
 gem 'rb-readline'
 gem 'rufo'
 
@@ -21,12 +21,12 @@ group :test, optional: true do
 
   gem 'aruba'
   gem 'clitest'
-  # gem 'pry-byebug'
 end
 
 group :development, optional: true do
   gem 'coderay', '~> 1.1.1'
   gem 'pry'
+  gem 'pry-byebug'
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'yard'
