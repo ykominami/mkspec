@@ -1,4 +1,4 @@
 #!/bin/bash
-. ~/bin1/.version
 
-bundle exec rspec ./mkspec_cli_total.rb
+bundle exec rspec ./spec/cli/mkspec_cli_total_spec.rb
+
