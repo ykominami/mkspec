@@ -8,22 +8,21 @@ gemspec
 gem 'bundler'
 gem 'erubis', '~> 2.7.0'
 gem 'pre-commit'
-gem 'rake', '~> 12.3.3'
+gem 'rake'
 gem 'rb-readline'
 gem 'rufo'
 
 group :test, optional: true do
-  gem 'rspec', '~> 3.0'
-  gem 'rspec_junit_formatter'
   gem 'rubocop'
   gem 'rubocop-rake'
   gem 'rubocop-rspec'
-
-  gem 'aruba'
-  gem 'clitest'
 end
 
 group :development, optional: true do
+  gem 'rspec', '~> 3.0'
+  gem 'rspec_junit_formatter'
+  gem 'aruba'
+  gem 'clitest'
   gem 'coderay', '~> 1.1.1'
   gem 'pry'
   gem 'pry-byebug'
@@ -32,3 +31,4 @@ group :development, optional: true do
   gem 'yard'
 end
 #  gem 'pry'
+
