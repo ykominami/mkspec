@@ -115,7 +115,8 @@ module Mkspec
       @hash[test_group_name] = {
         "path" => "rspec_describe_context/content.txt",
         "context" => test_group_name,
-        "tecsgen_cmd" => @gc.tecsgen_cmd
+        @gc.get_key_of_tecsgen_cmd => @gc.tecsgen_cmd,
+        @gc.get_key_of_tecsgen_cmd_path => @gc.tecsgen_cmd_path,
       }
     end
 

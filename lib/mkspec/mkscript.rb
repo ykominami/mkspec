@@ -24,7 +24,7 @@ module Mkspec
       @opt = opt
       @version = nil
 
-      opt.banner = "Usage: ruby #{$PROGRAM_NAME} -o output_dir -t tsv -c cmd -s ch -l limit -d script_dir -r resolved_top_dir_yaml -i tad_dir -g global_yaml -x original_output_dir -y target_cmd1 -z target_cmd2 -D top_dir_yaml -G specific_yaml -L log_dir"
+      opt.banner = "Usage: ruby #{$PROGRAM_NAME} -o output_dir -t tsv -c cmd -s ch -l limit -d script_dir -i tad_dir -g global_yaml -x original_output_dir -y target_cmd1 -z target_cmd2 -G specific_yaml -L log_dir"
 
       opt.on("-o output_dir", "output directory") { |x| @output_dir = x }
       opt.on("-t tsv", "tsv file") { |x| @tsv_fname = x }
@@ -32,13 +32,11 @@ module Mkspec
       opt.on("-s ch", "start-char") { |x| @start_char = x }
       opt.on("-l limit", "limit") { |x| @limit = x.to_i }
       opt.on("-d script_dir", "script directory") { |x| @script_dir = x }
-      opt.on("-r resolved_top_dir_yaml", "resolved top dir yamlfile") { |x| @resolved_top_dir_yaml_fname = x }
       opt.on("-i tad_dir", "limit") { |x| @tad_dir = x }
       opt.on("-g global_yaml", "global yamlfile") { |x| @global_yaml_fname = x }
       opt.on("-x original_output_dir", "original output dir") { |x| @original_output_dir = x }
       opt.on("-y target_cmd1", "path of target command 1") { |x| @target_cmd1 = x }
       opt.on("-z target_cmd2", "path of target command 2") { |x| @target_cmd2 = x }
-      opt.on("-D top_dir_yaml", "top dir yamlfile") { |x| @top_dir_yaml_fname = x }
       opt.on("-G specific_yaml", "specific yamlfile") { |x| @specific_yaml_fname = x }
       opt.on("-L log_dir", "limit") { |x| @log_dir = x }
       opt.on("-v") { |_x| @version = Mkspec::VERSION }
@@ -58,33 +56,68 @@ module Mkspec
 
       return STATE.change(Mkspec::FINISH, %(version #{@version})) if @version
 
+      @global_yaml_fname ||= ENV['MKSPEC_GLOBAL_YAML_FNAME']
+      @specific_yaml_fname ||= ENV['MKSPEC_SPECIFIC_YAML_FNAME']
+
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
+      @global_yaml_pn = Pathname.new(@global_yaml_fname)
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
+
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
+      @specific_yaml_pn = Pathname.new(@specific_yaml_fname)
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "invalid -G") unless @specific_yaml_pn.exist?
+
+
+      @gco = GlobalConfig.new(@specific_yaml_pn, @global_yaml_pn, nil)
+
+      ost = @gco.ost
+      # ost.output_dir.x
+      # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14"
+      @output_dir ||= ost.output_dir
+      @tsv_fname ||= ost.tsv_fname
+      @start_char ||= ost.start_char
+      @limit ||= ost.limit
+      # ost.original_output_dir.x
+      # "_DATA/hier14"
+      # ost.original_output_dir.x
+      # "_DATA/hier14"
+      # ost.original_output_dir.x
+      # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14/script"
+      @original_output_dir ||= ost.original_output_dir
+      @target_cmd1 ||= ost.tecsgen_cmd
+      @target_cmd2 ||= ost.tecsgen_merge_cmd
+      @log_dir ||= ost.log_dir
+      @cmd ||= ost.cmd
+      @start_char ||= ost.start_char
+      @limit ||= ost.limit
+
+      @target_cmd_1 ||= ost.target_cmd_1
+      @target_cmd_2 ||= ost.target_cmd_2
+      @tad_dir ||= ost.tad_dir
+      # ost.script_dir.x
+      # "spec"
+      @script_dir = ost.script_dir
+      @output_script_dir = ost.output_script_dir
+      # @output_script_dir.x 
+      # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14/script"
+      @output_template_and_data_dir_pn = ost.output_template_and_data_dir_pn
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless cmd_options.find { |it| @cmd == it }
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd_1
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd_2
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_I, "not specified -i") unless @tad_dir
+      
       # -d
       # -i
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
 
-      @global_yaml_pn = Pathname.new(@global_yaml_fname)
       # exit
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_X, "not specified -x") unless @original_output_dir
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd1
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd2
-
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "not specified -D") unless @top_dir_yaml_fname
-
-      @top_dir_yaml_pn = Pathname.new(@top_dir_yaml_fname)
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_DD, "invalid -D") unless @top_dir_yaml_pn.exist?
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
-
-      @resolved_top_dir_yaml_pn = Pathname.new(@resolved_top_dir_yaml_fname) if @resolved_top_dir_yaml_fname
 
       @specific_yaml_pn = Pathname.new(@specific_yaml_fname)
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "invalid -G") unless @specific_yaml_pn.exist?
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_LL, "not specified -L") unless @log_dir
 
       if Util.not_empty_string?(@log_dir).first
@@ -125,11 +158,27 @@ module Mkspec
     end
 
     def init
-      @lt_id = -1
-      @gco = GlobalConfig.new(@top_dir_yaml_pn, @resolved_top_dir_yaml_pn, @specific_yaml_pn, @global_yaml_pn, @target_cmd1, @target_cmd2, nil)
+      # ost.target_parent_dir
+      # puts "@output_dir=#{@output_dir}"
+      # puts "@output_script_dir=#{@output_script_dir}"
+      # @script_dir.X
+      # "spec"
+      # @output_script_dir.X
+      # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14/script"
+      # @tad_dir.X
+      # nil
+      # @output_dir.X
+      # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14"
+      config = Config.new(@gco.ost.top_dir, @gco.ost.data_top_dir, 
+                        @gco.ost.output_data_top_dir, @output_dir, @output_script_dir,
+                        @output_template_and_data_dir_pn)
+      # @gco.ost.top_dir=/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14
+      # @gco.ost.data_top_dir=spec
+      # @gco.ost.output_data_top_dir=/home/ykominami/repo/ykominami/mkspec_data
+      # @output_dir=/home/ykominami/repo/ykominami/mkspec_data
+      # @script_dir=/home/ykominami/repo/ykominami/mkspec_data
+      # @ta_dir=/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14
 
-      config = Config.new(@gco.ost.top_dir, @gco.ost.data_top_dir, @gco.ost.output_data_top_dir, @output_dir, @script_dir,
-                          @tad_dir)
       init_sub(@gco, config, @gco.tsv_path, @tad_dir, @start_char, @limit, @gco.make_arg)
     end
 

@@ -19,27 +19,45 @@ module Mkspec
     # test_output/template_and_data
     #
 
-    def initialize(spec_dir, data_top_dir, output_data_top_dir, output_dir, script_dir, tad_dir, test_case_dir = nil)
+    def initialize(data_top_dir, output_data_top_dir, output_dir, script_dir, tad_dir, test_case_dir = nil)
+      # puts "Config.new"
+      # puts "data_top_dir=#{data_top_dir}"
+      # puts "output_data_top_dir=#{output_data_top_dir}"
+      # puts "output_dir=#{output_dir}"
+      # puts "script_dir=#{script_dir}"
+      # puts "tad_dir=#{tad_dir}"
+      # tad_dir.X
+      # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14/script"
+      # @output_dir=/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14
+      # @script_dir=spec
+      # Config.new
+      # data_top_dir=/home/ykominami/repo/ykominami/mkspec_data
+      # output_data_top_dir=/home/ykominami/repo/ykominami/mkspec_data
+      # output_dir=/home/ykominami/repo/ykominami/mkspec_data
+      # script_dir=/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14
+
       # raise unless spec_dir
       raise unless data_top_dir
       raise unless output_data_top_dir
       raise unless output_dir
 
       @setup_count = 0
-      @spec_dir_pn = Pathname.new(spec_dir)
+      # @spec_dir_pn = Pathname.new(script_dir)
       @data_top_dir_pn = Pathname.new(data_top_dir)
       @output_data_top_dir_pn = Pathname.new(output_data_top_dir)
       @output_test_dir_pn = @output_data_top_dir_pn.join(GlobalConfig::TEST_DIR)
       @test_dir_pn = @data_top_dir_pn.join(GlobalConfig::TEST_DIR)
 
       @misc_dir_pn = @test_dir_pn.join(GlobalConfig::MISC_DIR)
-      top_pn = @spec_dir_pn.parent
       @root_output_dir_pn = @data_top_dir_pn.join(GlobalConfig::ROOT_OUTPUT_DIR)
 
       @output_dir = output_dir
       @script_dir = script_dir
       @tad_dir = tad_dir
       @test_case_dir = test_case_dir
+
+      # script_dir.x 
+      # ""/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14"
     end
 
     def setup
@@ -47,7 +65,7 @@ module Mkspec
       return self if @setup_count.positive?
 
       Loggerxcm.debug("Config.setup 1 #{@setup_count} self=#{self}")
-      Loggerxcm.debug(["caller=" , caller].join("\n"))
+      # Loggerxcm.debug(["caller=" , caller].join("\n"))
       output_dir_pn = Pathname.new(@output_dir)
       pn = if output_dir_pn.absolute?
              output_dir_pn
@@ -57,19 +75,24 @@ module Mkspec
       Loggerxcm.debug("Config.setup pn=#{pn}")
       pn.mkpath unless pn.exist?
       @output_dir_pn = pn
-
       @script_absolute_dir_pn = check_absolute_dir(@script_dir)
       @tad_absolute_dir_pn = check_absolute_dir(@tad_dir)
       @test_case_absolute_dir_pn = check_absolute_dir(@test_case_dir)
+      #@tad_absolute_dir_pn.x = nil
+      # @script_absolute_dir_pn.x 
+      # /home/ykominami/repo/ykominami/mkspec/spec
+      @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, @script_dir)
+      # puts "### Config @output_script_dir_pn=#{@output_script_dir_pn}"
 
-      @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, GlobalConfig::OUTPUT_SCRIPT_DIR)
       @output_template_and_data_dir_pn = setup_dir(@tad_absolute_dir_pn, @tad_dir,
                                                    GlobalConfig::OUTPUT_TEMPLATE_AND_DATA_DIR)
       @output_test_case_dir_pn = setup_dir(@test_case_absolute_dir_pn, @test_case_dir,
                                            GlobalConfig::OUTPUT_TEST_CASE_DIR)
 
-      @test_case_archive_dir_pn = @test_dir_pn.join(GlobalConfig::TEST_CASE_ARCHIVE_DIR)
+
       Loggerxcm.debug("@test_case_archive_dir_pn=#{@test_case_archive_dir_pn}")
+      # puts("@test_case_archive_dir_pn=#{@test_case_archive_dir_pn}")
+      @test_case_archive_dir_pn = @test_dir_pn.join(GlobalConfig::TEST_CASE_ARCHIVE_DIR)
       if @output_template_and_data_dir_pn.exist?
         setup_dir_content(@test_case_archive_dir_pn, @output_test_case_dir_pn)
       else
@@ -78,8 +101,10 @@ module Mkspec
       end
 
       Loggerxcm.debug("@output_template_and_data_dir_pn=#{@output_template_and_data_dir_pn}")
+      puts("@output_template_and_data_dir_pn=#{@output_template_and_data_dir_pn}")
       @archive_dir_pn = @test_dir_pn.join(GlobalConfig::TEST_ARCHIVE_DIR)
       if @archive_dir_pn.exist?
+        puts "############# setup_dir_content @archive_dir_pn=#{@archive_dir_pn}"
         setup_dir_content(@archive_dir_pn, @output_template_and_data_dir_pn)
       else
         Loggerxcm.error("Can't find #{@archive_dir_pn}")
@@ -120,6 +145,9 @@ module Mkspec
     end
 
     def setup_dir_content(src_dir, dest_dir)
+      puts "Config setup_dir_content"
+      puts "src_dir=#{src_dir}"
+      puts "dest_dir=#{dest_dir}"
       FileUtils.copy_entry(src_dir, dest_dir)
     end
 
@@ -132,7 +160,7 @@ module Mkspec
 
     def make_path_under_misc_dir(fname)
       new_pn = @misc_dir_pn.join(fname)
-      puts("Config#make_path_under_misc_dir fname=#{fnam} new_pn=#{new_pn}")
+      puts("Config#make_path_under_misc_dir fname=#{fname} new_pn=#{new_pn}")
       new_pn
     end
 
