@@ -27,7 +27,7 @@ mkscript = Mkspec::Mkscript.new
 mkscript.check_cli_options(ARGV)
 exit_code = mkscript.check_state_and_show_useage_and_state_message
 # Mkspec::Loggerxcm.show("exit_code=#{exit_code}")
-puts("exit_code=#{exit_code}")
+# puts("exit_code=#{exit_code}")
 exit(exit_code) if exit_code
 
 mkscript.init
