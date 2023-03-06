@@ -76,10 +76,22 @@ module Mkspec
 
   # 非Stringインスタンスエラークラス
   class NotStringInstError < StandardError
+    attr_reader :attr
+
+    def initialize(msg="My default message", message_array=[])
+      @attr = attr
+      super(msg)
+    end
   end
 
   # 空文字列インスタンスエラークラス
   class EmptyStringError < StandardError
+    attr_reader :message_array
+
+    def initialize(msg="My default message", message_array=[])
+      @message_array = message_array
+      super(msg)
+    end
   end
   # Your code goes here...
 
@@ -89,12 +101,30 @@ module Mkspec
   #end
 
   class MkspecError < StandardError
+    attr_reader :message_array
+
+    def initialize(msg="My default message", message_array=[])
+      @message_array = message_array
+      super(msg)
+    end
   end
 
   class MkspecDebugError < MkspecError
+    attr_reader :message_array
+
+    def initialize(msg="My default message", message_array=[])
+      @message_array = message_array
+      super(msg)
+    end
   end
 
   class MkspecAppError < MkspecError
+    attr_reader :message_array
+
+    def initialize(msg="My default message", message_array=[])
+      @message_array = message_array
+      super(msg)
+    end
   end
 end
 

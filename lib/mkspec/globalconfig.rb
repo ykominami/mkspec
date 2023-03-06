@@ -1,5 +1,6 @@
 require 'pp'
 require 'fileutils'
+require 'pathname'
 
 module Mkspec
   class GlobalConfig
@@ -90,21 +91,23 @@ module Mkspec
 
     DEFAULT_TOP_DIR = ".".freeze
 
-    def initialize(specific_yaml, global_yaml, target_cmd_1 = nil, target_cmd_2 = nil, original_spec_file_path = nil)
+    def initialize(new_count, specific_yaml, global_yaml, target_cmd_1 = nil, target_cmd_2 = nil, original_spec_file_path = nil)
+      @new_count = new_count
+
       specific_yaml_pn = Pathname.new(specific_yaml)
       @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn, {})
       ret, kind = Util.not_empty_hash?(@specific_hash)
       unless ret
         Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{@specific_hash.class}")
         Loggerxcm.debug("GlobalConfig.initialize kind=#{kind}")
-        raise(Mkspec::MkspecDebugError, "globalconfig.rb 1")
+        raise Mkspec::MkspecDebugError.new("globalconfig.rb 1")
       end
 
       global_yaml_pna = Pathname.new(global_yaml)
-      raise(Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
+      raise Mkspec::MkspecAppError.new("globalconfig.rb 2 #{global_yaml}") unless global_yaml_pna.exist?
 
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
-      raise(MkspecAppError, "globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
+      raise MkspecAppError.new("globalconfig.rb 3") unless Util.not_empty_hash?(@global_hash).first
 
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
 
@@ -130,7 +133,7 @@ module Mkspec
       @ost.data_dir_0 = @global_hash['data_dir_0']
       @ost.sub_data_dir_1 = @global_hash['sub_data_dir_1']
       @ost.sub_data_dir_2 = @global_hash['sub_data_dir_2']
-      @ost.test_case_dir = @global_hash['test_case_dir']
+      @ost.test_case_dir = @global_hash[TEST_CASE_DIR_KEY]
       @ost.tad_dir_index = @global_hash['tad_dir_index'].to_i
       @ost.tad_dir_array = @global_hash['tad_dir_array']
       @ost.tad_dir = @ost.tad_dir_array[ @ost.tad_dir_index ]
@@ -146,7 +149,30 @@ module Mkspec
       @ost.top_dir_pn = Pathname.new(@ost.top_dir)
       @ost.tsv_path_index = @global_hash['tsv_path_index']
       @ost.tsv_path_array = @global_hash['tsv_path_array']
-      @ost.original_output_dir = @global_hash[get_key_of_original_output_dir]
+      @ost.original_output_dir = @global_hash[get_key_of_original_output_dir].to_s
+      if @new_count
+        pn = Pathname.new(@ost.original_output_dir)
+        p "@ost.original_output_dir=#{@ost.original_output_dir}"
+        basename = pn.basename
+        if basename.to_s =~ /^([^\d]*)(\d+)$/
+          str = $1
+          n = $2.to_i
+          n += 1
+          parent_pn = pn.parent
+          while true
+            name = "#{str}#{n}"
+            p "name=#{name}"
+            new_pn = parent_pn.join(name)
+            if new_pn.exist?
+              n += 1
+            else
+              @ost.original_output_dir = new_pn.to_s
+              p "@ost.original_output_dir=#{@ost.original_output_dir}"
+              break
+            end
+          end
+        end
+      end
 
       @ost.original_output_root_dir = @global_hash['original_output_root_dir']
       @ost.log_dir = @global_hash[LOG_DIR_KEY]
@@ -174,16 +200,16 @@ module Mkspec
       @ost.output_data_top_dir = @ost.output_data_top_dir_pn.to_s
 
       # raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless @ost.original_root_output_dir_pn
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X1") unless global_yaml_pna.parent
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X2") unless @ost.data_top_dir_pn
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X3") unless @ost.top_dir_pn
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X31") unless @ost.top_dir_pn.exist?
+      raise Mkspec::MkspecDebugError.new("globalconfig.rb X1") unless global_yaml_pna.parent
+      raise Mkspec::MkspecDebugError.new("globalconfig.rb X2") unless @ost.data_top_dir_pn
+      raise Mkspec::MkspecDebugError.new("globalconfig.rb X3") unless @ost.top_dir_pn
+      raise Mkspec::MkspecDebugError.new("globalconfig.rb X31") unless @ost.top_dir_pn.exist?
 
       # puts "@ost.log_dir_pn=#{@ost.log_dir_pn}"
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X4") unless @ost.log_dir_pn.exist?
+      raise Mkspec::MkspecDebugError.new("globalconfig.rb X4 | Can't find #{@ost.log_dir_pn}") unless @ost.log_dir_pn.exist?
 
       ret = @ost.log_dir_pn.exist?
-      raise(Mkspec::MkspecDebugError, "globalconfig.rb X41") unless ret
+      raise Mkspec::MkspecDebugError.new("globalconfig.rb X41") unless ret
 
       @ost.specific_yaml_fname = specific_yaml_pn.to_s
 
@@ -192,9 +218,9 @@ module Mkspec
       @ost.original_spec_file = original_spec_file_path
 
       if target_cmd_1
-        raise(MkspecAppError, "globalconfig.rb 6") unless target_cmd_2
+        raise MkspecAppError.new("globalconfig.rb 6") unless target_cmd_2
       elsif target_cmd_2
-        raise(MkspecAppError, "globalconfig.rb 7")
+        raise MkspecAppError.new("globalconfig.rb 7")
       end
       if target_cmd_1 && target_cmd_2
         _tmp, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, ".", target_cmd_1, target_cmd_2)
@@ -239,7 +265,7 @@ module Mkspec
       ost.spec_dir = ost.spec_pn.to_s
       ost.top_dir_pn = ost.spec_pn.parent
       ost.top_dir = ost.top_dir_pn.to_s
-      raise(MkspecAppError, "globalconfig.rb X") unless Util.not_empty_string?(top_dir).first
+      raise MkspecAppError.new("globalconfig.rb X") unless Util.not_empty_string?(top_dir).first
 
       ost.spec_test_dir_pn = ost.data_top_dir_pn.join(TEST_DIR)
       ost.spec_test_test_misc_dir_pn = ost.spec_test_dir_pn.join(TEST_MISC_DIR)
@@ -270,13 +296,15 @@ module Mkspec
 
       ost.output_dir_pn = ost.target_parent_dir_pn
       ost.output_dir = ost.output_dir_pn.to_s
-      ost.output_template_and_data_dir_pn = ost.output_dir_pn.join("template_and_data")
+      # ost.output_template_and_data_dir_pn = ost.output_dir_pn.join("template_and_data")
+      ost.output_template_and_data_dir_pn = ost.output_dir_pn.join( ost.tad_dir )
       ost.output_template_and_data_dir = ost.output_template_and_data_dir_pn.to_s
-      ost.output_script_dir_pn = ost.output_dir_pn.join("script")
+      # ost.output_script_dir_pn = ost.output_dir_pn.join("script")
+      ost.output_script_dir_pn = ost.output_dir_pn.join( ost.script_dir )
       ost.output_script_dir = ost.output_script_dir_pn.to_s
       # ost.output_script_dir.x
       # "/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14/script"
-      ost.output_test_case_root_dir_pn = ost.output_dir_pn.join("test_case")
+      ost.output_test_case_root_dir_pn = ost.output_dir_pn.join(OUTPUT_TEST_CASE_DIR)
       ost.output_test_case_root_dir = ost.output_test_case_root_dir_pn.to_s
 
       # ost.template_and_data_dir_pn = ost.output_dir_pn.join(OUTPUT_TEMPLATE_AND_DATA_DIR)
@@ -330,7 +358,7 @@ module Mkspec
     end
 
     def top_dir
-      raise(MkspecAppError, "globalconfig.rb X-2") unless Util.not_empty_string?(@ost.top_dir).first
+      raise MkspecAppError.new( "globalconfig.rb X-2") unless Util.not_empty_string?(@ost.top_dir).first
 
       @ost.top_dir.to_s
     end

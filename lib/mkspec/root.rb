@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'pathname'
 
 module Mkspec
   require 'yaml'
@@ -8,17 +9,16 @@ module Mkspec
       yml_0_pn = Pathname.new(yml_fname)
       basename = yml_0_pn.basename
       yml_pn = yml_0_pn.exist? ? yml_0_pn : config.make_path_under_misc_dir(basename)
-      # puts "root.rb Root.initialize yml_pn=#{yml_pn}"
-      raise( Mkspec::MkspecDebugError, "root.rb initialize yml_0_pn=#{yml_0_pn} yml_pn=#{yml_pn}") unless yml_pn.exist?
+      raise Mkspec::MkspecDebugError.new("root.rb initialize yml_0_pn=#{yml_0_pn} yml_pn=#{yml_pn}") unless yml_pn.exist?
 
       Loggerxcm.debug("Util.extract_in_yaml_file yml_pn=#{yml_pn}")
       @setting_hash = Util.extract_in_yaml_file(yml_pn)
       unless Util.validate_hash(@setting_hash, "top_dir", String)
         Loggerxcm.debug("Root#initialize @setting_hash=#{@setting_hash}")
-        raise(Mkspec::MkspecDebugError, "root.rb initialize 1")
+        raise Mkspec::MkspecDebugError.new( "root.rb initialize 1")
       end
       @content_path = @setting_hash['path']
-      raise(Mkspec::MkspecDebugError, "root.rb 1 @contnet_path=#{@content_path}") unless @content_path
+      raise Mkspec::MkspecDebugError.new("root.rb 1 @contnet_path=#{@content_path}") unless @content_path
 
       @config = config
       @content_pn = @config.make_path_under_template_and_data_dir(@content_path)
@@ -29,7 +29,7 @@ module Mkspec
       @setting_hash.each do |k, v|
         if v.instance_of?(Hash)
           content_path = v['path']
-          raise(Mkspec::MkspecDebugError, "root.rb extract_in_hash_with_setting_hash 1") unless Util.validate_hash(v,
+          raise Mkspec::MkspecDebugError.new("root.rb extract_in_hash_with_setting_hash 1") unless Util.validate_hash(v,
                                                                                                                    "top_dir", String)
 
           yaml_path = nil

@@ -97,18 +97,17 @@ module Mkspec
         setup_dir_content(@test_case_archive_dir_pn, @output_test_case_dir_pn)
       else
         Loggerxcm.error("Can't find #{@test_case_archive_dir_pn}")
-        raise(Mkspec::MkspecDebugError, "config.rg 1")
+        raise Mkspec::MkspecDebugError.new("config.rg 1")
       end
 
       Loggerxcm.debug("@output_template_and_data_dir_pn=#{@output_template_and_data_dir_pn}")
-      puts("@output_template_and_data_dir_pn=#{@output_template_and_data_dir_pn}")
       @archive_dir_pn = @test_dir_pn.join(GlobalConfig::TEST_ARCHIVE_DIR)
       if @archive_dir_pn.exist?
-        puts "############# setup_dir_content @archive_dir_pn=#{@archive_dir_pn}"
+        # puts "############# setup_dir_content @archive_dir_pn=#{@archive_dir_pn}"
         setup_dir_content(@archive_dir_pn, @output_template_and_data_dir_pn)
       else
         Loggerxcm.error("Can't find #{@archive_dir_pn}")
-        raise(Mkspec::MkspecDebugError, "config.rb 2")
+        raise Mkspec::MkspecDebugError.new("config.rb 2")
       end
       @setup_count += 1
 
@@ -145,9 +144,9 @@ module Mkspec
     end
 
     def setup_dir_content(src_dir, dest_dir)
-      puts "Config setup_dir_content"
-      puts "src_dir=#{src_dir}"
-      puts "dest_dir=#{dest_dir}"
+      # puts "Config setup_dir_content"
+      # puts "src_dir=#{src_dir}"
+      # puts "dest_dir=#{dest_dir}"
       FileUtils.copy_entry(src_dir, dest_dir)
     end
 
@@ -160,7 +159,7 @@ module Mkspec
 
     def make_path_under_misc_dir(fname)
       new_pn = @misc_dir_pn.join(fname)
-      puts("Config#make_path_under_misc_dir fname=#{fname} new_pn=#{new_pn}")
+      # puts("Config#make_path_under_misc_dir fname=#{fname} new_pn=#{new_pn}")
       new_pn
     end
 
