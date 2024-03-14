@@ -28,7 +28,7 @@ group :development, optional: true do
   gem 'pry-byebug'
   gem 'pry-doc'
   gem 'pry-stack_explorer'
-  gem 'yard'
+  gem 'yard', '~> 0.9.36'
 end
 #  gem 'pry'
 
