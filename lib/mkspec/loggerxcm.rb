@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'pathname'
 
 module Mkspec
@@ -11,11 +12,12 @@ module Mkspec
     @log_file = nil
     @log_stdout = nil
     @stdout_backup = $stdout
-    @stringio = StringIO.new( +"", 'w+')
-    #@limit_of_num_of_files ||= 3
+    @stringio = StringIO.new(+"", 'w+')
+
+    @valid = false
 
     class << self
-      def ensure_quantum_log_files( log_dir_pn, limit_of_num_of_files , prefix)
+      def ensure_quantum_log_files(log_dir_pn, limit_of_num_of_files, prefix)
         list = log_dir_pn.children.select { |item| item.basename.to_s.match?("^#{prefix}") }.sort_by(&:mtime)
         latest_index = list.size - limit_of_num_of_files
         list[0, latest_index].map(&:unlink) if latest_index.positive?
@@ -37,7 +39,7 @@ module Mkspec
 
         @limit_of_num_of_files ||= 5
 
-        ensure_quantum_log_files( @log_dir_pn, @limit_of_num_of_files , prefix )
+        ensure_quantum_log_files(@log_dir_pn, @limit_of_num_of_files, prefix)
 
         @log_stdout = setup_logger_stdout(@log_stdout) if stdout_flag
 
@@ -45,13 +47,25 @@ module Mkspec
         fname = prefix + LOG_FILENAME_BASE if fname == :default
         @log_file = setup_logger_file(@log_file, log_dir, fname) if fname
 
-        obj = proc do |_, _, _, msg| "#{msg}\n" end
+        obj = proc do |_, _, _, msg|
+          "#{msg}\n"
+        end
         register_log_format(obj)
         register_log_level(level_hs[level])
+
+        @valid = true
+
+        Loggerxcm.fatal("fatal")
+        Loggerxcm.debug("debug")
+        Loggerxcm.info("info")
+        Loggerxcm.warn("warn")
+        Loggerxcm.error("error")
+        #        Loggerxcm.unknown("unknown")
       end
 
       def setup_logger_stdout(log_stdout)
         return log_stdout unless log_stdout.nil?
+
         begin
           log_stdout = Logger.new($stdout)
         rescue
@@ -67,7 +81,8 @@ module Mkspec
             log_file = Logger.new(filepath)
           rescue Errno::EACCES
             @error_count += 1
-          rescue
+          rescue => exc
+            puts exc
             @error_count += 1
           end
         end
@@ -80,6 +95,7 @@ module Mkspec
       end
 
       def register_log_level(level)
+        puts "============ Loggerxcm.register_log_level level=#{level} ==========="
         @log_file&.level = level
         @log_stdout&.level = level
         #
@@ -90,12 +106,12 @@ module Mkspec
       def to_string(value)
         if value.instance_of?(Array)
           @stdout_backup ||= $stdout
-          @stringio ||= StringIO.new( +"", 'w+')
+          @stringio ||= StringIO.new(+"", 'w+')
           $stdout = @stringio
-          $stdout = @stdout_backup
           @stringio.rewind
           str = @stringio.read
           @stringio.truncate(0)
+          $stdout = @stdout_backup
           str
         else
           value
@@ -103,17 +119,27 @@ module Mkspec
       end
 
       def show(value)
-        puts(value)
-        str = error_sub(value)
-        # puts(str) unless @log_stdout
-        puts(str) #unless @log_stdout
+        if @valid
+          if value.instance_of?(Array)
+            value.map do |v|
+              str = v.to_s
+              Util.puts_valid_str(str)
+            end
+          else
+            Util.puts_valid_str(str)
+          end
+          str = error_sub(value)
+          Util.puts_valid_str(str)
+        end
         true
       end
 
       def error_sub(value)
         str = to_string(value)
-        @log_file&.error(str)
-        @log_stdout&.error(str)
+        if @valid
+          @log_file&.error(str)
+          @log_stdout&.error(str)
+        end
         str
       end
 
@@ -124,34 +150,49 @@ module Mkspec
 
       def debug(value)
         str = to_string(value)
-        @log_file&.debug(str)
-        @log_stdout&.debug(str)
+        if @valid
+          @log_file&.debug(str)
+          @log_stdout&.debug(str)
+        end
+
         true
       end
 
       def info(value)
         str = to_string(value)
-        @log_file&.info(str)
-        @log_stdout&.info(str)
+        if @valid
+          @log_file&.info(str)
+          @log_stdout&.info(str)
+        end
         true
       end
 
       def warn(value)
         str = to_string(value)
-        @log_file&.warn(str)
-        @log_stdout&.warn(str)
+        if @valid
+          @log_file&.warn(str)
+          @log_stdout&.warn(str)
+        end
         true
       end
 
       def fatal(value)
         str = to_string(value)
-        @log_file&.fatal(str)
-        @log_stdout&.fatal(str)
+        if @valid
+          @log_file&.fatal(str)
+          @log_stdout&.fatal(str)
+        end
         true
       end
 
       def close
+        retrun unless @valid
+
         @log_file&.close
+        @log_file = nil
+        @log_stdout = nil
+
+        @valid = false
         # @log_stdout&.close
       end
     end

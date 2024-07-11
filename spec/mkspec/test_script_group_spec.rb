@@ -2,6 +2,9 @@
 
 require 'spec_helper_1'
 
+log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
+logger_init(log_dir, level: :debug, stdout_flag: true) #1
+
 RSpec.describe Mkspec::TestScriptGroup do
   context '' do
     before(:all) do
@@ -10,12 +13,14 @@ RSpec.describe Mkspec::TestScriptGroup do
       @original_output_dir_pn = @ost.original_output_dir_pn
       @original_output_dir = @ost.original_output_dir
     end
+
     context 'call method of TestScriptGroup class' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @tsg = @conf.create_instance_of_testscriptgroup
       end
-      it 'call setup_test_group' , xcmd: 1 do
+
+      it 'call setup_test_group', xcmd: 1 do
         l = "data-normal\tcom.1\ttest_1"
         hash = {}
         ret = @tsg.setup_test_group(l, hash)
@@ -26,7 +31,8 @@ RSpec.describe Mkspec::TestScriptGroup do
         before(:all) do
           @ret = @tsg.setup_from_tsv
         end
-        it 'call setup_from_tsv' , xcmd: 2 do
+
+        it 'call setup_from_tsv', xcmd: 2 do
           expect(@ret.size).to eq(@ost.number_of_testgroup)
         end
 
@@ -35,12 +41,12 @@ RSpec.describe Mkspec::TestScriptGroup do
         end
       end
 
-      it 'call setup' , xcmd: 3 do
+      it 'call setup', xcmd: 3 do
         ret = @tsg.setup
         expect(ret.instance_of?(described_class)).to be(true)
       end
 
-      it 'call next_name' , xcmd: 4 do
+      it 'call next_name', xcmd: 4 do
         answer = @tsg.name.succ
         ret = @tsg.next_name
         expect(ret).to eq(answer)
@@ -58,27 +64,27 @@ RSpec.describe Mkspec::TestScriptGroup do
           @ret = @tsg.result
         end
 
-        it 'call result(array of instance of TestScript' , xcmd: 5 do
+        it 'call result(array of instance of TestScript', xcmd: 5 do
           expect(@ret.size).to eq(@number_of_testscript)
         end
 
-        it 'call result 2' , xcmd: 6 do
+        it 'call result 2', xcmd: 6 do
           expect(@ret[0].instance_of?(Mkspec::TestScript)).to be(true)
         end
 
-        it 'call result 3' , xcmd: 7 do
+        it 'call result 3', xcmd: 7 do
           expect(@ret[0].name).to eq(@start_char)
         end
 
-        it 'call result 4' , xcmd: 8 do
+        it 'call result 4', xcmd: 8 do
           expect(@ret[0].script_name).to eq(@first_script_name)
         end
 
-        it 'call result 5' , xcmd: 9 do
+        it 'call result 5', xcmd: 9 do
           expect(@ret[0].test_groups.size).to eq(@number_of_testgroup_of_first_testscript)
         end
 
-        it 'call result 6' , xcmd: 10 do
+        it 'call result 6', xcmd: 10 do
           expect(@ret[0].test_groups[0].instance_of?(Mkspec::TestGroup)).to be(true)
         end
       end

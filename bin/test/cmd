@@ -3,4 +3,4 @@ bin_dir=$(dirname $0)
 top_dir=$(dirname $bin_dir)
 
 bundle exec rspec ${top_dir}/mkspec_cli_spec.rb $*
-
+# bundle exec rspec ${top_dir}/mkspec_cli_spec.rb $*

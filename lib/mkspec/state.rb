@@ -4,8 +4,6 @@ module Mkspec
   class State
     attr_accessor :message_array, :exit_code
 
-#    attr_accessor :message
-
     def initialize
       @exit_code = SUCCESS
       @message_array = []
@@ -25,7 +23,7 @@ module Mkspec
       self
     end
 
-    def show_message(message = nil)
+    def show_message(_message = nil)
       ary = []
       ary << @message_array if @message_array
       Loggerxcm.show(ary)

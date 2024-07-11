@@ -4,26 +4,26 @@ require 'mkspec'
 
 begin
   require 'rspec/core/rake_task'
-rescue LoadError => e
-  puts e.message
+rescue LoadError => exc
+  puts exc.message
 end
 
 begin
   RSpec::Core::RakeTask.new(:spec)
-rescue NameError, LoadError => e
-  puts e.message
+rescue NameError, LoadError => exc
+  Loggerxcm.fatal(exc.message)
 end
 
 begin
   require 'rubocop/rake_task'
-rescue LoadError => e
-  puts e.message
+rescue LoadError => exc
+  Loggerxcm.fatal(exc.message)
 end
 
 begin
   RuboCop::RakeTask.new
-rescue NameError, LoadError => e
-  puts e.message
+rescue NameError, LoadError => exc
+  Loggerxcm.fatal(exc.message)
 end
 
 desc 'Mkspec related operaion'

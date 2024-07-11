@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#ls ../mkspec_data
+#ls ../mkspec_data/bin
+#ls ../mkspec_data/bin/setup.bash
+../mkspec_data/binx/setup.bash
+MKSPEC_OUTPUT_DIR=/home/ykominami/repo_ykominami/mkspec_output
+echo "export MKSPEC_OUTPUT_DIR=${MKSPEC_OUTPUT_DIR}"
+echo "export MKSPEC_LOG_DIR=${MKSPEC_OUTPUT_DIR}/logs"
+

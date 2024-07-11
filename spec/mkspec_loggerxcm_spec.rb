@@ -1,27 +1,35 @@
 # frozen_string_literal: true
 
 require 'spec_helper_1'
-require 'pry'
-require 'pp'
+require 'debug'
+
+logger_init_x
 
 RSpec.describe 'Loggerxcm', type: :aruba do
   context 'STATE is SUCCESS' do
     before(:all) do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-      @str = "Fatal"
-      @message_array = [
+    end
+
+    let(:message_array) do
+      [
         "string 1",
         "string 2"
       ]
     end
+    let(:str) { "Fatal" }
 
     context 'fatal' do
-      before(:each) do
-        @ret_string = Mkspec::Loggerxcm.fatal(@str)
-        @ret = Mkspec::Loggerxcm.fatal(@message_array)
+      let(:ret_string) { Mkspec::Loggerxcm.fatal(str) }
+      let(:ret) { Mkspec::Loggerxcm.fatal(message_array) }
+
+      it 'fatal for string', cmd: 11, kind: :fatal do
+        expect(ret_string).to be(true)
       end
-      it 'fatal for string' , kind: :fatal, cmd: 11 do expect(@ret_string).to be(true) end
-      it 'fatal for array of string' , kind: :fatal, cmd: 12 do expect(@ret).to be(true) end
+
+      it 'fatal for array of string', cmd: 12, kind: :fatal do
+        expect(ret).to be(true)
+      end
     end
 
     context 'error' do
@@ -29,7 +37,9 @@ RSpec.describe 'Loggerxcm', type: :aruba do
         @ret = Mkspec::Loggerxcm.error(@message_array)
       end
 
-      it 'error for array of string' , kind: :error, cmd: 121 do expect(@ret).to be(true) end
+      it 'error for array of string', cmd: 121, kind: :error do
+        expect(@ret).to be(true)
+      end
     end
 
     context 'warn' do
@@ -37,7 +47,9 @@ RSpec.describe 'Loggerxcm', type: :aruba do
         @ret = Mkspec::Loggerxcm.warn(@message_array)
       end
 
-      it 'warn for array of string' , kind: :warn, cmd: 122 do expect(@ret).to be(true) end
+      it 'warn for array of string', cmd: 122, kind: :warn do
+        expect(@ret).to be(true)
+      end
     end
 
     context 'debug' do
@@ -45,7 +57,9 @@ RSpec.describe 'Loggerxcm', type: :aruba do
         @ret = Mkspec::Loggerxcm.debug(@message_array)
       end
 
-      it 'debug for array of string' , kind: :debug, cmd: 123 do expect(@ret).to be(true) end
+      it 'debug for array of string', cmd: 123, kind: :debug do
+        expect(@ret).to be(true)
+      end
     end
 
     context 'info' do
@@ -53,7 +67,9 @@ RSpec.describe 'Loggerxcm', type: :aruba do
         @ret = Mkspec::Loggerxcm.info(@message_array)
       end
 
-      it 'info for array of string' , kind: :info, cmd: 124 do expect(@ret).to be(true) end
+      it 'info for array of string', cmd: 124, kind: :info do
+        expect(@ret).to be(true)
+      end
     end
   end
 end
