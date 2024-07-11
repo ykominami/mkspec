@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'pathname'
 
 module Mkspec
@@ -13,19 +14,20 @@ module Mkspec
       @extra_indent = extra_indent
       @name = name
       @outer_hash = outer_hash
-      raise Mkspec::MkspecDebugError.new("item.rb initialize 1") unless Util.validate_hash(@outer_hash, "top_dir", String)
+      raise Mkspec::MkspecDebugError, "item.rb initialize 1" unless Util.validate_hash(@outer_hash, "top_dir", String)
 
       @local_hash = {}
       @config = config
+      content_path_full = @config.archive_dir_pn.join(content_path)
       Util.dump_var(:yaml_path, yaml_path)
-      Util.dump_var(:content_path, content_path)
-      @yaml_pn , kind_1 = ensure_path(yaml_path.to_s)
-      @content_pn , kind_2 = ensure_path(content_path.to_s)
+      Util.dump_var(:content_path_full, content_path_full)
+      @yaml_pn, kind_1 = ensure_path(yaml_path.to_s)
+      @content_pn, kind_2 = ensure_path(content_path_full.to_s)
       Util.dump_var(:@yaml_pn, @yaml_pn)
       Util.dump_var(:kind_1, kind_1)
       Util.dump_var(:@content_pn, @content_pn)
       Util.dump_var(:kind_2, kind_2)
-      raise Mkspec::MkspecDebugError.new("item.rb 2 content_path=#{content_path}") unless @content_pn
+      raise Mkspec::MkspecDebugError, "item.rb 2 content_path_full=#{content_path_full}" unless @content_pn
 
       @children = {}
       Loggerxcm.debug("Item.new @yaml_pn=#{@yaml_pn}")
@@ -53,21 +55,20 @@ module Mkspec
         pn = nil
         kind = 4
       end
-      [pn , kind]
+      [pn, kind]
     end
 
     def prepare
       Loggerxcm.debug("Item#setup @yaml_pn=#{@yaml_pn}")
       Loggerxcm.debug("Item#setup @content_pn=#{@content_pn}")
       @local_hash = Util.extract_in_yaml_file(@yaml_pn) if @yaml_pn&.exist?
-      raise Mkspec::MkspecDebugError.new("item.rb prepare 1") unless Util.validate_hash(@local_hash, "top_dir", String)
-      raise MkspecAppError.new("item.rb 4") unless Util.valid_pathname?(@content_pn)
+      raise Mkspec::MkspecDebugError, "item.rb prepare 1" unless Util.validate_hash(@local_hash, "top_dir", String)
+      raise MkspecAppError, "item.rb 4" unless Util.valid_pathname?(@content_pn)
 
       @content_lines = Util.get_file_content_lines(@content_pn)
-      raise MkspecAppError.new("item.rb 5") unless Util.valid_array?(@content_lines)
+      raise MkspecAppError, "item.rb 5" unless Util.valid_array?(@content_lines)
 
       @tag_table = Util.analyze(@content_lines)
-#      @hash = @local_hash.size.positive? ? @local_hash : @outer_hash
       if @local_hash.size.positive?
         Loggerxcm.debug("Item#setup use @local_hash")
         @hash = @local_hash
@@ -77,7 +78,6 @@ module Mkspec
         @hash = @outer_hash
       end
       @children = make_children(@tag_table, @hash)
-      error_count = 0
       @children.each do |k, v|
         @hash[k] = v.result
         raise MkspecAppError.new("item.rb 10 ", STATE.message_array) unless STATE.success?
@@ -95,7 +95,7 @@ module Mkspec
 
     def result
       Loggerxcm.debug(%(################################## Item#result @content_pn=#{@content_pn}))
-      raise MkspecAppError.new("item.rb 5 Item#result @content_pn=#{@content_pn}") unless @content_pn&.exist?
+      raise MkspecAppError, "item.rb 5 Item#result @content_pn=#{@content_pn}" unless @content_pn&.exist?
 
       check_kind_of_hash
       content = @content_lines.join("\n")

@@ -1,4 +1,7 @@
 #!/bin/bash
-
+echo "MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME=$MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME"
+# exit
 bundle exec rspec ./spec/cli/mkspec_cli_total_spec.rb
 
+# bundle exec rspec ./spec/cli/mkspec_cli_all_spec.rb
+# bundle exec rspec ./spec/cli/mkspec_cli_tad_spec.rb

@@ -1,14 +1,97 @@
 # frozen_string_literal: true
-require 'pathname'
+
+require "pathname"
 
 module Mkspec
   class Util
-    require 'pry'
-
+    @filex = Struct.new(:file_name, :full_path, :pathname)
     @re = Regexp.new("<%=([^%]+)%>")
     @re2 = Regexp.new("^(\s*)<%=(.+)%>")
 
     class << self
+      def puts_valid_str(str)
+        return if str.nil?
+
+        return if str.tr(' ', '').tr("\n", '').empty?
+
+        puts(str)
+      end
+
+      def check_var(place, varx, varxname)
+        count = 0
+        if varx.nil?
+          Loggerxcm.debug("#{place} #{varxname}=nil")
+          count += 1
+        else
+          Loggerxcm.debug("#{place} #{varxname}=#{varx}")
+        end
+        count
+      end
+
+      def validate_path(place, var, varname)
+        count = 0
+        if var.nil?
+          Loggerxcm.debug("#{place} #{varname}=nil")
+          count += 1
+        else
+          Loggerxcm.debug("#{place} #{varname}=#{var}")
+        end
+        count
+      end
+
+      def validate_filex(place, varx, varnamex)
+        count = 0
+        if varx.nil?
+          Loggerxcm.debug("#{place} #{varname}=nil")
+          count += 1
+        elsif varx.pathname.instance_of?(Pathname)
+          Loggerxcm.debug("#{place} #{varnamex}=#{varx.pathname}")
+        else
+          Loggerxcm.debug("#{place} #{varnamex}.pathname.instance_of?(Pathname) is false")
+          count += 1
+        end
+        count
+      end
+
+      def check_filex(place, var, varname)
+        Loggerxcm.debug("#{place} #{varname}=#{var.pathname}")
+      end
+
+      def adjust_paths
+        %w[
+          MKSPEC_TOP_DIR_YAML_FNAME
+          MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME
+          MKSPEC_SPECIFIC_YAML_FNAME
+          MKSPEC_GLOBAL_YAML_FNAME
+        ].map do |name|
+          fname = ENV.fetch(name, nil)
+          if fname.nil?
+            @filex.new(name, nil, nil)
+          else
+            pn = Pathname.new(fname)
+            if pn.exist?
+              @filex.new(name, fname, pn.expand_path)
+            else
+              @filex.new(name, fname, nil)
+            end
+          end
+        end
+      end
+
+      def make_hash_from_files(path_filex, resolved_filex)
+        if resolved_filex.pathname.exist?
+          pnx = resolved_filex.pathname
+        elsif path_filex
+          pn = path_filex.pathname
+          pnx = (pn if pn.exist?)
+        end
+        if pnx
+          Util.extract_in_yaml_file(pnx, {})
+        else
+          {}
+        end
+      end
+
       def get_path(parent_dir_pn, dir, cmd_1, cmd_2)
         pn_0 = parent_dir_pn.join(dir)
         if pn_0.exist?
@@ -29,7 +112,7 @@ module Mkspec
           end
           [dir_pn, pn_cmd_1, pn_cmd_2]
         else
-          [nil, nil, nil]
+          [pn_0, nil, nil]
         end
       end
 
@@ -46,9 +129,9 @@ module Mkspec
       end
 
       def adjust_hash_sub(hash, key_0, value_0, hashx)
-        unless Util.valid_instance?( value_0, String, Integer, Array, Hash)
+        unless Util.valid_instance?(value_0, String, Integer, Array, Hash)
           Loggerxcm.debug("Util#adjust_hash_sub util.rb adjust_hash_sub value_0=#{value_0} value_0.class=#{value_0.class} key_0=#{key_0}")
-          raise Mkspec::MkspecDebugError.new("util.rb adjust_hash_sub 1 key_0=#{key_0}")
+          raise Mkspec::MkspecDebugError, "util.rb adjust_hash_sub 1 key_0=#{key_0}"
         end
         tag_x_ary = tag_analyze_for_string(value_0)
         if tag_x_ary.size.positive?
@@ -76,7 +159,7 @@ module Mkspec
               end
             end
             hashx[tag_x] = hash[tag_x]
-            hashx[key_0] = extract_with_eruby(value_0 , hashx)
+            hashx[key_0] = extract_with_eruby(value_0, hashx)
           end
         else
           hashx[key_0] = value_0
@@ -86,25 +169,24 @@ module Mkspec
       def adjust_hash(hash)
         return {} unless Util.valid_hash_instance?(hash)
 
-        hash.each_with_object({}) { |hsx, hashx|
+        hash.each_with_object({}) do |hsx, hashx|
           key_0 = hsx[0]
           value_0 = hsx[1]
-          Loggerxcm.debug("=--- 0")
-          Loggerxcm.debug("adjust_hash 0 hashx=#{hashx}")
-          Loggerxcm.debug("adjust_hash 0 hsx=#{hsx}")
-          Loggerxcm.debug("adjust_hash 0 hash=#{hash}")
-          Loggerxcm.debug("=--- 0 End")
+          # Loggerxcm.debug("=--- 0")
+          # Loggerxcm.debug("adjust_hash 0 hashx=#{hashx}")
+          # Loggerxcm.debug("adjust_hash 0 hsx=#{hsx}")
+          # Loggerxcm.debug("adjust_hash 0 hash=#{hash}")
+          # Loggerxcm.debug("=--- 0 End")
           adjust_hash_sub(hash, key_0, value_0, hashx)
-          Loggerxcm.debug("=--- 4")
-          Loggerxcm.debug("adjust_hash 4 hashx=#{hashx}")
-          Loggerxcm.debug("adjust_hash 4 hsx=#{hsx}")
-          Loggerxcm.debug("adjust_hash 4 hash=#{hash}")
-          Loggerxcm.debug("=--- 4 End")
-        }
+          # Loggerxcm.debug("=--- 4")
+          # Loggerxcm.debug("adjust_hash 4 hashx=#{hashx}")
+          # Loggerxcm.debug("adjust_hash 4 hsx=#{hsx}")
+          # Loggerxcm.debug("adjust_hash 4 hash=#{hash}")
+          # Loggerxcm.debug("=--- 4 End")
+        end
       end
 
       def extract_with_eruby(content, hash = {})
-        result = nil
         unless Util.not_empty_string?(content).first
           raise(MkspecAppError,
                 "util.rb extract_with_eruby 20 content=#{content}")
@@ -118,13 +200,13 @@ module Mkspec
         Mkspec::Loggerxcm.debug("=========== 2")
         Mkspec::Loggerxcm.debug("0 extract_with_eruby content=#{content}")
         Mkspec::Loggerxcm.debug("=========== 3")
-# extract_in_yamlの場合は、
-# <%= item => という形式のものは、
-# 渡されたハッシュで全て展開できると想定しているが、
-# extracct_with_erubyの場合は、
-# <%  %>で記述したRubyスクリプトで変数が定義されることがあるので、
-# 必ずしも、与えられたハッシュだけでもれなく置き換えが
-# 出来なくても、例外が発生しない場合がある。
+        # extract_in_yamlの場合は、
+        # <%= item => という形式のものは、
+        # 渡されたハッシュで全て展開できると想定しているが、
+        # extracct_with_erubyの場合は、
+        # <%  %>で記述したRubyスクリプトで変数が定義されることがあるので、
+        # 必ずしも、与えられたハッシュだけでもれなく置き換えが
+        # 出来なくても、例外が発生しない場合がある。
         eruby = Erubis::Eruby.new(content)
         result = eruby.result(hash)
         Mkspec::Loggerxcm.debug("0 extract_with_eruby result=#{result}")
@@ -151,10 +233,10 @@ module Mkspec
 
       def tag_analyze(lines)
         if lines
-          lines.inject([]) { |ary, l|
+          lines.inject([]) do |ary, l|
             ary += tag_analyze_for_string(l)
             ary
-          }
+          end
         else
           []
         end
@@ -163,47 +245,42 @@ module Mkspec
       def tag_analyze_for_contents(contents)
         lines = contents.split("\n")
         if lines
-          lines.inject([]) { |ary, l|
+          lines.inject([]) do |ary, l|
             ary += tag_analyze_for_string(l)
             ary
-          }
+          end
         else
           []
         end
       end
 
       def extract_in_yaml(yaml_str, hash = nil)
-        # puts "extract_in_yaml 1"
-        # puts "yaml_str=#{yaml_str}"
-        raise Mkspec::MkspecDebugError.new("util.rb 14 hs.class=#{hash.class}") if hash.instance_of?(Array)
-        # puts "extract_in_yaml 2"
+        raise Mkspec::MkspecDebugError, "util.rb 14 hs.class=#{hash.class}" if hash.instance_of?(Array)
         return {} unless Util.not_empty_string?(yaml_str.to_s).first
-        # puts "extract_in_yaml 3"
 
         if Util.not_empty_string?(yaml_str).first
           begin
-            # puts "extract_in_yaml 4"
             yaml_hash = YAML.safe_load(yaml_str, permitted_classes: [Pathname])
-            # puts "extract_in_yaml 4-2"
-          rescue => ex
-            p ex
+          rescue => exc
+            Loggerxcm.fatal(exc)
           end
           yaml_hash ||= {}
         else
           yaml_hash = {}
         end
-        # puts "extract_in_yaml 5"
 
         hash = {} unless Util.not_empty_hash?(hash).first
         hash_x = yaml_hash.merge(hash)
         hash_y = adjust_hash(hash_x)
         unless Util.not_empty_string?(yaml_str).first
           raise Mkspec::MkspecDebugError.new(
-                "util.rb extract_in_yaml 16 yaml_str" , yaml_str)
+            "util.rb extract_in_yaml 16 yaml_str", yaml_str
+          )
         end
         unless Util.not_empty_hash?(hash_y).first
           raise Mkspec::MkspecDebugError.new(
-                "util.rb extract_in_yaml 17",  hash_y)
+            "util.rb extract_in_yaml 17x", hash_y
+          )
         end
         extracted_text = extract_with_eruby(yaml_str, hash_y)
         array = Util.not_empty_string?(extracted_text)
@@ -212,27 +289,26 @@ module Mkspec
         YAML.safe_load(extracted_text)
       end
 
-      def extract_in_yaml_file(yaml_file_path, hash = nil)
+      def extract_in_yaml_file(yaml_file_path, hashx = nil)
         Loggerxcm.debug("yaml_file_path=#{yaml_file_path}")
         Loggerxcm.debug("yaml_file_path.class=#{yaml_file_path.class}")
-        unless Util.not_empty_string?(yaml_file_path.to_s).first
-          raise Mkspec::MkspecDebugError.new(
-                "util.rb 15 yml_file_path=#{yaml_file_path}")
-        end
+        raise Mkspec::MkspecDebugError, "util.rb 15 yml_file_path=#{yaml_file_path}" unless Util.not_empty_string?(yaml_file_path.to_s).first
+
         pn = Pathname.new(yaml_file_path)
-        raise Mkspec::MkspecDebugError.new("util.rb 17 pn", pn) unless pn.exist?
+        Loggerxcm.debug("yaml_file_path=#{yaml_file_path}")
+        raise Mkspec::MkspecDebugError.new("util.rb 18 #{pn}", pn) unless pn.exist?
 
-        content = get_file_content(yaml_file_path)
+        content = File.read(pn.to_s)
         Loggerxcm.debug("Util#extract_in_yaml_file content=#{content}")
-        Loggerxcm.debug("Util#extract_in_yaml_file hash=#{hash}")
-        text = extract_in_yaml(content, hash)
-        dump_var(:text, text)
-        raise Mkspec::MkspecDebugError.new("extract_in_yaml_file 1 ret=#{ret}") unless Util.not_empty_hash?(text).first
+        Loggerxcm.debug("Util#extract_in_yaml_file hash=#{hashx}")
+        hash = extract_in_yaml(content, hashx)
+        dump_var(:hash, hash)
+        raise Mkspec::MkspecDebugError, "extract_in_yaml_file 1 ret=#{ret}" unless Util.not_empty_hash?(hash).first
 
-        text
+        hash
       end
 
-      def check_numeric_and_raise(tmp, num , error)
+      def check_numeric_and_raise(tmp, num, error)
         raise error if tmp.size > num && Util.numeric?(tmp[num])
       end
 
@@ -242,7 +318,7 @@ module Mkspec
           chunk = lookahead.strip
           if chunk.size == 1
             #if chunk.match?(/0/)
-            chunk == '0'
+            chunk == "0"
           else
             false
           end
@@ -256,7 +332,7 @@ module Mkspec
         return [false, 2] unless str.instance_of?(String)
 
         stripped_str = str.strip
-        return [false, 3] if stripped_str.size.zero?
+        return [false, 3] if stripped_str.empty?
 
         [true, 4]
       end
@@ -266,7 +342,7 @@ module Mkspec
         return [false, 2] unless str.instance_of?(String)
 
         stripped_str = str.strip
-        return [false, 3] if stripped_str.size.zero?
+        return [false, 3] if stripped_str.empty?
 
         [true, 4]
       end
@@ -274,14 +350,14 @@ module Mkspec
       def not_empty_hash?(hash)
         return [false, 1] unless hash
         return [false, 2] unless hash.instance_of?(Hash)
-        return [false, 3] if hash.size.zero?
+        return [false, 3] if hash.empty?
 
         [true, 4]
       end
 
-      def dump_var(name , value)
-        Loggerxcm.debug("Util#dump_var #{name}")
-        Loggerxcm.debug("Util#dump_var #{value}")
+      def dump_var(name, value)
+        Loggerxcm.debug("Util#dump_var name=#{name}")
+        Loggerxcm.debug("Util#dump_var value=#{value}")
       end
 
       def analyze(content_lines)

@@ -2,6 +2,9 @@
 
 require 'spec_helper_1'
 
+log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
+logger_init(log_dir, level: :debug, stdout_flag: true) #1
+
 RSpec.describe Mkspec::TestScript do
   context 'call instance methods of TestScript class' do
     before(:all) do
@@ -10,6 +13,7 @@ RSpec.describe Mkspec::TestScript do
       @original_output_dir_pn = @ost.original_output_dir_pn
       @original_output_dir = @ost.original_output_dir
     end
+
     context 'TestScript' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
@@ -29,15 +33,16 @@ RSpec.describe Mkspec::TestScript do
         before(:all) do
           @ret = @ts_0.grouping(@tg_0)
         end
-        it 'total_test_case of TestScript_0 size equal size of TestScriptGroup_0' , xcmd: 1 do
+
+        it 'total_test_case of TestScript_0 size equal size of TestScriptGroup_0', xcmd: 1 do
           expect(@ts_0.total_test_cases).to eq(@tg_0.size)
         end
 
-        it 'Size of TestGroup of TestScript_0 equal size of TestScriptGroup_0' , xcmd: 2 do
+        it 'Size of TestGroup of TestScript_0 equal size of TestScriptGroup_0', xcmd: 2 do
           expect(@ts_0.test_groups.size).to eq(1)
         end
 
-        it 'TestScript_0 is grouping of TestGroup_0 is not empty' , xcmd: 3 do
+        it 'TestScript_0 is grouping of TestGroup_0 is not empty', xcmd: 3 do
           expect(@ret).to eq(:NOT_EMPTY)
         end
       end
@@ -53,7 +58,8 @@ RSpec.describe Mkspec::TestScript do
           @size_1 = @ts_0.total_test_cases
           @size_2 = @ts_1.total_test_cases
         end
-        it 'Total test cases of TestScript_0 equals to size of TestGroup_0' , cmd: 2 do
+
+        it 'Total test cases of TestScript_0 equals to size of TestGroup_0', cmd: 2 do
           expect(@ts_0.total_test_cases).to eq(@tg_0.size)
         end
 
@@ -89,11 +95,12 @@ RSpec.describe Mkspec::TestScript do
       context 'call grouping 3' do
         before(:all) do
           @size_3 = @tg_2.size
-          ret_0 = @ts_0.grouping(@tg_2)
+          _ret_0 = @ts_0.grouping(@tg_2)
           @size_4 = @tg_3.size
-          ret_1 = @ts_0.grouping(@tg_3)
+          _ret_1 = @ts_0.grouping(@tg_3)
         end
-        it 'Total test cases of TestScript_0 equals to sum of TestGroup_2 and TestGroup_3' , xcmd: 3 do
+
+        it 'Total test cases of TestScript_0 equals to sum of TestGroup_2 and TestGroup_3', xcmd: 3 do
           expect(@ts_0.total_test_cases).to eq(@size_3 + @size_4)
         end
 
@@ -109,7 +116,8 @@ RSpec.describe Mkspec::TestScript do
           @size_4 = @tg_3.size
           @size_5 = @tg_4.size
         end
-        it 'Total test cases of TestScript_0 equals to sum of size of TestGroup_3 and size of TestGroup_4' , xcmd: 4 do
+
+        it 'Total test cases of TestScript_0 equals to sum of size of TestGroup_3 and size of TestGroup_4', xcmd: 4 do
           expect(@ts_0.total_test_cases).to eq(@size_4 + @size_5)
         end
 

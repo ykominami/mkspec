@@ -1,7 +1,12 @@
 PATH
+  remote: ../clitest
+  specs:
+    clitest (0.1.6)
+
+PATH
   remote: .
   specs:
-    mkspec (0.1.0)
+    mkspec (0.2.0)
       bundler
       erubis (~> 2.7.0)
       pre-commit
@@ -12,136 +17,151 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    aruba (2.1.0)
+    aruba (2.2.0)
       bundler (>= 1.17, < 3.0)
-      childprocess (>= 2.0, < 5.0)
       contracts (>= 0.16.0, < 0.18.0)
-      cucumber (>= 4.0, < 9.0)
+      cucumber (>= 8.0, < 10.0)
       rspec-expectations (~> 3.4)
       thor (~> 1.0)
     ast (2.4.2)
-    binding_of_caller (1.0.0)
-      debug_inspector (>= 0.0.1)
-    builder (3.2.4)
-    byebug (11.1.3)
-    childprocess (4.1.0)
-    clitest (0.1.1)
+    bigdecimal (3.1.8)
+    builder (3.3.0)
     coderay (1.1.3)
     contracts (0.17)
-    cucumber (8.0.0)
-      builder (~> 3.2, >= 3.2.4)
-      cucumber-ci-environment (~> 9.0, >= 9.0.4)
-      cucumber-core (~> 11.0, >= 11.0.0)
-      cucumber-cucumber-expressions (~> 15.1, >= 15.1.1)
-      cucumber-gherkin (~> 23.0, >= 23.0.1)
-      cucumber-html-formatter (~> 19.1, >= 19.1.0)
-      cucumber-messages (~> 18.0, >= 18.0.0)
-      diff-lcs (~> 1.5, >= 1.5.0)
-      mime-types (~> 3.4, >= 3.4.1)
-      multi_test (~> 1.1, >= 1.1.0)
-      sys-uname (~> 1.2, >= 1.2.2)
-    cucumber-ci-environment (9.1.0)
-    cucumber-core (11.0.0)
-      cucumber-gherkin (~> 23.0, >= 23.0.1)
-      cucumber-messages (~> 18.0, >= 18.0.0)
-      cucumber-tag-expressions (~> 4.1, >= 4.1.0)
-    cucumber-cucumber-expressions (15.2.0)
-    cucumber-gherkin (23.0.1)
-      cucumber-messages (~> 18.0, >= 18.0.0)
-    cucumber-html-formatter (19.2.0)
-      cucumber-messages (~> 18.0, >= 18.0.0)
-    cucumber-messages (18.0.0)
-    cucumber-tag-expressions (4.1.0)
-    debug_inspector (1.1.0)
-    diff-lcs (1.5.0)
+    cucumber (9.2.0)
+      builder (~> 3.2)
+      cucumber-ci-environment (> 9, < 11)
+      cucumber-core (> 13, < 14)
+      cucumber-cucumber-expressions (~> 17.0)
+      cucumber-gherkin (> 24, < 28)
+      cucumber-html-formatter (> 20.3, < 22)
+      cucumber-messages (> 19, < 25)
+      diff-lcs (~> 1.5)
+      mini_mime (~> 1.1)
+      multi_test (~> 1.1)
+      sys-uname (~> 1.2)
+    cucumber-ci-environment (10.0.1)
+    cucumber-core (13.0.2)
+      cucumber-gherkin (>= 27, < 28)
+      cucumber-messages (>= 20, < 23)
+      cucumber-tag-expressions (> 5, < 7)
+    cucumber-cucumber-expressions (17.1.0)
+      bigdecimal
+    cucumber-gherkin (27.0.0)
+      cucumber-messages (>= 19.1.4, < 23)
+    cucumber-html-formatter (21.4.0)
+      cucumber-messages (> 19, < 25)
+    cucumber-messages (22.0.0)
+    cucumber-tag-expressions (6.1.0)
+    debug (1.9.2)
+      irb (~> 1.10)
+      reline (>= 0.3.8)
+    diff-lcs (1.5.1)
     erubis (2.7.0)
-    ffi (1.15.5)
-    json (2.6.3)
-    method_source (1.0.0)
-    mime-types (3.4.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2023.0218.1)
+    ffi (1.17.0)
+    ffi (1.17.0-aarch64-linux-gnu)
+    ffi (1.17.0-aarch64-linux-musl)
+    ffi (1.17.0-arm-linux-gnu)
+    ffi (1.17.0-arm-linux-musl)
+    ffi (1.17.0-arm64-darwin)
+    ffi (1.17.0-x86-linux-gnu)
+    ffi (1.17.0-x86-linux-musl)
+    ffi (1.17.0-x86_64-darwin)
+    ffi (1.17.0-x86_64-linux-gnu)
+    ffi (1.17.0-x86_64-linux-musl)
+    io-console (0.7.2)
+    irb (1.14.0)
+      rdoc (>= 4.0.0)
+      reline (>= 0.4.2)
+    json (2.7.2)
+    language_server-protocol (3.17.0.3)
+    mini_mime (1.1.5)
     multi_test (1.1.0)
-    parallel (1.22.1)
-    parser (3.2.1.0)
+    parallel (1.25.1)
+    parser (3.3.3.0)
       ast (~> 2.4.1)
+      racc
     pluginator (1.5.0)
-    pre-commit (0.39.0)
+    pre-commit (0.40.0)
       pluginator (~> 1.5)
-    pry (0.14.2)
-      coderay (~> 1.1)
-      method_source (~> 1.0)
-    pry-byebug (3.10.1)
-      byebug (~> 11.0)
-      pry (>= 0.13, < 0.15)
-    pry-doc (1.4.0)
-      pry (~> 0.11)
-      yard (~> 0.9.11)
-    pry-stack_explorer (0.6.1)
-      binding_of_caller (~> 1.0)
-      pry (~> 0.13)
+    psych (5.1.2)
+      stringio
+    racc (1.8.0)
     rainbow (3.1.1)
-    rake (13.0.6)
+    rake (13.2.1)
     rb-readline (0.5.5)
-    regexp_parser (2.7.0)
-    rexml (3.2.5)
-    rspec (3.12.0)
-      rspec-core (~> 3.12.0)
-      rspec-expectations (~> 3.12.0)
-      rspec-mocks (~> 3.12.0)
-    rspec-core (3.12.1)
-      rspec-support (~> 3.12.0)
-    rspec-expectations (3.12.2)
+    rdoc (6.7.0)
+      psych (>= 4.0.0)
+    regexp_parser (2.9.2)
+    reline (0.5.9)
+      io-console (~> 0.5)
+    rexml (3.3.1)
+      strscan
+    rspec (3.13.0)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.0)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.12.0)
-    rspec-mocks (3.12.3)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.1)
       diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.12.0)
-    rspec-support (3.12.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.1)
     rspec_junit_formatter (0.6.0)
       rspec-core (>= 2, < 4, != 2.12.0)
-    rubocop (1.47.0)
+    rubocop (1.64.1)
       json (~> 2.3)
+      language_server-protocol (>= 3.17.0)
       parallel (~> 1.10)
-      parser (>= 3.2.0.0)
+      parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml (>= 3.2.5, < 4.0)
-      rubocop-ast (>= 1.26.0, < 2.0)
+      rubocop-ast (>= 1.31.1, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.27.0)
-      parser (>= 3.2.1.0)
-    rubocop-capybara (2.17.1)
-      rubocop (~> 1.41)
+    rubocop-ast (1.31.3)
+      parser (>= 3.3.1.0)
     rubocop-rake (0.6.0)
       rubocop (~> 1.0)
-    rubocop-rspec (2.18.1)
-      rubocop (~> 1.33)
-      rubocop-capybara (~> 2.17)
+    rubocop-rspec (3.0.2)
+      rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
-    rufo (0.15.1)
-    sys-uname (1.2.2)
+    rufo (0.18.0)
+    stringio (3.1.1)
+    strscan (3.1.0)
+    sys-uname (1.3.0)
       ffi (~> 1.1)
-    thor (1.2.1)
-    unicode-display_width (2.4.2)
+    thor (1.3.1)
+    unicode-display_width (2.5.0)
     yard (0.9.36)
 
 PLATFORMS
-  x86_64-linux
+  aarch64-linux-gnu
+  aarch64-linux-musl
+  arm-linux-gnu
+  arm-linux-musl
+  arm64-darwin
+  ruby
+  x86-linux-gnu
+  x86-linux-musl
+  x86_64-darwin
+  x86_64-linux-gnu
+  x86_64-linux-musl
 
 DEPENDENCIES
   aruba
   bundler
-  clitest
+  clitest!
   coderay (~> 1.1.1)
+  debug
   erubis (~> 2.7.0)
   mkspec!
   pre-commit
-  pry
-  pry-byebug
-  pry-doc
-  pry-stack_explorer
+  racc
   rake
   rb-readline
   rspec (~> 3.0)
@@ -153,4 +173,4 @@ DEPENDENCIES
   yard (~> 0.9.36)
 
 BUNDLED WITH
-   2.4.6
+   2.5.14

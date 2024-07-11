@@ -3,7 +3,6 @@
 
 require 'bundler/setup'
 require 'mkspec'
-require 'pp'
 require 'pathname'
 
 module Mkspec
@@ -22,7 +21,6 @@ module Mkspec
       @pn = Pathname.new(path)
       @hash_by_file = {}
       @hash = {}
-      #puts @pn
     end
 
     def get_all_rbfile
@@ -30,82 +28,64 @@ module Mkspec
     end
 
     def setup
-      @pn.find { |item_pn|
+      @pn.find do |item_pn|
         next unless item_pn.file? && item_pn.fnmatch("*.yml")
 
         content = Util.get_file_content(item_pn)
         hashx = YAML.safe_load(content)
-        hashx.map { |k, v|
+        hashx.map do |k, v|
           if YamlConfig.valid_key?(k)
-            #puts k
             @hash[k] = v
           end
-        }
+        end
         @hash_by_file[item_pn] = hashx
-      }
+      end
     end
   end
 
   class YamlX
     def initialize(dir1, dir2)
-      @yc1, @yc2 = [dir1, dir2].map { |x|
+      @yc1, @yc2 = [dir1, dir2].map do |x|
         yc = YamlConfig.new(x)
         yc.setup
         yc
-      }
+      end
     end
 
-#     def merge
-#       @hash = {}
-#
-#       @yc1.hash.map { |k,v|
-#         puts "# #{k}"
-#         v.map { |k2, v2|
-#           if @yc2.hash[k] && @yc2.hash[k][k2]
-#             yc2_v2 = @yc2.hash[k][k2]
-#             @yc1.hash[k][k2] = yc2_v2 if v2 != yc2_v2
-#           end
-#         }
-#       }
-#     end
     def merge_sub(src_hash, dest_hash)
-      src_hash.map { |src_k, src_v|
-        puts "src_k=#{src_k}"
+      src_hash.map do |src_k, src_v|
+        Loggerxcm.show("src_k=#{src_k}")
 
         if src_v.instance_of?(Hash) && dest_hash[src_k] && dest_hash[src_k].instance_of?(Hash)
           merge_sub(src_v, dest_hash[src_k])
         else
           case src_k
           when "option_list", "cdlfile"
-            #puts "B dest_hash[#{src_k}]=#{dest_hash[src_k]}"
             dest_hash[src_k] = src_v
-            #puts "A dest_hash[#{src_k}]=#{dest_hash[src_k]}"
           end
         end
-      }
+      end
     end
 
     def merge
       @hash = {}
-      #puts "======================="
       merge_sub(@yc1.hash, @yc2.hash)
     end
 
     def show
-      @yc1.hash_by_file.map { |k, v|
-        puts "# #{k}"
-        v.map { |k2, v2|
-          puts "## #{k2}"
-          puts v2
-        }
-      }
+      @yc1.hash_by_file.map do |k, v|
+        Loggerxcm.show( "# #{k}")
+        v.map do |k2, v2|
+          Loggerxcm.show("## #{k2}")
+          Loggerxcm.show(v2)
+        end
+      end
     end
 
     def output
-      @yc2.hash_by_file.map { |k, v|
-        #puts "# #{k}"
+      @yc2.hash_by_file.map do |k, v|
         File.write(k, YAML.dump(v))
-      }
+      end
     end
   end
 end
@@ -119,9 +99,5 @@ puts spec_dir_2
 yamlx = Mkspec::YamlX.new(spec_dir_1, spec_dir_2)
 
 yamlx.merge
-
-#yamlx.show
-
-#puts "==="
 
 yamlx.output

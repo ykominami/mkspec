@@ -1,9 +1,10 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'mkspec'
-require 'pp'
+require "bundler/setup"
+require "mkspec"
+
+require 'debug'
 # require 'mkspec/loggerxcm'
 
 # You can add fixtures and/or initialization code here to make experimenting
@@ -17,7 +18,7 @@ require 'pp'
 # IRB.start(__FILE__)
 def output_error_message(mes)
   if mes.kind_of?(Array)
-    mes.map{ |x| puts x }
+    mes.map { |x| puts x }
   elsif mes.kind_of?(String)
     puts mes
   else
@@ -26,44 +27,41 @@ def output_error_message(mes)
   Mkspec::Loggerxcmspec.error(mes)
 end
 
-exit_code = nil
 mkscript = Mkspec::Mkscript.new
 mkscript.check_cli_options(ARGV)
 exit_code = mkscript.check_state_and_show_useage_and_state_message
-# Mkspec::Loggerxcm.show("exit_code=#{exit_code}")
-# puts("exit_code=#{exit_code}")
 exit(exit_code) if exit_code
 
 mkscript.init
 
 begin
   mkscript.create_files
-rescue Mkspec::MkspecDebugError => e
-  output_error_message(e.message)
-  output_error_message(e.backtrace)
+rescue Mkspec::MkspecDebugError => exc
+  output_error_message(exc.message)
+  output_error_message(exc.backtrace)
   if Mkspec::STATE.success?
-    puts "1"
+    Loggerxcm.fatal("1")
     exit_code = Mkspec::MKSPEC_DEBUG_ERROR
   else
-    puts "2"
+    Mkspec::Loggerxcm.fatal("2")
     exit_code = Mkspec::STATE.show_message
   end
   # exit(exit_code)
-rescue Mkspec::MkspecAppError => e
-  output_error_message(e.message)
-  output_error_message(e.backtrace)
+rescue Mkspec::MkspecAppError => exc
+  output_error_message(exc.message)
+  output_error_message(exc.backtrace)
   if Mkspec::STATE.success?
-    puts "3"
+    Loggerxcm.fatal("3")
     exit_code = Mkspec::MKSPEC_APP_ERROR
   else
-    puts "4"
+    Loggerxcm.fatal("4")
     exit_code = Mkspec::STATE.show_message
   end
-rescue StandardError => e
+rescue StandardError => exc
   output_error_message("###################### 1")
-  output_error_message(e.message)
-  output_error_message(e.backtrace)
-  puts "5"
+  output_error_message(exc.message)
+  output_error_message(exc.backtrace)
+  Loggerxcm.fatal("5")
   exit_code = Mkspec::STATE.show_message
 end
 exit_code ||= 0

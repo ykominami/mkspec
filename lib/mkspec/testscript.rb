@@ -5,7 +5,7 @@ module Mkspec
     attr_reader :name, :script_name, :test_groups, :total_test_cases, :inner_result
 
     def initialize(name, limit)
-      raise MkspecAppError.new("testscript.rb 1 name.class=#{name.class}") unless Util.not_empty_string?(name).first
+      raise MkspecAppError, "testscript.rb 1 name.class=#{name.class}" unless Util.not_empty_string?(name).first
 
       @name = name
       @script_name = Util.make_spec_filename(name)

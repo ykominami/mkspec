@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'pathname'
 
 module Mkspec
@@ -24,7 +25,8 @@ module Mkspec
     def setup
       ret = true
       lines = []
-      pn = Pathname.new("rspec_head/content.txt")
+      pn = Pathname.new("#{GlobalConfig::TEST_ARCHIVE_DIR}/rspec_head/content.txt")
+
       str = Util.get_file_content(@config.make_path_under_template_and_data_dir(pn))
       lines << str
 
@@ -48,15 +50,15 @@ module Mkspec
       ret = true
       begin
         File.write(@template_path, @content)
-      rescue StandardError => e
+      rescue StandardError => exc
         message = [
-          e.message,
-          e.backtrace
+          exc.message,
+          exc.backtrace
         ]
         Loggerxcm.error(message)
         ret = false
       end
-      raise Mkspec::MkspecDebugError.new("templatex.rb 1 ret=#{ret}") unless ret
+      raise Mkspec::MkspecDebugError, "templatex.rb 1 ret=#{ret}" unless ret
 
       ret
     end

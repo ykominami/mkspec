@@ -12,7 +12,21 @@ AllCops:
   #
   StyleGuideBaseURL: https://github.com/fortissimo1997/ruby-style-guide/blob/japanese/README.ja.md
   #
-
+  # 結果のsuggest部分を非表示にする
+  SuggestExtensions: false
+  # rubocopの対象外ファイル
+  Exclude:
+    - "Gemfile"
+    - "bin/**/*"
+    - "db/**/*"
+    - "log/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+    - "lib/tasks/auto_annotate_models.rake"
+    - "config/environments/*"
+    - "config/puma.rb"
+    - "root/**/*"
+    - "test_data/**/*"
 Layout:
   # メソッド名をcamelCase に設定します
   MethodName:
@@ -39,3 +53,7 @@ Style:
   # class documentation commentのアラートを出さない
   Documentation:
     Enabled: false
+
+  Naming:
+    RescuedExceptionsVariableName: exc
+

@@ -27,28 +27,11 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.7'
 
   spec.add_runtime_dependency 'bundler'
+  spec.add_runtime_dependency 'erubis', '~> 2.7.0'
   spec.add_runtime_dependency 'pre-commit'
   spec.add_runtime_dependency 'rake', '~> 13.0'
-#  spec.add_runtime_dependency 'pry'
-  spec.add_runtime_dependency 'erubis', '~> 2.7.0'
   spec.add_runtime_dependency 'rb-readline'
   spec.add_runtime_dependency 'rufo'
-
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rspec_junit_formatter'
-
-  spec.add_development_dependency 'aruba'
-  spec.add_development_dependency 'clitest'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'rubocop-rake'
-  spec.add_development_dependency 'rubocop-rspec'
-
-  spec.add_development_dependency 'coderay', '~> 1.1.1'
-  spec.add_development_dependency 'yard'
-  # spec.add_development_dependency 'pry-byebug'
-  spec.add_development_dependency 'pry'
-  spec.add_development_dependency 'pry-doc'
-  spec.add_development_dependency 'pry-stack_explorer'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

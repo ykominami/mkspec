@@ -3,7 +3,8 @@
 require 'erubis'
 require 'yaml'
 require 'pathname'
-require 'pry'
+#require 'pry'
+require 'debug'
 require 'rufo'
 require 'clitest'
 require 'fileutils'
@@ -70,7 +71,7 @@ module Mkspec
   MKSPEC_ENV_VARIABLE_ERROR_RESOLVED_TOP_DIR_YAML_FNAME = 202
   MKSPEC_ENV_VARIABLE_ERROR_SPECIFIC_YAML_FNAME = 203
   MKSPEC_ENV_VARIABLE_ERROR_GLOBAL_YAML_FNAME = 204
-  
+
   # デフォルトのログディレクトリ
   DEFAULT_LOG_DIR = "./logs"
 
@@ -78,7 +79,7 @@ module Mkspec
   class NotStringInstError < StandardError
     attr_reader :attr
 
-    def initialize(msg="My default message", message_array=[])
+    def initialize(msg = "My default message", _message_array = [])
       @attr = attr
       super(msg)
     end
@@ -88,7 +89,7 @@ module Mkspec
   class EmptyStringError < StandardError
     attr_reader :message_array
 
-    def initialize(msg="My default message", message_array=[])
+    def initialize(msg = "My default message", message_array = [])
       @message_array = message_array
       super(msg)
     end
@@ -103,7 +104,7 @@ module Mkspec
   class MkspecError < StandardError
     attr_reader :message_array
 
-    def initialize(msg="My default message", message_array=[])
+    def initialize(msg = "My default message", message_array = [])
       @message_array = message_array
       super(msg)
     end
@@ -112,7 +113,7 @@ module Mkspec
   class MkspecDebugError < MkspecError
     attr_reader :message_array
 
-    def initialize(msg="My default message", message_array=[])
+    def initialize(msg = "My default message", message_array = [])
       @message_array = message_array
       super(msg)
     end
@@ -121,7 +122,7 @@ module Mkspec
   class MkspecAppError < MkspecError
     attr_reader :message_array
 
-    def initialize(msg="My default message", message_array=[])
+    def initialize(msg = "My default message", message_array = [])
       @message_array = message_array
       super(msg)
     end
