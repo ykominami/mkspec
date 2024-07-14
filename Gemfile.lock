@@ -1,7 +1,7 @@
 PATH
   remote: ../clitest
   specs:
-    clitest (0.1.6)
+    clitest (0.1.8)
 
 PATH
   remote: .

@@ -1,10 +1,19 @@
 #!/bin/bash
 
-#ls ../mkspec_data
-#ls ../mkspec_data/bin
-#ls ../mkspec_data/bin/setup.bash
-../mkspec_data/binx/setup.bash
-MKSPEC_OUTPUT_DIR=/home/ykominami/repo_ykominami/mkspec_output
-echo "export MKSPEC_OUTPUT_DIR=${MKSPEC_OUTPUT_DIR}"
-echo "export MKSPEC_LOG_DIR=${MKSPEC_OUTPUT_DIR}/logs"
+src_dir=$(dirname $0)
+echo "src_dir=${src_dir}"
+parent_dir_x=${src_dir}/../..
+current_dir=${PWD}
+cd ${parent_dir_x}
+parent_dir=${PWD}
+cd ${current_dir}
+output_dir=${parent_dir}/mkspec_output
+data_dir=${parent_dir}/mkspec_data
+echo "export MKSPEC_OUTPUT_DIR=${output_dir}"
+echo "export MKSPEC_LOG_DIR=${output_dir}/logs"
+echo "export MKSPEC_DATA_DIR=${data_dir}"
+echo "export MKSPEC_TOP_DIR_YAML_FNAME=${data_dir}/top_dir.yml"
+echo "export MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME=${data_dir}/_resolved/top_dir.yml"
+echo "export MKSPEC_GLOBAL_YAML_FNAME=${data_dir}/global.yml"
+echo "export MKSPEC_SPECIFIC_YAML_FNAME=${data_dir}/mkspec_data/specific.yml"
 
