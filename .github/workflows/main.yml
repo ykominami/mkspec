@@ -36,7 +36,7 @@ jobs:
 
       - name: Run the default task
         run: |
-          gem install bundler -v 2.5.15
+          gem install bundler -v 2.5.0
           bundle config with 'test'
           bundle install
           bundle exec rake
