@@ -3,7 +3,7 @@
 require 'erubis'
 require 'yaml'
 require 'pathname'
-require 'debug'
+# require 'debug'
 require 'rufo'
 require 'clitest'
 require 'fileutils'
