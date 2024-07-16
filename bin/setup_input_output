@@ -9,11 +9,12 @@ parent_dir=${PWD}
 cd ${current_dir}
 output_dir=${parent_dir}/mkspec_output
 data_dir=${parent_dir}/mkspec_data
+echo "export MKSPEC_DATA_DIR=${data_dir}"
 echo "export MKSPEC_OUTPUT_DIR=${output_dir}"
 echo "export MKSPEC_LOG_DIR=${output_dir}/logs"
 echo "export MKSPEC_DATA_DIR=${data_dir}"
 echo "export MKSPEC_TOP_DIR_YAML_FNAME=${data_dir}/top_dir.yml"
 echo "export MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME=${data_dir}/_resolved/top_dir.yml"
 echo "export MKSPEC_GLOBAL_YAML_FNAME=${data_dir}/global.yml"
-echo "export MKSPEC_SPECIFIC_YAML_FNAME=${data_dir}/mkspec_data/specific.yml"
+echo "export MKSPEC_SPECIFIC_YAML_FNAME=${data_dir}/specific.yml"
 

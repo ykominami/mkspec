@@ -5,33 +5,44 @@ module Mkspec
   require "ostruct"
   require "clitest"
 
+  # The `Mkspec::TestConf` class is responsible for managing the configuration of the testing environment for the Mkspec framework.
+  # It initializes the configuration by setting up directories and files necessary for the tests, based on the provided parameters.
+  # This class encapsulates the logic for adjusting paths and organizing the test configuration data, making it easier to handle
+  # various configurations and custom setups required for different testing scenarios.
+  #
+  # @example Creating a new `TestConf` instance
+  #   dirs_and_files = Mkspec::Util.adjust_dirs_and_files
+  #   testconf = Mkspec::TestConf.new(dirs_and_files, "mkspec", "")
+  #
+  # @param dirs_and_files [Array] The directories and files adjusted for the test environment.
+  # @param name [String] The name identifier for the test configuration.
+  # @param additional_info [String] Additional information or parameters that might be needed for the configuration.
   class TestConf
+    # Implementation omitted
     attr_reader :ost
 
-    def initialize(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1, target_cmd_2, original_spec_file_path)
+    # def initialize(top_dir_yaml, resolved_top_dir_yaml, specific_yaml, global_yaml, target_cmd_1 = nil, target_cmd_2 = nil)
+    def initialize(dirs_and_files, target_cmd_1 = nil, target_cmd_2 = nil)
       invalid_count = 0
+      # raise
       place = "TestConf.initialize"
-      invalid_count += Util.validate_filex(place, top_dir_yaml, "top_dir_yaml")
-      invalid_count += Util.validate_filex(place, resolved_top_dir_yaml, "resolved_top_dir_yaml")
-      invalid_count += Util.validate_filex(place, specific_yaml, "specific_yaml")
-      invalid_count += Util.validate_filex(place, global_yaml, "global_yaml")
+      # puts "dirs_and_files=#{dirs_and_files}"
+      invalid_count += Util.validate_filex(place, dirs_and_files.top_dir_yaml, "top_dir_yaml")
+      invalid_count += Util.validate_filex(place, dirs_and_files.resolved_top_dir_yaml, "resolved_top_dir_yaml")
+      invalid_count += Util.validate_filex(place, dirs_and_files.specific_yaml, "specific_yaml")
+      invalid_count += Util.validate_filex(place, dirs_and_files.global_yaml, "global_yaml")
+      invalid_count += Util.validate_filex(place, dirs_and_files.data_dir, "data_dir")
+      invalid_count += Util.validate_filex(place, dirs_and_files.output_dir, "output_dir")
+      invalid_count += Util.validate_filex(place, dirs_and_files.log_dir, "log_dir")
+      # puts "invalid_count=#{invalid_count}"
+      # raise
       return if invalid_count.positive?
 
-      @top_dir_hash = Util.make_hash_from_files(top_dir_yaml, resolved_top_dir_yaml)
-      @globalconfig = Mkspec::GlobalConfig.new(false, @top_dir_hash, specific_yaml.pathname, global_yaml.pathname, target_cmd_1, target_cmd_2, original_spec_file_path)
+      @top_dir_hash = Util.make_hash_from_files(dirs_and_files.top_dir_yaml, dirs_and_files.resolved_top_dir_yaml)
+      # raise
+      @globalconfig = Mkspec::GlobalConfig.new(false, @top_dir_hash, dirs_and_files, target_cmd_1, target_cmd_2)
       @ost = @globalconfig.ost
-
-      invalid_count += Util.validate_path(place, @ost.data_top_dir, "@ost.data_top_dir")
-      invalid_count += Util.validate_path(place, @ost.output_data_top_dir, "@ost.output_data_top_dir")
-      invalid_count += Util.validate_path(place, @ost.output_dir, "@ost.output_dir")
-      return if invalid_count.positive?
-
-      setup(@ost)
-
-      invalid_count += Util.validate_path(place, @ost.data_top_dir, "@ost.data_top_dir")
-      invalid_count += Util.validate_path(place, @ost.output_data_top_dir, "@ost.output_data_top_dir")
-      invalid_count += Util.validate_path(place, @ost.output_dir, "@ost.output_dir")
-
+      setup
       @invalid_count = invalid_count
     end
 
@@ -49,41 +60,43 @@ module Mkspec
       @top_dir_hash = Util.extract_in_yaml_file(pn, {})
     end
 
-    def setup_for_test_specific_data(ost)
-      ost._output_dir_pn = ost.test_root_dir_pn.join("_output")
-      ost._output_dir = ost._output_dir_pn.to_s
-      ost._output_data_top_dir_pn = ost.test_root_dir_pn.join("_output")
-      ost._output_data_top_dir = ost._output_dir_pn.to_s
+    def setup
+      return false if @ost.output_data_top_dir.nil?
 
-      ost._test_case_dir_pn = ost._output_dir_pn.join("test_case")
-      ost._test_case_dir = ost._test_case_dir_pn.to_s
-      ost._template_and_data_dir_pn = ost._output_dir_pn.join("template_and_data")
-      ost._template_and_data_dir = ost._template_and_data_dir_pn.to_s
-      ost._script_dir_pn = ost._output_dir_pn.join("script")
-      ost._script_dir = ost._script_dir_pn.to_s
-      ost._yaml_fname = "a.yml"
-      ost._data_dir_pn = ost._template_and_data_dir_pn.join("a")
+      setup_for_test_specific_data
+      @ost.data_dir_pn = @ost.output_template_and_data_dir_pn.join("a")
+      @ost.tad_2_dir = "template_and_data_2"
+      @ost.script_3_dir = "script_3"
+      @ost.start_char = "a"
+      @ost.limit = 6
+      @ost.test_1 = "test_1"
+      @ost.test_2 = "test_2"
+      @ost.format_fname = "format.txt"
+      # raise
+      @ost.number_of_testgroup = 59
+      @ost.number_of_testscript = 19
+      @ost.number_of_testgroup_of_first_testscript = 3
+      @ost.tgroup_0_name = "mruby-MrubyBridge"
+      @ost.tgroup_0_name_normalize = "mruby_MrubyBridge"
+      @ost.cmdline_0 = Clitest::Cmdline.new(nil, nil, @ost.target_parent_dir_pn,
+                                            [@ost.target_cmd_1_pn, @ost.target_cmd_2_pn])
+      @globalconfig.arrange(@ost)
     end
 
-    def setup(ost)
-      return false if ost.output_data_top_dir.nil?
+    def setup_for_test_specific_data
+      @ost._output_dir_pn = @ost.test_root_dir_pn.join("_output")
+      @ost._output_dir = @ost._output_dir_pn.to_s
+      @ost._output_data_top_dir_pn = @ost.test_root_dir_pn.join("_output")
+      @ost._output_data_top_dir = @ost._output_dir_pn.to_s
 
-      setup_for_test_specific_data(ost)
-      ost.data_dir_pn = ost.output_template_and_data_dir_pn.join("a")
-      ost.tad_2_dir = "template_and_data_2"
-      ost.script_3_dir = "script_3"
-      ost.start_char = "a"
-      ost.limit = 6
-      ost.test_1 = "test_1"
-      ost.test_2 = "test_2"
-      ost.format_fname = "format.txt"
-      ost.number_of_testgroup = 59
-      ost.number_of_testscript = 19
-      ost.number_of_testgroup_of_first_testscript = 3
-      ost.tgroup_0_name = "mruby-MrubyBridge"
-      ost.tgroup_0_name_normalize = "mruby_MrubyBridge"
-      ost.cmdline_0 = Clitest::Cmdline.new(nil, nil, ost.target_parent_dir_pn, [ost.target_cmd_1_pn, ost.target_cmd_2_pn])
-      @globalconfig.arrange(ost)
+      @ost._test_case_dir_pn = @ost._output_dir_pn.join("test_case")
+      @ost._test_case_dir = @ost._test_case_dir_pn.to_s
+      @ost._template_and_data_dir_pn = @ost._output_dir_pn.join("template_and_data")
+      @ost._template_and_data_dir = @ost._template_and_data_dir_pn.to_s
+      @ost._script_dir_pn = @ost._output_dir_pn.join("script")
+      @ost._script_dir = @ost._script_dir_pn.to_s
+      @ost._yaml_fname = "a.yml"
+      @ost._data_dir_pn = @ost._template_and_data_dir_pn.join("a")
     end
 
     def _mkscript
@@ -106,13 +119,15 @@ module Mkspec
     end
 
     def _config
+      # raise
+      # puts "@ost.data_top_dir=#{@ost.data_top_dir}"
       @ost._config = Mkspec::Config.new(@ost.data_top_dir, @ost._output_data_top_dir, @ost._output_dir,
-                                        @ost.output_script_dir_pn, @ost.output_template_and_data_dir).setup
+                                        @ost.output_template_and_data_dir).setup
     end
 
     def config_0
       @ost.config_0 = Mkspec::Config.new(@ost.data_top_dir, @ost._output_data_top_dir, @ost.output_dir,
-                                         @ost.output_script_dir_pn, @ost.output_template_and_data_dir).setup
+                                         @ost.output_template_and_data_dir).setup
     end
 
     def make_script_name(name)
@@ -161,19 +176,14 @@ module Mkspec
 
     def create_instance_of_config
       # raise unless @ost.spec_dir
-      return false if @ost.spec_dir
       return false if @ost.data_top_dir
       return false if @ost.output_data_top_dir
       return false if @ost.output_dir
 
-      Mkspec::Config.new(@ost.data_top_dir, @ost.output_data_top_dir, @ost.output_dir, nil, nil).setup
+      Mkspec::Config.new(@ost.data_top_dir, @ost.output_data_top_dir, nil, nil).setup
     end
 
     def _create_instance_of_config
-      if @ost.spec_dir.nil?
-        Loggerxcm.debug("TestConf#_create_instance_of_config @ost.spec_dir=nil")
-        return nil
-      end
       if @ost.data_top_dir.nil?
         Loggerxcm.debug("TestConf#_create_instance_of_config @ost.data_top_dir=nil")
         return nil
@@ -186,7 +196,7 @@ module Mkspec
         Loggerxcm.debug("TestConf#_create_instance_of_config @ost._output_dir=nil")
         return nil
       end
-      Mkspec::Config.new(@ost.data_top_dir, @ost.output_data_top_dir, @ost._output_dir, @ost.output_script_dir, nil).setup
+      Mkspec::Config.new(@ost.data_top_dir, @ost.output_data_top_dir, @ost.output_script_dir, nil).setup
     end
 
     def create_instance_of_root
@@ -221,8 +231,6 @@ module Mkspec
       level = 1
       tag = "make_arg_data_flat"
       hash = {}
-      #              (size,  name, outer_hash,   content_path, yaml_path, config)
-      # @ost._config.setup
       _mkscript
       Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @ost._config)
     end
@@ -231,18 +239,15 @@ module Mkspec
       level = 1
       tag = "make_arg_data_flat"
       hash = {}
-      #              (size,  name, outer_hash,   content_path, yaml_path, config)
-      #_config
-      #@ost._config.setup
       _mkscript
       Mkspec::Item.new(level, 0, tag, hash, content_path, yaml_path, @ost._config)
     end
 
     def create_instance_of_setting
       testscript = create_instance_of_testscript
-      config = create_instance_of_config
+      config = create_instance_of_configs
       func_name_of_make_arg = @ost.make_arg_basename
-      Mkspec::Setting.new(testscript, config, func_name_of_make_arg)
+      Mkspec::Setting.new(@globalconfig, testscript, config, func_name_of_make_arg)
     end
 
     def _create_instance_of_setting

@@ -6,7 +6,7 @@ require 'debug'
 logger_init_x
 
 RSpec.describe 'Loggerxcm', type: :aruba do
-  context 'STATE is SUCCESS' do
+  context 'with STATE is SUCCESS' do
     before(:all) do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
     end
@@ -19,7 +19,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
     end
     let(:str) { "Fatal" }
 
-    context 'fatal' do
+    context 'when fatal' do
       let(:ret_string) { Mkspec::Loggerxcm.fatal(str) }
       let(:ret) { Mkspec::Loggerxcm.fatal(message_array) }
 
@@ -32,7 +32,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
       end
     end
 
-    context 'error' do
+    context 'when error' do
       before(:each) do
         @ret = Mkspec::Loggerxcm.error(@message_array)
       end
@@ -42,7 +42,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
       end
     end
 
-    context 'warn' do
+    context 'when warn' do
       before(:each) do
         @ret = Mkspec::Loggerxcm.warn(@message_array)
       end
@@ -52,7 +52,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
       end
     end
 
-    context 'debug' do
+    context 'when debug' do
       before(:each) do
         @ret = Mkspec::Loggerxcm.debug(@message_array)
       end
@@ -62,7 +62,7 @@ RSpec.describe 'Loggerxcm', type: :aruba do
       end
     end
 
-    context 'info' do
+    context 'when info' do
       before(:each) do
         @ret = Mkspec::Loggerxcm.info(@message_array)
       end

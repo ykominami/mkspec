@@ -10,8 +10,6 @@ require "aruba/rspec"
 logger_init_x
 
 RSpec.describe "command-line", type: :aruba do
-  #include TestConf
-
   before(:all) do
     Mkspec::Loggerxcm.fatal("#### mkspec_cli_spec.rb ####")
     @conf = TestHelp.make_testconf
@@ -23,12 +21,12 @@ RSpec.describe "command-line", type: :aruba do
     @ost.cmdline_0.make_cmdline_1(test_case_dir, @ost.result, option_extra.join(" "), file_list)
   end
 
-  context "make script" do
+  context "with make script" do
     # test_auto/_DATA/hier5
     #                      /test_case(生成したspecファイルを実行するときに参照)
     #                      /template_and_data(出力先)
     #                      /script(出力先)
-    context "create all files" do
+    context "when create all files" do
       let(:ost) { @conf.ost }
       let(:tsv_fname) { ost.misc_tsv_fname }
       let(:argv) do
@@ -67,7 +65,7 @@ RSpec.describe "command-line", type: :aruba do
     #                      #/template_and_data(出力先)
     #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
     #                      /script(出力先)
-    context "create files under template_and_data_2 directory" do
+    context "when create files under template_and_data_2 directory" do
       test_case_dir = 1
       let(:tsv_fname) { @ost.misc_tsv_fname }
       let(:argv) do
@@ -106,7 +104,7 @@ RSpec.describe "command-line", type: :aruba do
     #                      /template_and_data_2(今回の参照先)　ここは参照するだけ
     #                      #/script(出力先)
     #                      /script_3 (今回の出力先)　ここに出力するだけ
-    context "create spec files from files under templaet_and_data_2 to script_3 directory" do
+    context "when create spec files from files under templaet_and_data_2 to script_3 directory" do
       test_case_dir = 1
       let(:tsv_fname) { @ost.misc_tsv_fname }
       let(:argv) do
@@ -140,7 +138,7 @@ RSpec.describe "command-line", type: :aruba do
       end
     end
 
-    context "create all files to script x from tadx" do
+    context "when create all files to script x from tadx" do
       test_case_dir = 1
       let(:argv) do
         %W[
@@ -173,7 +171,7 @@ RSpec.describe "command-line", type: :aruba do
       end
     end
 
-    context "create all files to script y from tady" do
+    context "when create all files to script y from tady" do
       test_case_dir = 1
       let(:argv) do
         %W[
@@ -206,7 +204,7 @@ RSpec.describe "command-line", type: :aruba do
       end
     end
 
-    context "create all files to script y only from tady" do
+    context "when create all files to script y only from tady" do
       test_case_dir = 1
       let(:argv) do
         %W[
@@ -239,7 +237,7 @@ RSpec.describe "command-line", type: :aruba do
       end
     end
 
-    context "create all files to script x from tadv" do
+    context "when create all files to script x from tadv" do
       test_case_dir = 1
       let(:argv) do
         %W[
@@ -272,7 +270,7 @@ RSpec.describe "command-line", type: :aruba do
       end
     end
 
-    context "create all files to script y from tadw" do
+    context "when create all files to script y from tadw" do
       test_case_dir = 1
       let(:argv) do
         %W[
@@ -305,7 +303,7 @@ RSpec.describe "command-line", type: :aruba do
       end
     end
 
-    context "create all files to script y only from tadw" do
+    context "when create all files to script y only from tadw" do
       test_case_dir = 1
       let(:argv) do
         %W[

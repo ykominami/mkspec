@@ -5,14 +5,14 @@ require 'spec_helper_1'
 logger_init_x
 
 RSpec.describe Mkspec do
-  context 'call methods of Root class' do
+  context 'with call methods of Root class' do
     before(:all) do
       conf = TestHelp.make_testconf
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @root = conf._create_instance_of_root
     end
 
-    context '' do
+    context 'when extract' do
       it 'call extract_in_hash_with_setting_hash', xcmd: 1 do
         hash = @root.extract_in_hash_with_setting_hash({})
         expect(hash.empty?).to be(false)
@@ -24,7 +24,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context 'make_item with {}' do
+    context 'when make_item with {}' do
       let(:item) { @root.make_item({}) }
 
       it 'call make_item', xcmd: 3 do
