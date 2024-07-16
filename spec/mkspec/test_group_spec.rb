@@ -2,11 +2,12 @@
 
 require 'spec_helper_1'
 
-log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
-logger_init(log_dir, level: :debug, stdout_flag: true) #1
+# log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
+# logger_init(log_dir, level: :debug, stdout_flag: true) #1
+logger_init_x
 
 RSpec.describe Mkspec::TestGroup do
-  context 'call methods of TestGroup class' do
+  context 'with call methods of TestGroup class' do
     before(:all) do
       @conf = TestHelp.make_testconf
       @ost = @conf.ost
@@ -15,7 +16,7 @@ RSpec.describe Mkspec::TestGroup do
       @test_case_args = Mkspec::Util.make_arg_of_add_test_case_of_testgroup
     end
 
-    context 'STATE is SUCCESS' do
+    context 'when when STATE is SUCCESS' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @conf2 = @conf
@@ -28,7 +29,7 @@ RSpec.describe Mkspec::TestGroup do
         expect(ret).to eq(@tg_0_name_normalize)
       end
 
-      context 'TestGroup_0 add TestCase' do
+      context 'when TestGroup_0 add TestCase' do
         before(:all) do
           @conf.add_testcases(@tg_0, 1)
         end

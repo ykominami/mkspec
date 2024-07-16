@@ -1,10 +1,20 @@
 # frozen_string_literal: true
 
 require 'pathname'
+require 'yaml'
 
 module Mkspec
-  require 'yaml'
-
+  # The `Mkspec::Root` class serves as the entry point for managing the root configuration and settings within the Mkspec framework.
+  # It is responsible for initializing the framework's configuration by loading and validating settings from a specified YAML file.
+  # This class plays a crucial role in setting up the environment for the Mkspec framework by ensuring that all necessary
+  # configurations are correctly loaded and accessible. It also provides methods for extracting and managing specific
+  # configuration details, facilitating the dynamic creation and manipulation of items based on the framework's settings.
+  #
+  # @example Initializing a new `Root` instance with a YAML configuration file
+  #   root = Mkspec::Root.new("config.yml", config)
+  #
+  # @param yml_fname [String] The filename of the YAML file containing configuration settings.
+  # @param config [Mkspec::Config] An instance of the `Mkspec::Config` class for managing framework configurations.
   class Root
     def initialize(yml_fname, config)
       yml_0_pn = Pathname.new(yml_fname)

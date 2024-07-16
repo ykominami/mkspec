@@ -2,11 +2,12 @@
 
 require 'spec_helper_1'
 
-log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
-logger_init(log_dir, level: :debug, stdout_flag: true) #1
+# log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
+# logger_init(log_dir, level: :debug, stdout_flag: true) #1
+logger_init_x
 
 RSpec.describe Mkspec::TestScriptGroup do
-  context '' do
+  context 'with calling method of TestScriptGroup class' do
     before(:all) do
       @conf = TestHelp.make_testconf
       @ost = @conf.ost
@@ -14,7 +15,7 @@ RSpec.describe Mkspec::TestScriptGroup do
       @original_output_dir = @ost.original_output_dir
     end
 
-    context 'call method of TestScriptGroup class' do
+    context 'when call method of TestScriptGroup class' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @tsg = @conf.create_instance_of_testscriptgroup
@@ -27,7 +28,7 @@ RSpec.describe Mkspec::TestScriptGroup do
         expect(ret.instance_of?(described_class)).to be(true)
       end
 
-      context 'setup_from_tsv' do
+      context 'when setup_from_tsv' do
         before(:all) do
           @ret = @tsg.setup_from_tsv
         end
@@ -52,7 +53,7 @@ RSpec.describe Mkspec::TestScriptGroup do
         expect(ret).to eq(answer)
       end
 
-      context 'call result after calling setup' do
+      context 'when call result after calling setup' do
         before(:all) do
           Mkspec::STATE.change(Mkspec::SUCCESS, nil)
           @number_of_testscript = @ost.number_of_testscript

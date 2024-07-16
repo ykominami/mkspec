@@ -5,11 +5,17 @@ require "spec_helper_1"
 logger_init_x
 
 RSpec.describe Mkspec do
-  context "format" do
-    before(:each) do
+  context "with format" do
+    before(:all) do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       @conf = TestHelp.make_testconf
+      # puts "@conf=#{@conf}"
       @ost = @conf.ost
+      #  puts "@ost=#{@ost}"
+      # puts "@ost.format_fname=#{@ost.format_fname}|"
+      @format_fname = @ost.format_fname
+      # puts "@format_fname=#{@format_fname}|"
+      # puts "@ost.test_root_dir_pn=#{@ost.test_root_dir_pn }"
     end
 
     let(:str) do
@@ -24,7 +30,9 @@ RSpec.describe Mkspec do
       END_OF_BLOCK
     end
     let(:ret) { Mkspec::Mkscript.format(str) }
-    let(:format_pn) { @ost._test_data_dir_pn.join(@ost.format_fname) }
+    #    let(:format_fname) { @ost.format_fname }
+
+    let(:format_pn) { @ost._test_data_dir_pn.join(@format_fname) }
     let(:value) { File.read(format_pn) }
 
     it "@conf", a: 1 do
@@ -36,13 +44,14 @@ RSpec.describe Mkspec do
     end
   end
 
-  context "create instance of class" do
+  context "with create instance of class" do
     before(:all) do
       @conf = TestHelp.make_testconf
       @ost = @conf.ost
+      # puts "create instance of class | @ost=#{@ost}"
     end
 
-    context "Config" do
+    context "when Config" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -54,9 +63,12 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "Root" do
+    context "when Root" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
+        # puts "Root @conf=#{@conf}"
+        # puts "Root @conf.ost=#{@conf.ost}"
+        # puts "Root @conf.ost.data_top_dir=#{@conf.ost.data_top_dir}"
       end
 
       let(:root) { @conf._create_instance_of_root }
@@ -66,7 +78,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "Item" do
+    context "when Item" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         Mkspec::Util.dump_var(:o_content_fname, @ost.content_fname)
@@ -82,7 +94,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "Setting" do
+    context "when Setting" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -94,7 +106,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "Templatex" do
+    context "when Templatex" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         config = @conf.create_instance_of_config
@@ -110,7 +122,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "TestGroup" do
+    context "when TestGroup" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -122,7 +134,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "TestCase" do
+    context "when TestCase" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -134,7 +146,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "TestScript" do
+    context "when TestScript" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -146,7 +158,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "TestScriptGroup" do
+    context "when TestScriptGroup" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -158,7 +170,7 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "Mkscript" do
+    context "when Mkscript" do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       let(:tsv_fname) { @ost.misc_tsv_fname }
       let(:argv) do
@@ -181,11 +193,16 @@ RSpec.describe Mkspec do
       end
     end
 
-    context "GlobalConfig" do
+    context "when GlobalConfig" do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @conf = TestHelp.make_testconf
-        @top_dir_yaml, @resolved_top_dir_yaml, @specific_yaml, @global_yaml = Mkspec::Util.adjust_paths
+        # @top_dir_yaml, @resolved_top_dir_yaml, @specific_yaml, @global_yaml = Mkspec::Util.adjust_paths
+        @dirs_and_files = Mkspec::Util.adjust_dirs_and_files
+        @top_dir_yaml = @dirs_and_files.top_dir_yaml
+        @resolved_top_dir_yaml = @dirs_and_files.resolved_top_dir_yaml
+        @specific_yaml = @dirs_and_files.specific_yaml
+        @global_yaml = @dirs_and_files.global_yaml
         Mkspec::Util.dump_var(:specific_yaml, @specific_yaml)
         raise unless @top_dir_yaml
         raise unless @resolved_top_dir_yaml
@@ -193,13 +210,11 @@ RSpec.describe Mkspec do
 
       let(:target_cmd_1) { "tecsgen" }
       let(:target_cmd_2) { "tecsmerge" }
-      let(:original_spec_file_path) { __FILE__ }
 
       let(:top_dir_hash) { Mkspec::Util.make_hash_from_files(@top_dir_yaml, @resolved_top_dir_yaml) }
 
       it "ret", xcmd: 1 do
-        ret = Mkspec::GlobalConfig.new(false, top_dir_hash, @specific_yaml.pathname,
-                                       @global_yaml.pathname, target_cmd_1, target_cmd_2, original_spec_file_path)
+        ret = Mkspec::GlobalConfig.new(false, top_dir_hash, @dirs_and_files, target_cmd_1, target_cmd_2)
         expect(ret.class).to eq(Mkspec::GlobalConfig)
       end
     end

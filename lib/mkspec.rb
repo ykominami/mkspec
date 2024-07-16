@@ -3,7 +3,6 @@
 require 'erubis'
 require 'yaml'
 require 'pathname'
-#require 'pry'
 require 'debug'
 require 'rufo'
 require 'clitest'
@@ -96,11 +95,16 @@ module Mkspec
   end
   # Your code goes here...
 
-  # 固定長インデント付きErubyテンプレートクラス
-  #class PrefixedLineEruby < Erubis::Eruby
-  #  include Erubis::PrefixedLineEnhancer
-  #end
-
+  # The `Mkspec::MkspecError` class serves as a custom exception for the Mkspec framework.
+  # It is designed to handle errors specific to the Mkspec operations, providing a more
+  # granular control over error management within the framework. This class can be extended
+  # to define various types of errors that are unique to the Mkspec's domain, facilitating
+  # better error diagnosis and handling.
+  #
+  # @example Raising a Mkspec-specific error
+  #   raise Mkspec::MkspecError.new("Specific error message")
+  #
+  # @param message [String] The error message describing what went wrong.
   class MkspecError < StandardError
     attr_reader :message_array
 
@@ -110,7 +114,19 @@ module Mkspec
     end
   end
 
+  # The `Mkspec::MkspecDebugError` class is a specialized error class within the Mkspec framework
+  # designed to handle debugging-related errors. It extends `Mkspec::MkspecError`, inheriting its
+  # capabilities to manage errors specific to Mkspec operations, with a focus on issues encountered
+  # during debugging processes. This class allows for more detailed error reporting and handling
+  # in scenarios where debugging information is crucial for diagnosing problems.
+  #
+  # @example Raising a MkspecDebug-specific error
+  #   raise Mkspec::MkspecDebugError.new("Debug-specific error message")
+  #
+  # @param message [String] The error message describing the debugging issue.
+  # @param message_array [Array] Optional array of additional messages or details related to the error.
   class MkspecDebugError < MkspecError
+    # Implementation omitted
     attr_reader :message_array
 
     def initialize(msg = "My default message", message_array = [])
@@ -119,6 +135,17 @@ module Mkspec
     end
   end
 
+  # The `Mkspec::MkspecAppError` class is a custom exception class within the Mkspec framework
+  # designed to handle application-level errors. It extends `Mkspec::MkspecError`, leveraging its
+  # capabilities for managing errors specific to Mkspec operations, but with a focus on errors that
+  # occur at the application level. This distinction allows for more precise error handling and
+  # categorization, facilitating better error diagnosis and management for application-specific issues.
+  #
+  # @example Raising an application-specific error
+  #   raise Mkspec::MkspecAppError.new("Application-specific error message")
+  #
+  # @param message [String] The error message describing the application issue.
+  # @param message_array [Array] Optional array of additional messages or details related to the error.
   class MkspecAppError < MkspecError
     attr_reader :message_array
 

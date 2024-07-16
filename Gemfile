@@ -15,8 +15,8 @@ gem 'rufo'
 
 group :development, :test, optional: true do
   gem 'aruba'
-  gem 'clitest', path: "../clitest"
-  # gem 'clitest'
+  # gem 'clitest', path: "../clitest"
+  gem 'clitest'
   gem 'rspec', '~> 3.0'
   gem 'rspec_junit_formatter'
   gem 'rubocop'

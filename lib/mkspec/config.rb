@@ -4,6 +4,20 @@ require "pathname"
 require "fileutils"
 
 module Mkspec
+  # The `Mkspec::Config` class is designed to manage the configuration of directories and paths for the Mkspec framework.
+  # It facilitates the setup of a structured environment for testing by organizing directories such as test outputs,
+  # scripts, templates, and data directories. This class provides methods to ensure the correct setup of these directories,
+  # handling both absolute and relative paths, and supports the dynamic creation of necessary directories if they do not exist.
+  # Additionally, it offers utility methods to construct paths under specific directories, aiding in the organization and
+  # management of test files and resources.
+  #
+  # @example Initializing a new `Config` instance
+  #   config = Mkspec::Config.new(data_top_dir, output_data_top_dir, tad_dir, test_case_dir)
+  #
+  # @param data_top_dir [String] The top-level directory for source data.
+  # @param output_data_top_dir [String] The top-level directory for output data.
+  # @param tad_dir [String] The directory for templates and data.
+  # @param test_case_dir [String, nil] The directory for test cases, optional.
   class Config
     attr_reader :spec_dir_pn, :test_dir_pn, :misc_dir_pn, :output_dir_pn,
                 :output_script_dir_pn, :output_template_and_data_dir_pn, :output_test_case_dir_pn,
@@ -22,44 +36,17 @@ module Mkspec
     def initialize(
       data_top_dir,
       output_data_top_dir,
-      output_dir,
-      script_dir,
-
       tad_dir,
-
       test_case_dir = nil
     )
-
-      # raise unless spec_dir
-      #raise unless data_top_dir
-      #raise unless output_data_top_dir
-      #raise unless output_dir
-      # raise unless tad_dir
-
       @setup_count = 0
 
-      data_top_dir_original = data_top_dir
-      @data_top_dir_original_pn = Pathname.new(data_top_dir_original)
-      data_top_dir_real_pn = @data_top_dir_original_pn.expand_path
-      @data_top_dir_pn = data_top_dir_real_pn
-
-      @output_data_top_dir = ENV.fetch("MKSPEC_OUTPUT_DIR", output_data_top_dir)
+      @data_top_dir_pn = Pathname.new(data_top_dir)
+      @output_data_top_dir = output_data_top_dir
       @output_data_top_dir_pn = Pathname.new(@output_data_top_dir)
       @output_test_dir_pn = @output_data_top_dir_pn.join(GlobalConfig::TEST_DIR)
       @test_dir_pn = @data_top_dir_pn.join(GlobalConfig::TEST_DIR)
-
       @misc_dir_pn = @test_dir_pn.join(GlobalConfig::MISC_DIR)
-      @root_output_dir_pn = @data_top_dir_pn.join(GlobalConfig::ROOT_OUTPUT_DIR)
-
-      output_dir_original = output_dir
-      output_dir_original_pn = Pathname.new(output_dir_original)
-      output_dir_real_pn = output_dir_original_pn.expand_path
-      @output_dir = output_dir_real_pn.to_s
-
-      script_dir_original = script_dir
-      script_dir_original_pn = Pathname.new(script_dir_original)
-      script_dir_real_pn = script_dir_original_pn.expand_path
-      @script_dir = script_dir_real_pn.to_s
 
       if tad_dir.nil?
         @tad_dir = tad_dir
@@ -78,9 +65,6 @@ module Mkspec
         test_case_dir_real_pn = test_case_dir_original_pn.expand_path
         @test_case_dir = test_case_dir_real_pn.to_s
       end
-
-      # script_dir.x
-      # ""/home/ykominami/repo/ykominami/mkspec_data/_DATA/hier14"
     end
 
     def setup
@@ -88,24 +72,14 @@ module Mkspec
       return self if @setup_count.positive?
 
       Loggerxcm.debug("Config.setup 1 #{@setup_count} self=#{self}")
-      # Loggerxcm.debug(["caller=" , caller].join("\n"))
-      output_dir_pn = Pathname.new(@output_dir)
-      pn = if output_dir_pn.absolute?
-             output_dir_pn
-           else
-             @root_output_dir_pn.join(@output_dir)
-           end
-      Loggerxcm.debug("Config.setup pn=#{pn}")
-      pn.mkpath unless pn.exist?
-      @output_dir_pn = pn
-      @script_absolute_dir_pn = check_absolute_dir(@script_dir)
+
+      @output_data_top_dir_pn.mkpath unless @output_data_top_dir_pn.exist?
       @tad_absolute_dir_pn = check_absolute_dir(@tad_dir)
       @test_case_absolute_dir_pn = check_absolute_dir(@test_case_dir)
-      #@tad_absolute_dir_pn.x = nil
-      # @script_absolute_dir_pn.x
-      # /home/ykominami/repo/ykominami/mkspec/spec
-      @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @script_dir, @script_dir)
-
+      @output_script_dir_pn = @output_data_top_dir_pn
+      @script_absolute_dir_pn = @output_script_dir_pn.expand_path
+      @script_dir = "script"
+      @output_script_dir_pn = setup_dir(@script_absolute_dir_pn, @output_script_dir, @output_script_dir)
       @output_template_and_data_dir_pn = setup_dir(@tad_absolute_dir_pn, @tad_dir,
                                                    GlobalConfig::OUTPUT_TEMPLATE_AND_DATA_DIR)
       @output_test_case_dir_pn = setup_dir(@test_case_absolute_dir_pn, @test_case_dir,
@@ -174,7 +148,7 @@ module Mkspec
         real_src_dir = File.realpath(src_dir)
         Loggerxcm.debug("src_dir=#{src_dir} | real_src_dir=#{real_src_dir}")
         ret += 1
-      rescue => exc
+      rescue StandardError => exc
         Loggerxcm.fatal(exc)
         Loggerxcm.fatal("Config#setup_dir_content Can't find #{src_dir} pwd=#{pwd}")
       end
@@ -182,7 +156,7 @@ module Mkspec
         real_dest_dir = File.realpath(dest_dir)
         Loggerxcm.debug("dest_dir=#{dest_dir} | real_dest_dir=#{real_dest_dir}")
         ret += 1
-      rescue => exc
+      rescue StandardError => exc
         Loggerxcm.fatal(exc)
       end
       return unless ret >= 2
@@ -191,7 +165,7 @@ module Mkspec
     end
 
     def setup_directory(dir)
-      pn = @output_dir_pn + dir
+      pn = @output_data_top_dir_pn.join(dir)
       Loggerxcm.debug("setup_directory pn=#{pn}")
       pn.mkpath unless pn.exist?
       pn

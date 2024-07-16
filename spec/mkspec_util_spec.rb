@@ -6,8 +6,8 @@ require "debug"
 logger_init_x
 
 RSpec.describe "Mkspec::Util" do
-  context "adjust_paths" do
-    ret = Mkspec::Util.adjust_paths
+  context "with adjust_files" do
+    ret = Mkspec::Util.adjust_files
     top_dir_yaml_file, resolved_top_dir_yaml_file, specific_yaml_file, global_yaml_file = ret
     it "The number of elements in the array is four.", cmd: 1 do
       expect(ret.size).to eq(4)
@@ -46,13 +46,13 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "get_file_content" do
+  context "with get_file_content" do
     before(:all) do
       Mkspec::STATE.change(Mkspec::SUCCESS, nil)
     end
 
     # conf = TestHelp.make_testconf
-    _, _, global_yaml_file, = Mkspec::Util.adjust_paths
+    _, _, global_yaml_file, = Mkspec::Util.adjust_files
     let(:ret) { Mkspec::Util.get_file_content(global_yaml_file[2]) }
 
     it "get_file_content", cmd: 0 do
@@ -60,14 +60,14 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "extract_in_yaml_file" do
+  context "with extract_in_yaml_file" do
     before(:all) do
       @expected_hash_base = { "emails" => ["flower@mail.com",
                                            "garnet@mail.net", "peach@mail.org"],
                               "names" => ["Hanako", "Sumire", "Momoko"] }
     end
 
-    context 'ENV["MKSPEC_SPECIFIC_YAML_FNAME"]' do
+    context 'when ENV["MKSPEC_SPECIFIC_YAML_FNAME"]' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @expected_hash_base = {
@@ -89,9 +89,9 @@ RSpec.describe "Mkspec::Util" do
         }
       end
 
-      context "extract_in_yaml_file" do
+      context "when extract_in_yaml_file" do
         before(:all) do
-          _, _, @specific_yaml_file, = Mkspec::Util.adjust_paths
+          _, _, @specific_yaml_file, = Mkspec::Util.adjust_files
           Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         end
 
@@ -103,10 +103,10 @@ RSpec.describe "Mkspec::Util" do
         end
       end
 
-      context "extract_in_yaml_file 2" do
-        context "YAML file and nil" do
+      context "when extract_in_yaml_file 2" do
+        context "when YAML file and nil" do
           before(:all) do
-            _, _, @specific_yaml_file, = Mkspec::Util.adjust_paths
+            _, _, @specific_yaml_file, = Mkspec::Util.adjust_files
             Mkspec::STATE.change(Mkspec::SUCCESS, nil)
           end
 
@@ -121,10 +121,10 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "extract_in_yaml_file double" do
-    context "File" do
+  context "with extract_in_yaml_file double" do
+    context "when File" do
       before(:all) do
-        _, _, @specific_yaml_file, @global_yaml_file = Mkspec::Util.adjust_paths
+        _, _, @specific_yaml_file, @global_yaml_file = Mkspec::Util.adjust_files
       end
 
       let(:specific_hash) { Mkspec::Util.extract_in_yaml_file(@specific_yaml_file.pathname) }
@@ -136,8 +136,8 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "extract_in_yaml 3" do
-    context "Hash and string(yaml)" do
+  context "with extract_in_yaml 3" do
+    context "when Hash and string(yaml)" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -180,8 +180,8 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "extract_in_yaml" do
-    context "empty string and nil" do
+  context "with extract_in_yaml" do
+    context "when empty string and nil" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -196,7 +196,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "empty string and not appropriate hash" do
+    context "when empty string and not appropriate hash" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -211,7 +211,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "string and appropriate hash" do
+    context "when string and appropriate hash" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -232,8 +232,8 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "extract_with_eruby" do
-    context "extract_with_eruby empty string and empty hash" do
+  context "with extract_with_eruby" do
+    context "when extract_with_eruby empty string and empty hash" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -248,7 +248,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "extract_with_eruby not empty string and appropriate hash" do
+    context "when extract_with_eruby not empty string and appropriate hash" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -267,7 +267,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "extract_with_eruby not empty string and not appropriate hash" do
+    context "when extract_with_eruby not empty string and not appropriate hash" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -287,8 +287,8 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "tag_analyze" do
-    context "string and appropriate hash 1" do
+  context "with tag_analyze" do
+    context "when string and appropriate hash 1" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -313,7 +313,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "string and appropriate hash 2" do
+    context "when string and appropriate hash 2" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -333,8 +333,8 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "adjust_hash" do
-    context "nil" do
+  context "with adjust_hash" do
+    context "when nil" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -348,7 +348,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "{}" do
+    context "when {}" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end
@@ -362,7 +362,7 @@ RSpec.describe "Mkspec::Util" do
       end
     end
 
-    context "hash size 1" do
+    context "when hash size 1" do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
       end

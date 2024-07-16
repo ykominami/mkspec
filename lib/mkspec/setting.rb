@@ -1,7 +1,23 @@
 # frozen_string_literal: true
 
 module Mkspec
+  # The `Mkspec::Setting` class is responsible for managing the settings and configurations specific to a test script
+  # within the Mkspec framework. It handles the initialization of settings based on global configurations, test script
+  # details, and additional configuration parameters. This class plays a pivotal role in preparing the environment for
+  # test execution by setting up template paths, data YAML paths, and managing test case IDs. It also facilitates the
+  # dynamic generation of test contexts and the setup of test cases, ensuring that each test case is configured with
+  # the correct parameters and environment settings. Additionally, the `Mkspec::Setting` class is responsible for
+  # outputting configuration details to a YAML file, aiding in the reproducibility and debugging of tests.
+  #
+  # @example Initializing a new `Setting` instance
+  #   setting = Mkspec::Setting.new(global_config, testscript, config, initial_testcase_id)
+  #
+  # @param global_config [Mkspec::GlobalConfig] The global configuration for the Mkspec framework.
+  # @param testscript [Mkspec::TestScript] The test script for which settings are being configured.
+  # @param config [Mkspec::Config] Additional configuration parameters.
+  # @param initial_testcase_id [Integer] The starting ID for test cases within the test script.
   class Setting
+    # Implementation omitted
     attr_reader :template_path, :testscript, :data_yaml_path, :func_name_of_make_arg, :lt_id
 
     def initialize(global_config, testscript, config, initail_testcase_id)

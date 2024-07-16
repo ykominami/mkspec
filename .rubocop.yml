@@ -39,6 +39,9 @@ Layout:
   # Max: 170
   Max: 250
 
+Metrics/ClassLength:
+  Max: 400 # クラスの最大行数をここで設定
+
 Style:
   # 日本語のコメントを OK とする
   AsciiComments:
