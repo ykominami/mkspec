@@ -30,13 +30,44 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+<<<<<<< Updated upstream
           bundler-cache: false
       - name: Run the default task
+||||||| Stash base
+          bundler-cache: true
+      - name: ls ./test_data/
+=======
+          bundler-cache: true
+      - name: Run the default task
+>>>>>>> Stashed changes
         run: |
+<<<<<<< Updated upstream
           gem install bundler -v 2.2.7
           bundle config with 'test'
           bundle install
           bundle exec rake
 
+||||||| Stash base
+          ls -al ${{ github.workspace}}/test_data
+      - name: ls ./test_data/_resolved
+        run: |
+          ls -al ${{ github.workspace}}/test_data/_resolved
+      - name: cat ./test_data/top_dir.yml
+        run: |
+          cat ${{ github.workspace}}/test_data/top_dir.yml
+      - name: cat ./test_data/global.yml
+        run: |
+          cat ${{ github.workspace}}/test_data/global.yml
+      - name: cat ./test_data/specific.yml
+        run: |
+          cat ${{ github.workspace}}/test_data/specific.yml
+      - name: echo
+        run: echo "This job's status is ${{ job.status }}"
+=======
+          gem install bundler -v 2.5.15
+          bundle config with 'development'
+          bundle install
+          bundle exec rake
+>>>>>>> Stashed changes
 #      - name: Run the default task
 #        run: bundle exec rake
