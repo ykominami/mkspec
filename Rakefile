@@ -26,5 +26,11 @@ rescue NameError, LoadError => exc
   Loggerxcm.fatal(exc.message)
 end
 
+begin
+  require "bundler/gem_tasks"
+rescue NameError, LoadError => exc
+  Loggerxcm.fatal(exc.message)
+end
+
 desc 'Mkspec related operaion'
 task default: %i[spec rubocop]
