@@ -3,6 +3,18 @@
 require 'pathname'
 
 module Mkspec
+  # The `Mkspec::Item` class represents an individual item within the Mkspec framework. It is designed to encapsulate
+  # the properties and behaviors of a single item, such as a test case or a configuration entity. This class provides
+  # a structured way to manage the attributes of an item, including its identification, description, and any specific
+  # metadata associated with it. The `Mkspec::Item` class serves as a foundational element for more complex structures
+  # within the framework, enabling detailed organization and manipulation of individual items in a consistent manner.
+  #
+  # @example Creating a new `Item` instance
+  #   item = Mkspec::Item.new(id: "001", description: "Example item", metadata: { key: "value" })
+  #
+  # @param id [String] The unique identifier for the item.
+  # @param description [String] A brief description of the item.
+  # @param metadata [Hash] Optional metadata associated with the item.
   class Item
     attr_reader :state, :content_lines, :content_path, :name, :outer_hash, :tag_table,
                 :extract_count, :local_hash, :yaml_path
@@ -72,7 +84,6 @@ module Mkspec
       if @local_hash.size.positive?
         Loggerxcm.debug("Item#setup use @local_hash")
         @hash = @local_hash
-        #raise Mkspec::MkspecDebugError,.new("item.rb prepare 1 use @local_hash")
       else
         Loggerxcm.debug("Item#setup use @outer_hash")
         @hash = @outer_hash

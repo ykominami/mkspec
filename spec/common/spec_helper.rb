@@ -31,12 +31,12 @@ end
 def logger_init_x
   # log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
   log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
-  logger_init(log_dir, level: :fatal, stdout_flag: true) #1
+  logger_init(log_dir, level: :fatal, stdout_flag: true) # 1
   # logger_init(log_dir, level: :debug, stdout_flag: true) #1
   # logger_init(log_dir, level: :error, stdout_flag: true) #1
   # logger_init(log_dir, level: :warn, stdout_flag: true) #1
   # logger_init(log_dir, level: :info, stdout_flag: true) #1
-  logger_init(log_dir, level: :fatal, stdout_flag: false) #1
+  logger_init(log_dir, level: :fatal, stdout_flag: false) # 1
 end
 # logger_init("./logs")
 # logger_init(log_dir, level: :fatal)
@@ -75,23 +75,12 @@ end
 
 class TestHelp
   def self.make_testconf
-    top_dir_yaml_file, resolved_top_dir_yaml_file, specific_yaml_file, global_yaml_file = Mkspec::Util.adjust_paths
+    dirs_and_files = Mkspec::Util.adjust_dirs_and_files
 
-    Mkspec::Util.check_filex("TestHelp.make_testconf", top_dir_yaml_file, "top_dir_yaml_file")
-    Mkspec::Util.check_filex("TestHelp.make_testconf", resolved_top_dir_yaml_file, "resolved_top_dir_yaml_file")
-    Mkspec::Util.check_filex("TestHelp.make_testconf", specific_yaml_file, "specific_yaml_file")
-    Mkspec::Util.check_filex("TestHelp.make_testconf", global_yaml_file, "global_yaml_file")
-
-    original_spec_file_path = "spec"
-    pna = Pathname.new(original_spec_file_path).expand_path
     Mkspec::TestConf.new(
-      top_dir_yaml_file,
-      resolved_top_dir_yaml_file,
-      specific_yaml_file,
-      global_yaml_file,
+      dirs_and_files,
       "mkspec",
-      "",
-      pna
+      ""
     )
   end
 end

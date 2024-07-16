@@ -1,0 +1,20 @@
+        def spec_file_setup(ost)
+          pn = Pathname.new(ENV.fetch("PWD", nil))
+          spec_pn = pn.join("spec")
+          spec_pn = nil unless spec_pn.exist?
+          if spec_pn.nil? && ENV.fetch(SPEC_DIR_KEY, nil)
+            spec_pn = Pathname.new(ENV.fetch(SPEC_DIR_KEY, nil))
+            spec_pn = nil unless spec_pn.exist?
+          end
+          ost.original_output_dir_pn = pn
+
+          ost.spec_pn = spec_pn
+          ost.spec_dir = ost.spec_pn.to_s
+          return unless Util.not_empty_string?(ost.top_dir)
+
+          ost.spec_test_dir_pn = ost.data_top_dir_pn.join(TEST_DIR)
+          ost.spec_test_test_misc_dir_pn = ost.spec_test_dir_pn.join(TEST_MISC_DIR)
+          ost.spec_test_test_include_dir_pn = ost.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
+          ost.spec_test_test_cygwn_dir_pn = ost.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
+          ost.spec_test_test_cygwn3_dir_pn = ost.spec_test_dir_pn.join(TEST_CYGWIN3_DIR)
+        end

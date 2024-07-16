@@ -17,11 +17,6 @@ class GlobalConfig
     end
 
  class Mkscript   
-    def spec_file_setup(ost, original_spec_file_path)
-        引数のoriginal_spec_file_pathの親ディレクトリがspecであれば、original_spec_file_path
-        をost.original_output_dir_pnにする
-        そうでなれば、カレントディレクトリの直下にspecディレクトリが存在しなければ
-        ETODO この部分のコードを削除する。
 
     def setup(ost)
         ost.output_deata_top_dir_pn

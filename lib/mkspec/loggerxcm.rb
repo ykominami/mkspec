@@ -3,7 +3,22 @@
 require 'pathname'
 
 module Mkspec
+  # The `Mkspec::Loggerxcm0` class is designed to provide logging functionality specific to the Mkspec framework.
+  # It encapsulates the logging mechanism, offering a unified interface for recording various levels of messages,
+  # such as debug, info, warning, and error. This class aims to facilitate debugging and tracking of the application's
+  # flow by providing detailed and structured log messages. It can be configured to log messages to different outputs,
+  # including standard output, files, or external logging services, depending on the needs of the framework.
+  #
+  # @example Logging a debug message
+  #   Mkspec::Loggerxcm0.debug("This is a debug message")
+  #
+  # @example Logging an error message
+  #   Mkspec::Loggerxcm0.error("This is an error message")
+  #
+  # This class may also support log rotation, filtering of log messages based on severity, and formatting of log messages
+  # to include timestamps, source identifiers, and other relevant information.
   class Loggerxcm0
+    # Implementation omitted
     require 'logger'
     require 'fileutils'
     require 'stringio'
@@ -68,7 +83,8 @@ module Mkspec
 
         begin
           log_stdout = Logger.new($stdout)
-        rescue
+        rescue StandardError => exc
+          pust exc.message
           @error_count += 1
         end
         log_stdout
@@ -78,10 +94,10 @@ module Mkspec
         filepath = Pathname.new(log_dir).join(fname)
         if log_file.nil?
           begin
-            log_file = Logger.new(filepath)
+            log_file = Logger.new(filepath.to_s)
           rescue Errno::EACCES
             @error_count += 1
-          rescue => exc
+          rescue StandardError => exc
             puts exc
             @error_count += 1
           end

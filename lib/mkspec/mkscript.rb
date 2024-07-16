@@ -3,10 +3,27 @@
 require "pathname"
 
 module Mkspec
+  # The `Mkspec::Mkscript` class is designed to facilitate the creation and management of scripts within the Mkspec framework.
+  # It provides a structured approach to generating, executing, and handling output from various scripts used in testing or
+  # other automated tasks. This class abstracts the complexities involved in script management, offering methods to easily
+  # create, configure, and execute scripts with custom parameters and environments. It aims to streamline the process of
+  # script execution, making it more efficient and manageable within the context of the Mkspec framework's operations.
+  #
+  # @example Creating and executing a new script
+  #   mkscript = Mkspec::Mkscript.new("example_script.sh", param1: "value1", param2: "value2")
+  #   mkscript.execute
+  #
+  # @param script_name [String] The name or path of the script to be executed.
+  # @param params [Hash] A hash of parameters to be passed to the script, optional.
   class Mkscript
+    # Implementation omitted
     require "optparse"
 
     attr_accessor :gco, :new_count
+
+    def initialize
+      @dirs_and_files = Util.adjust_dirs_and_files
+    end
 
     def check_state_and_show_useage_and_state_message
       exit_code = nil
@@ -20,8 +37,7 @@ module Mkspec
     end
 
     def check_cli_options(argv)
-      argv_dup = argv.dup
-      cmd_options = %w[spec tad all]
+      @cmd_options = %w[spec tad all]
       opt = OptionParser.new
       @opt = opt
       @version = nil
@@ -59,24 +75,11 @@ module Mkspec
 
       return STATE.change(Mkspec::FINISH, %(version #{@version})) if @version
 
-      _top_dir_yaml_file, _resolved_top_dir_yaml_file, specific_yaml_file, global_yaml_file = Util.adjust_paths
+      setup_globalconfig
+      validate_setting
+    end
 
-      @global_yaml_fname ||= global_yaml_file.full_path
-      @specific_yaml_fname ||= specific_yaml_file.full_path
-
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
-
-      @global_yaml_pn = global_yaml_file.pathname
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
-
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
-
-      @specific_yaml_pn = specific_yaml_file.pathname
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "invalid -G") unless @specific_yaml_pn.exist?
-
-      init_hash = config_from_environmental_varialbes
-      @gco = GlobalConfig.new(@new_count, init_hash, @specific_yaml_pn, @global_yaml_pn, nil)
-
+    def validate_setting
       ost = @gco.ost
       @output_dir ||= ost.output_dir
       @tsv_fname ||= ost.tsv_fname
@@ -87,28 +90,22 @@ module Mkspec
       @target_cmd_2 ||= ost.tecsgen_merge_cmd
       @log_dir ||= ost.log_dir
       @cmd ||= ost.cmd
-      @start_char ||= ost.start_char
-      @limit ||= ost.limit
-
       @target_cmd_1 ||= ost.target_cmd_1
       @target_cmd_2 ||= ost.target_cmd_2
       @tad_dir ||= ost.tad_dir
       @script_dir = ost.script_dir
       @output_script_dir = ost.output_script_dir
       @output_template_and_data_dir_pn = ost.output_template_and_data_dir_pn
-
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless cmd_options.find { |it| @cmd == it }
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless @cmd_options.find { |it| @cmd == it }
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd_1
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Z, "not specified -z") unless @target_cmd_2
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_I, "not specified -i") unless @tad_dir
-
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_X, "not specified -x") unless @original_output_dir
-
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_LL, "not specified -L") unless @log_dir
 
       if Util.not_empty_string?(@log_dir).first
@@ -119,7 +116,6 @@ module Mkspec
 
       if @log_dir_pn.nil?
         dir = ENV.fetch("MKSPEC_LOG_DIR")
-
         @log_dir = if valid_dir?(dir)
                      dir
                    else
@@ -132,9 +128,24 @@ module Mkspec
       Loggerxcm.error("argv_str=#{argv_dup.join(' ')}")
     end
 
+    def setup_globalconfig
+      init_hash = config_from_environmental_varialbes
+
+      @global_yaml_fname ||= @dirs_and_files.global_yaml.full_path
+      @specific_yaml_fname ||= @dirs_and_files.specific_yaml.full_path
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "not specified -g") unless @global_yaml_fname
+
+      @global_yaml_pn = @dirs_and_files.global_yaml.pathname
+      @specific_yaml_pn = @dirs_and_files.specific_yaml.pathname
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_G, "invalid -g") unless @global_yaml_pn.exist?
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_GG, "not specified -G") unless @specific_yaml_fname
+
+      @gco = GlobalConfig.new(@new_count, init_hash, @dirs_and_files, nil)
+    end
+
     def config_from_environmental_varialbes
-      top_dir_yaml_file, resolved_top_dir_yaml_file, _specific_yaml_file, _global_yaml_file = Util.adjust_paths
-      Util.make_hash_from_files(top_dir_yaml_file, resolved_top_dir_yaml_file)
+      @dirs_and_files = Util.adjust_dirs_and_files
+      Util.make_hash_from_files(@dirs_and_files.top_dir_yaml, @dirs_and_files.resolved_top_dir_yaml)
     end
 
     def valid_dir?(path)
@@ -152,7 +163,7 @@ module Mkspec
       @tsv_path = tsv_path
       @tsv_path = @config.make_path_under_misc_dir(@tsv_path) unless @tsv_path.exist?
 
-      @tsg = Mkspec::TestScriptGroup.new(@tsv_path, start_char, limit, make_arg).setup
+      @tsg = TestScriptGroup.new(@tsv_path, start_char, limit, make_arg).setup
       return false unless STATE.success?
 
       @setting_and_testscript_array = make_array_of_setting_and_testscript(gco, @tsg, @config)
@@ -161,6 +172,10 @@ module Mkspec
     end
 
     def init
+      unless @gco
+        setup_globalconfig
+        validate_setting
+      end
       Loggerxcm.debug("Config#init @gco.ost.top_dir=#{@gco.ost.top_dir}")
       raise MkspecAppError, "Config#init @gco.ost.top_dir=#{@gco.ost.top_dir}" unless @gco.ost.top_dir
 
@@ -168,7 +183,6 @@ module Mkspec
       config = Config.new(
         @gco.ost.data_top_dir,
         @gco.ost.output_data_top_dir,
-        @output_dir,
         @output_script_dir,
         @output_template_and_data_dir_pn
       )
@@ -239,10 +253,8 @@ module Mkspec
         return nil if @setting_and_testscript_array.nil?
 
         create_all_template_and_data(@setting_and_testscript_array)
-        # raise MkspecDebugError.new("mkscript.rb 2", STATE.message_array) unless STATE.success?
         return nil unless STATE.success?
       end
-      #raise( MkspecDebugError, "mkscript.rb 3 #{STATE.message}") unless STATE.success?
       Loggerxcm.debug("spec=#{spec}")
 
       ret = true
@@ -253,7 +265,6 @@ module Mkspec
         ret = create_all_spec_file(@config, @setting_and_testscript_array)
         Loggerxcm.debug("1 ret=#{ret} spec=#{spec}")
       end
-      # raise MkspecDebugError.new("mkscript.rb 4 ret=#{ret}") unless ret
       return nil unless ret
 
       [template_and_data, spec, data_dir_index]
@@ -308,7 +319,7 @@ module Mkspec
       end
       Loggerxcm.debug("error_count=#{error_count}")
       Loggerxcm.debug("message=#{message}")
-      puts "STATE.success=#{STATE.exit_code}" unless STATE.success?
+      Loggerxcm.fatal("STATE.success=#{STATE.exit_code}") unless STATE.success?
       raise Mkspec::MkspecDebugError.new("mkscript.rb 10", STATE.message_array) unless STATE.success?
 
       error_count.zero?

@@ -2,11 +2,12 @@
 
 require 'spec_helper_1'
 
-log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
-logger_init(log_dir, level: :debug, stdout_flag: true) #1
+# log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
+# logger_init(log_dir, level: :debug, stdout_flag: true) #1
+logger_init_x
 
 RSpec.describe Mkspec::TestScript do
-  context 'call instance methods of TestScript class' do
+  context 'with call instance methods of TestScript class' do
     before(:all) do
       @conf = TestHelp.make_testconf
       @ost = @conf.ost
@@ -14,7 +15,7 @@ RSpec.describe Mkspec::TestScript do
       @original_output_dir = @ost.original_output_dir
     end
 
-    context 'TestScript' do
+    context 'when TestScript' do
       before(:all) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
         @conf2 = @conf
@@ -29,7 +30,7 @@ RSpec.describe Mkspec::TestScript do
         @size_1 = @ost.limit + 1
       end
 
-      context 'call grouping 1' do
+      context 'when call grouping 1' do
         before(:all) do
           @ret = @ts_0.grouping(@tg_0)
         end
@@ -47,7 +48,7 @@ RSpec.describe Mkspec::TestScript do
         end
       end
 
-      context 'TestScript_0 is grouping of TestGroup_0' do
+      context 'when TestScript_0 is grouping of TestGroup_0' do
         before(:all) do
           @ret_0 = @ts_0.grouping(@tg_0)
           if @ret_0 == :EMPTY
@@ -92,7 +93,7 @@ RSpec.describe Mkspec::TestScript do
         end
       end
 
-      context 'call grouping 3' do
+      context 'when call grouping 3' do
         before(:all) do
           @size_3 = @tg_2.size
           _ret_0 = @ts_0.grouping(@tg_2)
@@ -109,7 +110,7 @@ RSpec.describe Mkspec::TestScript do
         end
       end
 
-      context 'call grouping 4' do
+      context 'when call grouping 4' do
         before(:all) do
           @ret_0 = @ts_0.grouping(@tg_3)
           @ret_1 = @ts_0.grouping(@tg_4)

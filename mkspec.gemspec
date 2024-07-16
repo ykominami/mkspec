@@ -24,14 +24,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
   # spec.required_ruby_version = Gem::Requirement.new('>= 2.4.0')
-  spec.required_ruby_version = '>= 2.7'
-
-  spec.add_runtime_dependency 'bundler'
-  spec.add_runtime_dependency 'erubis', '~> 2.7.0'
-  spec.add_runtime_dependency 'pre-commit'
-  spec.add_runtime_dependency 'rake', '~> 13.0'
-  spec.add_runtime_dependency 'rb-readline'
-  spec.add_runtime_dependency 'rufo'
+  spec.required_ruby_version = '>= 3.0.3'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

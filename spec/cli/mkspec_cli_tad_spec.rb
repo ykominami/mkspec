@@ -7,8 +7,6 @@ require 'aruba/rspec'
 logger_init_x
 
 RSpec.describe 'command-line', type: :aruba do
-  #include TestConf
-
   before(:all) do
     Mkspec::Loggerxcm.fatal("#### mkspec_cli_spec.rb ####")
     @conf = TestHelp.make_testconf
@@ -21,7 +19,7 @@ RSpec.describe 'command-line', type: :aruba do
     @ost.cmdline_0.make_cmdline_1(test_case_dir, @ost.result, option_extra.join(' '), file_list)
   end
 
-  context 'make script' do
+  context 'with make script' do
     let(:ost) { @ost }
     let(:argv) do
       %W[-D #{ost.top_dir_yaml_fname}
@@ -45,7 +43,7 @@ RSpec.describe 'command-line', type: :aruba do
     #                      #/template_and_data(出力先)
     #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
     #                      /script(出力先)
-    context 'create files under template_and_data_2 directory' do
+    context 'when create files under template_and_data_2 directory' do
       it 'do successfullyn', :cli, :test_normal_sh_out, cmd: 2 do
         argvx = argv
         test_case_dir = 1

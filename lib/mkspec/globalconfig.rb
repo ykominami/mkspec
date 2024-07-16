@@ -5,6 +5,18 @@ require "pathname"
 require 'ostruct'
 
 module Mkspec
+  # The `Mkspec::GlobalConfig` class is designed to manage global configuration settings for the Mkspec framework.
+  # It provides a centralized point of access for configuration parameters that affect the framework as a whole,
+  # facilitating the management of settings such as environment variables, default paths, and other global preferences.
+  # This class ensures that global settings are consistently applied across different components of the Mkspec framework,
+  # making it easier to maintain and update configuration as needed.
+  #
+  # @example Accessing a global configuration value
+  #   global_config = Mkspec::GlobalConfig.instance
+  #   default_output_dir = global_config.default_output_dir
+  #
+  # This class utilizes the Singleton design pattern to ensure that only one instance of the configuration is created
+  # and accessible throughout the application, providing a unified point of reference for global settings.
   class GlobalConfig
     attr_accessor :ost, :specific_hash
 
@@ -32,8 +44,6 @@ module Mkspec
     SPECIFIC_YAML_FNAME_KEY = "specific_yaml_fname"
     # グローバルYAMLファイルを表すキー
     GLOBAL_YAML_FNAME_KEY = "global_yaml_fname"
-    # original_spec_file_pathを表すキー
-    ORIGINAL_SPEC_FILE_PATH_KEY = "original_spec_file_path"
     # オリジナル出力ディレクトリを表すキー
     ORIGINAL_OUTPUT_DIR_KEY = "original_output_dir"
 
@@ -47,7 +57,6 @@ module Mkspec
     CONTENT_FNAME = "content.txt"
     TESTDATA_FNAME = "testdata.txt"
     YAML_FNAME = "a.yml"
-    ROOT_OUTPUT_DIR = "test_auto"
     OUTPUT_SCRIPT_DIR = "script"
     OUTPUT_TEMPLATE_AND_DATA_DIR = "template_and_data"
     OUTPUT_TEST_CASE_DIR = "test_case"
@@ -93,74 +102,51 @@ module Mkspec
 
     DEFAULT_TOP_DIR = "."
 
-    def initialize(new_count, init_hash, specific_yaml_pn, global_yaml_pna, target_cmd_1 = nil, target_cmd_2 = nil, original_spec_file_path = nil)
+    def initialize(new_count, init_hash, dirs_and_files, target_cmd_1 = nil, target_cmd_2 = nil)
       @new_count = new_count
-      # specific_yaml_pn = specific_yaml.pathname
-      Loggerxcm.debug("specific_yaml_pn=#{specific_yaml_pn}")
-      @specific_hash = Util.extract_in_yaml_file(specific_yaml_pn, init_hash)
-
       # global_yaml_pna = global_yaml.pathname
+      global_yaml_pna = dirs_and_files.global_yaml.pathname
       raise Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml_pna}" unless global_yaml_pna.exist?
 
+      specific_yaml_pna = dirs_and_files.specific_yaml.pathname
+      @specific_hash = Util.load_info(specific_yaml_pna)
+      @specific_hash = @specific_hash.first if @specific_hash.instance_of?(Array)
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
-      raise MkspecAppError, "globalconfig.rb 3" unless Util.not_empty_hash?(@global_hash).first
+
+      result = Util.not_empty_hash?(@global_hash)
+      raise MkspecAppError, "globalconfig.rb 3" unless result.first
 
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
-
-      init_for_common
-      init_for_ost(target_cmd_1, target_cmd_2, original_spec_file_path, init_hash, global_yaml_pna, specific_yaml_pn)
-      init_for_source(original_spec_file_path, global_yaml_pna)
-      init_for_output
+      Loggerxcm.debug("GlobalConfig.initialize @specific_hash=#{@specific_hash}")
+      init_for_common(@specific_hash)
+      init_for_ost(target_cmd_1, target_cmd_2, init_hash, global_yaml_pna)
+      init_for_output(dirs_and_files)
       setup(@ost)
     end
 
-    def init_for_source(original_spec_file_path, global_yaml_pna)
-      @ost.original_output_root_dir = @global_hash["original_output_root_dir"]
-      @ost.log_dir = @global_hash[LOG_DIR_KEY]
-      log_dir = ENV.fetch("MKSPEC_LOG_DIR", @ost.log_dir)
-      @ost.log_dir_pn = Pathname.new(log_dir)
-      parent_dir = @ost.log_dir_pn.parent.to_s
-      FileUtils.mkdir_p(parent_dir)
-      global_yaml_original_pn = global_yaml_pna
-      global_yaml_real_pn = global_yaml_original_pn.expand_path
-
-      @ost.data_top_dir_original_pn = global_yaml_original_pn.parent
-      @ost.data_top_dir_original = @ost.data_top_dir_original_pn.to_s
-
-      @ost.data_top_dir_pn = global_yaml_real_pn.parent
+    def init_for_output(dirs_and_files)
+      pn = dirs_and_files.log_dir.pathname
+      @ost.log_dir_pn = pn
+      @ost.data_top_dir_pn = dirs_and_files.data_dir.pathname
       @ost.data_top_dir = @ost.data_top_dir_pn.to_s
-
-      spec_file_setup(@ost, original_spec_file_path) if original_spec_file_path
-
-      raise Mkspec::MkspecDebugError, "globalconfig.rb X1" unless global_yaml_pna.parent
-      raise Mkspec::MkspecDebugError, "globalconfig.rb X2" unless @ost.data_top_dir_pn
-      raise Mkspec::MkspecDebugError, "globalconfig.rb X3" unless @ost.top_dir_pn
-      raise Mkspec::MkspecDebugError, "globalconfig.rb X31" unless @ost.top_dir_pn.exist?
-    end
-
-    def init_for_output
-      valid_original_root_output_dir = false
-      if @ost.original_root_output_dir.nil? == false
-        @ost.original_root_output_dir_pn = Pathname.new(@ost.original_root_output_dir)
-        valid_original_root_output_dir = true if @ost.original_root_output_dir_pn.exist?
-      end
-      @ost.output_data_top_dir_pn = if valid_original_root_output_dir
-                                      @ost.original_root_output_dir_pn
-                                    else
-                                      @ost.data_top_dir_pn
-                                    end
+      @ost.output_data_top_dir_pn = dirs_and_files.output_dir.pathname
       @ost.output_data_top_dir = @ost.output_data_top_dir_pn.to_s
+      # raise
+      @ost.spec_test_dir_pn = @ost.data_top_dir_pn.join(TEST_DIR)
+      @ost.spec_test_test_misc_dir_pn = @ost.spec_test_dir_pn.join(TEST_MISC_DIR)
+      @ost.spec_test_test_include_dir_pn = @ost.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
+      @ost.spec_test_test_cygwn_dir_pn = @ost.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
+      @ost.spec_test_test_cygwn3_dir_pn = @ost.spec_test_dir_pn.join(TEST_CYGWIN3_DIR)
 
       raise Mkspec::MkspecDebugError, "globalconfig.rb X4 | Can't find #{@ost.log_dir_pn}" unless @ost.log_dir_pn.exist?
-      raise Mkspec::MkspecDebugError, "globalconfig.rb X41" unless @ost.log_dir_pn.exist?
 
-      Loggerxcm.debug "@ost.log_dir_pn=#{@ost.log_dir_pn}"
       Loggerxcm.debug "@ost.log_dir_pn.expand_path=#{@ost.log_dir_pn.expand_path}"
       @ost.log_dir_pn.mkpath
     end
 
     def setup(ost)
-      ost.test_root_dir_pn = ost.output_data_top_dir_pn.join(TEST_DIR)
+      # ost.test_root_dir_pn = ost.output_data_top_dir_pn.join(TEST_DIR)
+      ost.test_root_dir_pn = ost.data_top_dir_pn.join(TEST_DIR)
       ost.test_root_dir = ost.test_root_dir_pn.to_s
 
       if ost.original_output_root_dir.nil?
@@ -194,20 +180,19 @@ module Mkspec
       ost.yaml_fname = YAML_FNAME
     end
 
-    def init_for_common
-      ret, kind = Util.not_empty_hash?(@specific_hash)
+    def init_for_common(specific_hash)
+      ret, kind = Util.not_empty_hash?(specific_hash)
       unless ret
-        Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{@specific_hash.class}")
+        Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{specific_hash.class}")
         Loggerxcm.debug("GlobalConfig.initialize kind=#{kind}")
         raise Mkspec::MkspecDebugError, "globalconfig.rb 1"
       end
 
-      @global_hash.merge!(@specific_hash)
+      @global_hash.merge!(specific_hash)
     end
 
-    def init_for_ost(target_cmd_1, target_cmd_2, original_spec_file_path, init_hash, global_yaml_pna, specific_yaml_pn)
-      ost = OpenStruct.new
-      @ost = ost
+    def init_for_ost(target_cmd_1, target_cmd_2, init_hash, global_yaml_pna)
+      @ost = OpenStruct.new
       @ost.cmd = @global_hash[CMD_KEY]
       @ost.start_char = @global_hash[START_CHAR_KEY]
       @ost.limit = @global_hash[LIMIT_KEY]
@@ -215,7 +200,6 @@ module Mkspec
       @ost.target_cmd_2 = @global_hash[TARGET_CMD_2_KEY]
       @ost.target_cmd_1 = target_cmd_1 if target_cmd_1
       @ost.target_cmd_2 = target_cmd_2 if target_cmd_2
-      #@ost.target_cmd_2.x
       @ost.make_arg = @global_hash[MAKE_ARG_KEY]
       @ost.tecsgen_base = @global_hash["tecsgen_base"]
       @ost.tecsgen_cmd = @global_hash[TECSGEN_CMD_KEY]
@@ -283,11 +267,8 @@ module Mkspec
         end
       end
 
-      @ost.specific_yaml_fname = specific_yaml_pn.to_s
-
       @ost.global_yaml_pna = global_yaml_pna
       @ost.global_yaml_fname = global_yaml_pna.to_s
-      @ost.original_spec_file = original_spec_file_path
 
       if target_cmd_1
         raise MkspecAppError, "globalconfig.rb 6" unless target_cmd_2
@@ -304,42 +285,8 @@ module Mkspec
       return if @ost.target_cmd_1_pn.nil?
 
       @ost.exe_dir_pn, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, "exe", target_cmd_1, target_cmd_2)
-    end
 
-    def load_info(path)
-      pna = Pathname.new(path)
-      hash = if pna.exist?
-               Util.extract_in_yaml_file(pna)
-             else
-               {}
-             end
-      [hash, pna]
-    end
-
-    def spec_file_setup(ost, original_spec_file_path)
-      pn = Pathname.new(original_spec_file_path)
-      if pn.dirname == "spec"
-        spec_pn = pn.parent
-      else
-        pn = Pathname.new(ENV.fetch("PWD", nil))
-        spec_pn = pn.join("spec")
-        spec_pn = nil unless spec_pn.exist?
-      end
-      if spec_pn.nil? && ENV.fetch(SPEC_DIR_KEY, nil)
-        spec_pn = Pathname.new(ENV.fetch(SPEC_DIR_KEY, nil))
-        spec_pn = nil unless spec_pn.exist?
-      end
-      ost.original_output_dir_pn = pn
-
-      ost.spec_pn = spec_pn
-      ost.spec_dir = ost.spec_pn.to_s
-      return unless Util.not_empty_string?(ost.top_dir)
-
-      ost.spec_test_dir_pn = ost.data_top_dir_pn.join(TEST_DIR)
-      ost.spec_test_test_misc_dir_pn = ost.spec_test_dir_pn.join(TEST_MISC_DIR)
-      ost.spec_test_test_include_dir_pn = ost.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
-      ost.spec_test_test_cygwn_dir_pn = ost.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
-      ost.spec_test_test_cygwn3_dir_pn = ost.spec_test_dir_pn.join(TEST_CYGWIN3_DIR)
+      @ost
     end
 
     def arrange(ost)

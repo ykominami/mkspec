@@ -5,17 +5,19 @@ require 'spec_helper_1'
 logger_init_x
 
 RSpec.describe Mkspec do
-  context 'call instance methods of Iem class' do
-    context '' do
+  context 'with call instance methods of Iem class' do
+    context 'when item' do
       before(:each) do
         Mkspec::STATE.change(Mkspec::SUCCESS, nil)
+        @testconf = TestHelp.make_testconf
+        # puts "@testconf=#{@testconf}"
+        @ost = @testconf.ost
+        # puts "@ost=#{@ost}"
       end
 
-      let(:conf) { TestHelp.make_testconf }
-      let(:ost) { conf.ost }
-      let(:content_path) { ost.spec_test_test_misc_dir_pn.join("_content.txt") }
-      let(:yaml_path) { ost.spec_test_test_misc_dir_pn.join("_a.yml") }
-      let(:item) { conf._create_instance_of_item(content_path, yaml_path) }
+      let(:content_path) { @ost.spec_test_test_misc_dir_pn.join("_content.txt") }
+      let(:yaml_path) { @ost.spec_test_test_misc_dir_pn.join("_a.yml") }
+      let(:item) { @testconf._create_instance_of_item(content_path, yaml_path) }
       let(:ret) { item.result }
 
       it 'call result(String)', xcmd: 1 do
