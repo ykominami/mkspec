@@ -23,7 +23,7 @@ module Mkspec
     require 'fileutils'
     require 'stringio'
 
-    LOG_FILENAME_BASE = "#{Time.now.strftime('%Y%m%d-%H%M%S')}.log"
+    LOG_FILENAME_BASE = "#{Time.now.strftime('%Y%m%d-%H%M%S')}.log".freeze
     @log_file = nil
     @log_stdout = nil
     @stdout_backup = $stdout
