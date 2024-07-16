@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mkspec (0.2.2)
+    mkspec (0.2.3)
 
 GEM
   remote: https://rubygems.org/

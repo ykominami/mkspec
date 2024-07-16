@@ -11,8 +11,8 @@ if RUBY_VERSION < "1.9.3"
     require File.join(File.dirname(f), File.basename(f, ".rb"))
   end
 else
-  Dir.glob(File.expand_path("support/*.rb", __dir__)).sort.each { |f| require_relative f }
-  Dir.glob(File.expand_path("support/**/*.rb", __dir__)).sort.each { |f| require_relative f }
+  Dir.glob(File.expand_path("support/*.rb", __dir__)).each { |f| require_relative f }
+  Dir.glob(File.expand_path("support/**/*.rb", __dir__)).each { |f| require_relative f }
 end
 
 RSpec.configure do |config|
@@ -31,11 +31,11 @@ end
 def logger_init_x
   # log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
   log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
-  logger_init(log_dir, level: :fatal, stdout_flag: true) # 1
+  # logger_init(log_dir, level: :fatal, stdout_flag: true) # 1
   # logger_init(log_dir, level: :debug, stdout_flag: true) #1
   # logger_init(log_dir, level: :error, stdout_flag: true) #1
   # logger_init(log_dir, level: :warn, stdout_flag: true) #1
-  # logger_init(log_dir, level: :info, stdout_flag: true) #1
+  logger_init(log_dir, level: :info, stdout_flag: true) # 1
   logger_init(log_dir, level: :fatal, stdout_flag: false) # 1
 end
 # logger_init("./logs")
