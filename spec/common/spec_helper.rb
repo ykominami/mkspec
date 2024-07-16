@@ -31,11 +31,11 @@ end
 def logger_init_x
   # log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
   log_dir = ENV.fetch('MKSPEC_LOG_DIR', "./test_data/logs")
-  logger_init(log_dir, level: :fatal, stdout_flag: true) # 1
+  # logger_init(log_dir, level: :fatal, stdout_flag: true) # 1
   # logger_init(log_dir, level: :debug, stdout_flag: true) #1
   # logger_init(log_dir, level: :error, stdout_flag: true) #1
   # logger_init(log_dir, level: :warn, stdout_flag: true) #1
-  # logger_init(log_dir, level: :info, stdout_flag: true) #1
+  logger_init(log_dir, level: :info, stdout_flag: true) # 1
   logger_init(log_dir, level: :fatal, stdout_flag: false) # 1
 end
 # logger_init("./logs")

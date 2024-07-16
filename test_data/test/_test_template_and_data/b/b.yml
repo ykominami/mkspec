@@ -1,0 +1,181 @@
+---
+path: b/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  original_output_dir: _DATA/hier4
+  target_cmd_1_pn: "/home/ykominami/repo/mkspec/bin/mkspec"
+  target_cmd_2_pn: 
+  tecspath: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecslib"
+  tecsgen_cmd_path: "/home/ykominami/repo/ns3-tecsgen/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo/mkspec_data/global.yml"
+  test_case_dir: test_case
+  abs_test_case_dir: "/home/ykominami/repo/mkspec/test_auto/_DATA/hier4/test_case"
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+data_error:
+  path: rspec_describe_context/content.txt
+  context: data_error
+  tecsgen_cmd: tecsgen
+make_cmdline_1_data_error:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_error_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_1
+  dir: '1'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 16
+  tc_1: 17
+data_error_2:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_2
+  dir: '2'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 18
+  tc_1: 19
+data_error_3:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_3
+  dir: '3'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 20
+  tc_1: 21
+data_error_4:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_4
+  dir: '4'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 22
+  tc_1: 23
+data_error_5:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_5
+  dir: '5'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 24
+  tc_1: 25
+data_error_6:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_6
+  dir: '6'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 26
+  tc_1: 27
+data_error_7:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_7
+  dir: '7'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 28
+  tc_1: 29
+data_error_8:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_8
+  dir: '8'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 30
+  tc_1: 31
+data_error_9:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_9
+  dir: '9'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 32
+  tc_1: 33
+data_error_10:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_10
+  dir: '10'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 34
+  tc_1: 35
+data_error_11:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_11
+  dir: '11'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 36
+  tc_1: 37
+data_error_12:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_12
+  dir: '12'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 38
+  tc_1: 39
+data_error_13:
+  path: rspec_describe_context_context/content.txt
+  context: data_error_13
+  dir: '13'
+  cdlfile: data_error.cdl
+  test_1: not_to
+  test_1_value: be_successfully_executed
+  test_2: to
+  test_2_value: have_output(/error:/)
+  func_name: make_cmdline_1
+  tc_0: 40
+  tc_1: 41
