@@ -11,8 +11,8 @@ if RUBY_VERSION < "1.9.3"
     require File.join(File.dirname(f), File.basename(f, ".rb"))
   end
 else
-  Dir.glob(File.expand_path("support/*.rb", __dir__)).sort.each { |f| require_relative f }
-  Dir.glob(File.expand_path("support/**/*.rb", __dir__)).sort.each { |f| require_relative f }
+  Dir.glob(File.expand_path("support/*.rb", __dir__)).each { |f| require_relative f }
+  Dir.glob(File.expand_path("support/**/*.rb", __dir__)).each { |f| require_relative f }
 end
 
 RSpec.configure do |config|

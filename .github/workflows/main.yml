@@ -33,10 +33,9 @@ jobs:
           bundler-cache: false
       - name: Run the default task
         run: |
-          gem install bundler -v 2.2.7
-          bundle config with 'test'
+          gem install bundler -v 2.5.15
+          bundle config with 'development'
           bundle install
           bundle exec rake
-
 #      - name: Run the default task
 #        run: bundle exec rake
