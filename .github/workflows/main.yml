@@ -18,11 +18,13 @@ jobs:
 
     env:
       BUNDLE_WITH: test
+      MKSPEC_OUTPUT_DIR: ./test_output
+      MKSPEC_DATA_DIR: ./test_data
+      MKSPEC_LOG_DIR: ./test_output/logs
       MKSPEC_GLOBAL_YAML_FNAME: ./test_data/global.yml
       MKSPEC_RESOLVED_TOP_DIR_YAML_FNAME: ./test_data/_resolved/top_dir.yml
       MKSPEC_TOP_DIR_YAML_FNAME: ./test_data/top_dir.yml
       MKSPEC_SPECIFIC_YAML_FNAME: ./test_data/specific.yml
-      MKSPEC_LOG_DIR: ./test_data/logs
 
     steps:
       - uses: actions/checkout@v4
@@ -31,11 +33,18 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: false
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.0
+          bundler-cache: false
       - name: Run the default task
         run: |
-          gem install bundler -v 2.5.15
-          bundle config with 'development'
+          gem install bundler -v 2.2.7
+          bundle config with 'test'
           bundle install
           bundle exec rake
+
 #      - name: Run the default task
 #        run: bundle exec rake

@@ -1,0 +1,34 @@
+make_arg: make_cmdline_1
+tecsgen_base: <%= tecsgen_top_dir %>/tecsgen
+tecsgen_cmd: tecsgen
+# テスト対象コマンド第1
+# target_cmd_1: <%= tecsgen_cmd %>
+target_cmd_1: tecsgen
+#
+tecsmerge_cmd: tecsmerge
+# テスト対象コマンド第2
+# target_cmd_2: <%= tecsmerge_cmd %>
+target_cmd_2: tecsmerge
+#
+tecsgen_cmd_path: <%= tecsgen_base %>/tecsgen
+tecsmerge_cmd_path: <%= tecsgen_base %>/<%= tecsmerge_cmd %>
+tecsgen_path: <%= tecsgen_base %>
+tecspath: <%= tecsgen_base %>/tecslib
+# data_dir_0: _DATA2
+# sub_data_dir_1: hier11
+# sub_data_dir_2: hier10
+original_output_dir: _DATA/hier27
+test_case_dir: test_case
+tad_dir_index: 0
+tad_dir_array:
+  - template_and_data
+  - template_and_data_2
+script_dir_index: 0
+script_dir_array:
+  - spec
+  - spec_2
+
+original_root_output_dir: /home/ykominami/repo_ykominami/mkspec_output
+#
+top_dir: /home/ykominami/repo_ykominami/mkspec_data
+
