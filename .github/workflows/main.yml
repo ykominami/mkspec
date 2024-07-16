@@ -34,17 +34,11 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: false
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.0.0
-          bundler-cache: false
       - name: Run the default task
         run: |
-          gem install bundler -v 2.2.7
+          gem install bundler -v 2.5.15
           bundle config with 'test'
           bundle install
           bundle exec rake
-
 #      - name: Run the default task
 #        run: bundle exec rake
