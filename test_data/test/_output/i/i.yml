@@ -1,0 +1,158 @@
+---
+path: i/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  top_dir: "/home/ykominami/repo_ykominami/mkspec_data"
+  original_output_dir: _DATA/hier27
+  target_cmd_1: mkspec
+  target_cmd_2: tecsmerge
+  tecspath: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec_data/global.yml"
+  test_case_dir: test_case
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+hello:
+  path: rspec_describe_context/content.txt
+  context: hello
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_hello:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+hello_1:
+  path: rspec_describe_context_context/content.txt
+  context: hello_1
+  dir: '1'
+  cdlfile: hello.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 114
+  tc_1: 115
+simple:
+  path: rspec_describe_context/content.txt
+  context: simple
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_simple:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+simple_1:
+  path: rspec_describe_context_context/content.txt
+  context: simple_1
+  dir: '1'
+  cdlfile: simple.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 116
+  tc_1: 117
+optional:
+  path: rspec_describe_context/content.txt
+  context: optional
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_optional:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+optional_1:
+  path: rspec_describe_context_context/content.txt
+  context: optional_1
+  dir: '1'
+  cdlfile: optional.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 118
+  tc_1: 119
+optional_2:
+  path: rspec_describe_context_context/content.txt
+  context: optional_2
+  dir: '2'
+  cdlfile: optional.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 120
+  tc_1: 121
+series:
+  path: rspec_describe_context/content.txt
+  context: series
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_series:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+series_1:
+  path: rspec_describe_context_context/content.txt
+  context: series_1
+  dir: '1'
+  cdlfile: series.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 122
+  tc_1: 123
+pointer:
+  path: rspec_describe_context/content.txt
+  context: pointer
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_pointer:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+pointer_1:
+  path: rspec_describe_context_context/content.txt
+  context: pointer_1
+  dir: '1'
+  cdlfile: pointer.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 124
+  tc_1: 125

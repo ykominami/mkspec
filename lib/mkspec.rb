@@ -3,8 +3,16 @@
 require 'erubis'
 require 'yaml'
 require 'pathname'
-require 'debug'
-require 'rufo'
+begin
+  require 'debug'
+rescue StandardError => exc
+  puts exc.message
+end
+begin
+  require 'rufo'
+rescue StandardError => exc
+  puts exc.message
+end
 require 'clitest'
 require 'fileutils'
 

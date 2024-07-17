@@ -397,10 +397,10 @@ module Mkspec
       Loggerxcm.debug("str=#{str}")
       begin
         str_2 = format_ruby_script(spec_file_pn, str)
-      rescue StandardError => e
+      rescue StandardError => exc
         message = [
-          e.message,
-          e.backtrace
+          exc.message,
+          exc.backtrace
         ]
         Loggerxcm.fatal(message)
         STATE.change(Mkspec::CANNOT_FORMAT_WITH_ERUBY, "Can not format a ruby script", spec_file_pn)

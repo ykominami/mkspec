@@ -1,0 +1,19 @@
+require 'spec_helper'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+  <%= allocator %>
+    <%= make_cmdline_1_allocator %>
+    <%= allocator_1 %>
+    <%= allocator_2 %>
+    <%= allocator_CB %>
+  <%= rspec_describe_context_end %>
+  <%= romram %>
+    <%= make_cmdline_1_romram %>
+    <%= romram_normal %>
+    <%= romram_r %>
+    <%= romram_ram_initializer_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

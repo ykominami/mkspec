@@ -208,13 +208,13 @@ RSpec.describe Mkspec do
         raise unless @resolved_top_dir_yaml
       end
 
-      let(:target_cmd_1) { "tecsgen" }
-      let(:target_cmd_2) { "tecsmerge" }
+      let(:target_cmd_first) { "tecsgen" }
+      let(:target_cmd_second) { "tecsmerge" }
 
       let(:top_dir_hash) { Mkspec::Util.make_hash_from_files(@top_dir_yaml, @resolved_top_dir_yaml) }
 
       it "ret", xcmd: 1 do
-        ret = Mkspec::GlobalConfig.new(false, top_dir_hash, @dirs_and_files, target_cmd_1, target_cmd_2)
+        ret = Mkspec::GlobalConfig.new(false, top_dir_hash, @dirs_and_files, target_cmd_first, target_cmd_second)
         expect(ret.class).to eq(Mkspec::GlobalConfig)
       end
     end

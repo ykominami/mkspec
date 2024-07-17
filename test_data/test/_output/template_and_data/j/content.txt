@@ -1,0 +1,23 @@
+require 'spec_helper'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+  <%= c_exp %>
+    <%= make_cmdline_1_c_exp %>
+    <%= c_exp_1 %>
+  <%= rspec_describe_context_end %>
+  <%= const %>
+    <%= make_cmdline_1_const %>
+    <%= const_1 %>
+  <%= rspec_describe_context_end %>
+  <%= float %>
+    <%= make_cmdline_1_float %>
+    <%= float_1 %>
+  <%= rspec_describe_context_end %>
+  <%= sjis %>
+    <%= make_cmdline_1_sjis %>
+    <%= sjis_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

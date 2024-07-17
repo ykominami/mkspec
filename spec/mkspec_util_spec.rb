@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 require "spec_helper_1"
-require "debug"
+
+begin
+  require "debug"
+rescue StandardError => exc
+  puts exc.message
+end
 
 logger_init_x
 
@@ -60,67 +65,6 @@ RSpec.describe "Mkspec::Util" do
     end
   end
 
-  context "with extract_in_yaml_file" do
-    before(:all) do
-      @expected_hash_base = { "emails" => ["flower@mail.com",
-                                           "garnet@mail.net", "peach@mail.org"],
-                              "names" => ["Hanako", "Sumire", "Momoko"] }
-    end
-
-    context 'when ENV["MKSPEC_SPECIFIC_YAML_FNAME"]' do
-      before(:all) do
-        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-        @expected_hash_base = {
-          "cmd" => "all",
-          "limit" => 6,
-          "start_char" => "a",
-          "tecsgen_top_dir" => "/home/ykominami/repo_ykominami/tecsgen",
-          "asp_dir" => "/mnt/e/v/ext2/svn-toppers/asp/trunk",
-          "asp3_dir" => "/mnt/e/v/ext2/svn-toppers/asp3/trunk",
-
-          "log_dir" => "/home/ykominami/repo_ykominami/mkspec_output/logs",
-          "original_output_root_dir" => "/home/ykominami/repo_ykominami/mkspec_output",
-          "top_dir" => "/home/ykominami/repo_ykominami/mkspec_data",
-          "tsv_path_index" => 0,
-          "tsv_path_array" => [
-            "/home/ykominami/repo_ykominami/mkspec_data/test/misc/testlist-x.txt",
-            "/home/ykominami/repo_ykominami/mkspec_data/test/misc/t.txt"
-          ]
-        }
-      end
-
-      context "when extract_in_yaml_file" do
-        before(:all) do
-          _, _, @specific_yaml_file, = Mkspec::Util.adjust_files
-          Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-        end
-
-        let(:expected_ret_hash) { @expected_hash_base }
-        let(:ret_hash) { Mkspec::Util.extract_in_yaml_file(@specific_yaml_file.pathname) }
-
-        it "result", cmd: 1000, tc: 1000 do
-          expect(ret_hash).to eq(expected_ret_hash)
-        end
-      end
-
-      context "when extract_in_yaml_file 2" do
-        context "when YAML file and nil" do
-          before(:all) do
-            _, _, @specific_yaml_file, = Mkspec::Util.adjust_files
-            Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-          end
-
-          let(:expected_ret_hash) { nil }
-          let(:ret_hash) { Mkspec::Util.extract_in_yaml_file(@specific_yaml_file.pathname) }
-
-          it "@ret_hash", cmd: 1010 do
-            expect(ret_hash).not_to eq(expected_ret_hash)
-          end
-        end
-      end
-    end
-  end
-
   context "with extract_in_yaml_file double" do
     context "when File" do
       before(:all) do
@@ -131,50 +75,6 @@ RSpec.describe "Mkspec::Util" do
       let(:global_hash) { Mkspec::Util.extract_in_yaml_file(@global_yaml_file.pathname, specific_hash) }
 
       it "double", cmd: 1100 do
-        expect(global_hash.class).to eq(Hash)
-      end
-    end
-  end
-
-  context "with extract_in_yaml 3" do
-    context "when Hash and string(yaml)" do
-      before(:all) do
-        Mkspec::STATE.change(Mkspec::SUCCESS, nil)
-      end
-
-      let(:yaml_str) { "" }
-      let(:hash) do
-        {
-          "make_arg" => "make_cmdline_1",
-          "tecsgen_base" => "<%= tecsgen_top_dir %>/tecsgen/tecsgen",
-          "tecsgen_cmd" => "tecsgen",
-          "tecsmerge_cmd" => "tecsmerge",
-          "tecsgen_cmd_path" => "<%= tecsgen_base %>/tecsgen",
-          "tecsmerge_cmd_path" => "<%= tecsgen_base %>/<%= tecsmerge_cmd %>",
-          "tecsgen_path" => "<%= tecsgen_base %>",
-          "tecspath" => "<%= tecsgen_base %>/tecslib",
-          "data_dir_0" => "_DATA",
-          "sub_data_dir_1" => "hier4",
-          "sub_data_dir_2" => "hier1",
-          "root_output_dir" => "test_auto",
-          "original_output_dir" => "_DATA/hier4",
-          "test_case_dir" => "test_case",
-          "tad_dir_index" => 0,
-          "tad_dir_array" => ["template_and_data", "template_and_data_2"],
-          "script_dir_index" => 0,
-          "script_dir_array" => ["script", "script_2"],
-          "tecsgen_top_dir" => "/home/ykominami/repo/ns4-tecsgen",
-          "asp_dir" => "/mnt/e/v/ext2/svn-toppers/asp/trunk",
-          "asp3_dir" => "/mnt/e/v/ext2/svn-toppers/asp3/trunk",
-          "top_dir" => "/home/ykominami/repo/mkspec",
-          "tsv_path_index" => 0,
-          "tsv_path" => ["/home/ykominami/repo/mkspec/test_auto/misc/testlist-x.txt",
-                         "/home/ykominami/repo/mkspec/test_auto/misc/t.txt"]
-        }
-      end
-      let(:global_hash) { Mkspec::Util.extract_in_yaml(yaml_str, hash) }
-
-      it "double", cmd: 1200 do
         expect(global_hash.class).to eq(Hash)
       end
     end

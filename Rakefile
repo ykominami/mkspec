@@ -3,6 +3,12 @@
 require 'mkspec'
 
 begin
+  require "bundler/gem_tasks"
+rescue LoadError => exc
+  puts exc.message
+end
+
+begin
   require 'rspec/core/rake_task'
 rescue LoadError => exc
   puts exc.message

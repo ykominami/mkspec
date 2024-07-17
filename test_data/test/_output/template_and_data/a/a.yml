@@ -1,0 +1,172 @@
+---
+path: a/content.txt
+desc: tecsgen command
+rspec_describe_head:
+  path: rspec_describe_head/content.txt
+  top_dir: "/home/ykominami/repo_ykominami/mkspec_data"
+  original_output_dir: _DATA/hier27
+  target_cmd_1: mkspec
+  target_cmd_2: tecsmerge
+  tecspath: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec_data/global.yml"
+  test_case_dir: test_case
+rspec_describe_end:
+  path: rspec_describe_end/content.txt
+rspec_describe_context_end:
+  path: rspec_describe_context_end/content.txt
+data_normal:
+  path: rspec_describe_context/content.txt
+  context: data_normal
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_data_normal:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_normal_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_normal_1
+  dir: '1'
+  cdlfile: data_normal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 0
+  tc_1: 1
+data_normal_2:
+  path: rspec_describe_context_context/content.txt
+  context: data_normal_2
+  dir: '2'
+  cdlfile: data_normal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 2
+  tc_1: 3
+data_flat:
+  path: rspec_describe_context/content.txt
+  context: data_flat
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_data_flat:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_flat_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_flat_1
+  dir: '1'
+  cdlfile: data_flat.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 4
+  tc_1: 5
+data_abnormal:
+  path: rspec_describe_context/content.txt
+  context: data_abnormal
+  tecsgen_cmd: tecsgen
+  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+make_cmdline_1_data_abnormal:
+  path: make_arg/content.txt
+  func_name: make_cmdline_1
+  option_list: []
+data_abnormal_1:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_1
+  dir: '1'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 6
+  tc_1: 7
+data_abnormal_2:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_2
+  dir: '2'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 8
+  tc_1: 9
+data_abnormal_3:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_3
+  dir: '3'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 10
+  tc_1: 11
+data_abnormal_4:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_4
+  dir: '4'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 12
+  tc_1: 13
+data_abnormal_5:
+  path: rspec_describe_context_context/content.txt
+  context: data_abnormal_5
+  dir: '5'
+  cdlfile: data_abnormal.cdl
+  test_1: to
+  test_1_value: be_successfully_executed
+  test_1_message: execute successfully
+  test_1_tag: test_normal_sh:true
+  test_2: not_to
+  test_2_value: have_output(/error:/)
+  test_2_message: don't have error in output
+  test_2_tag: test_normal_sh_out:true
+  func_name: make_cmdline_1
+  tc_0: 14
+  tc_1: 15
