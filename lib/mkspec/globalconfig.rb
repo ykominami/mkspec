@@ -107,8 +107,8 @@ module Mkspec
       # global_yaml_pna = global_yaml.pathname
       global_yaml_pna = dirs_and_files.global_yaml.pathname
       raise Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml_pna}" unless global_yaml_pna.exist?
-
       specific_yaml_pna = dirs_and_files.specific_yaml.pathname
+      puts "specific_yaml_pna=#{specific_yaml_pna}"
       @specific_hash = Util.load_info(specific_yaml_pna)
       @specific_hash = @specific_hash.first if @specific_hash.instance_of?(Array)
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
