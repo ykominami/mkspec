@@ -6,7 +6,6 @@ begin
 recue StandardError => exc
   puts exc.message
 end
-require 'aruba/rspec'
 
 logger_init_x
 
