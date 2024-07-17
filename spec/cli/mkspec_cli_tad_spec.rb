@@ -3,7 +3,7 @@
 require 'spec_helper_2'
 begin
   require 'debug'
-recue StandardError => exc
+rescue StandardError => exc
   puts exc.message
 end
 
