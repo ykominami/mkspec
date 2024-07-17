@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper_1'
-require 'debug'
+
+begin
+  require 'debug'
+rescue StandardError => exc
+  puts exc.message
+end
 
 logger_init_x
 

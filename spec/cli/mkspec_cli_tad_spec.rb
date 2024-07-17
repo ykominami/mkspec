@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
 require 'spec_helper_2'
-require 'debug'
+begin
+  require 'debug'
+recue StandardError => exc
+  puts exc.message
+end
 require 'aruba/rspec'
 
 logger_init_x
