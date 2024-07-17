@@ -4,7 +4,12 @@
 require "bundler/setup"
 
 require "spec_helper_2"
-require "debug"
+begin
+  require "debug"
+rescue StandartError => exc
+  puts exc.message
+end
+
 require "aruba/rspec"
 
 logger_init_x
