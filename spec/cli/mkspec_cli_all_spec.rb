@@ -2,7 +2,6 @@
 
 # require 'spec_helper'
 require 'spec_helper_2'
-require 'debug'
 require 'aruba/rspec'
 
 logger_init_x

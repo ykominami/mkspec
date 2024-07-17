@@ -8,7 +8,11 @@ begin
 rescue StandardError => exc
   puts exc.message
 end
-require 'rufo'
+begin
+  require 'rufo'
+rescue StandardError => exc
+  puts exc.message
+end
 require 'clitest'
 require 'fileutils'
 
