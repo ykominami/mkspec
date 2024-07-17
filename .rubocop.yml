@@ -60,3 +60,5 @@ Style:
   Naming:
     RescuedExceptionsVariableName: exc
 
+Naming/RescuedExceptionsVariableName:
+  PreferredName: exc
