@@ -1,0 +1,11 @@
+require 'spec_helper'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+  <%= restrict %>
+    <%= make_cmdline_1_restrict %>
+    <%= restrict_1 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

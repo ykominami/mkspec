@@ -1,0 +1,24 @@
+require 'spec_helper'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+  <%= data_normal %>
+    <%= make_cmdline_1_data_normal %>
+    <%= data_normal_1 %>
+    <%= data_normal_2 %>
+  <%= rspec_describe_context_end %>
+  <%= data_flat %>
+    <%= make_cmdline_1_data_flat %>
+    <%= data_flat_1 %>
+  <%= rspec_describe_context_end %>
+  <%= data_abnormal %>
+    <%= make_cmdline_1_data_abnormal %>
+    <%= data_abnormal_1 %>
+    <%= data_abnormal_2 %>
+    <%= data_abnormal_3 %>
+    <%= data_abnormal_4 %>
+    <%= data_abnormal_5 %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>

@@ -1,5 +1,5 @@
-top_dir.yml
-_output/
+#top_dir.yml
+#_output/
 result.txt
 *.log
 *.code-workspace

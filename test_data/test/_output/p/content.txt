@@ -1,0 +1,22 @@
+require 'spec_helper'
+require 'aruba/rspec'
+require 'pathname'
+
+RSpec.describe '<%= desc %>', type: :aruba do
+  <%= rspec_describe_head %>
+  <%= dynamic %>
+    <%= make_cmdline_1_dynamic %>
+    <%= dynamic_normal %>
+    <%= dynamic_ram_initializer %>
+    <%= dynamic_ramonly %>
+    <%= dynamic_singleton %>
+    <%= dynamic_singleton_ramonly %>
+    <%= dynamic_singleton_ram_initializer %>
+    <%= dynamic_array %>
+    <%= dynamic_array_r %>
+    <%= dynamic_array_ram_initializer %>
+    <%= dynamic_singleton_array %>
+    <%= dynamic_singleton_array_r %>
+    <%= dynamic_singleton_array_ram_initializer %>
+  <%= rspec_describe_context_end %>
+<%= rspec_describe_end %>
