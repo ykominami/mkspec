@@ -62,3 +62,9 @@ Style:
 
 Naming/RescuedExceptionsVariableName:
   PreferredName: exc
+
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: false
+
+Style/IfWithBooleanLiteralBranches:
+  Enabled: false

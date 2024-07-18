@@ -3,13 +3,13 @@ path: f/content.txt
 desc: tecsgen command
 rspec_describe_head:
   path: rspec_describe_head/content.txt
-  top_dir: "/home/ykominami/repo_ykominami/mkspec_data"
+  top_dir: "/home/ykominami/repo_ykominami/mkspec/test_data"
   original_output_dir: _DATA/hier27
   target_cmd_1: mkspec
   target_cmd_2: tecsmerge
-  tecspath: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecslib"
-  tecspath_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
-  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec_data/global.yml"
+  tecspath: "./test_other/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec/test_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -19,7 +19,7 @@ struct:
   path: rspec_describe_context/content.txt
   context: struct
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_struct:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -60,7 +60,7 @@ namespace:
   path: rspec_describe_context/content.txt
   context: namespace
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_namespace:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -85,7 +85,7 @@ region:
   path: rspec_describe_context/content.txt
   context: region
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_region:
   path: make_arg/content.txt
   func_name: make_cmdline_1

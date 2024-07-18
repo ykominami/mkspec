@@ -40,42 +40,37 @@ module Mkspec
       @current_testscript = make_testscript(@name)
     end
 
-    # Processes a line from the TSV file to set up a test group within the current test script.
-    # It extracts test group and test case information from the line, validates it, and then
-    # creates or updates the corresponding test group and test case instances.
-    #
-    # @param line [String] A line from the TSV file containing test group and test case definitions.
-    # @param state [Hash] A hash used to track the state of test group creation and modification.
-    # @return [TestScriptGroup] The instance of TestScriptGroup, allowing for method chaining.
     def setup_test_group(line, state)
       # tgroup, tcase, tmp = l.chomp.split(/\s+|\t+/)
       tgroup, tcase, *tmp = line.chomp.split("\t")
-      raise MkspecAppError, "testscriptgroup.rb 2 tgroup=#{tgroup}" if tgroup.nil?
+      if tgroup.nil?
+        Loggerxcm.debug("tgroup=#{tgroup}|")
+        retirm self
+      end
+      if tgroup =~ /^\s*#/
+        Loggerxcm.debug("testscriptgroup.rb 3")
+        return self
+      end
+      if tcase.nil?
+        Loggerxcm.debug("testscriptgroup.rb 4")
+        return self
+      end
+      if tcase =~ /^\s*#/
+        Loggerxcm.debug("testscriptgroup.rb 5")
+        return self
+      end
+      if tmp.size > 4
+        Loggerxcm.debug("testscriptgroup.rb 6")
+        return self
+      end
 
-      Loggerxcm.debug("tgroup=#{tgroup}|")
-      raise MkspecAppError, "testscriptgroup.rb 3" if tgroup =~ /^\s*#/
+      (1..7).each do |num|
+        if Util.check_numeric(tmp, num)
+          Loggerxcm.debug("testscriptgroup.rb #{num}")
+          return self
+        end
+      end
 
-      raise MkspecAppError, "testscriptgroup.rb 4" if tcase.nil?
-
-      raise MkspecAppError, "testscriptgroup.rb 5" if tcase =~ /^\s*#/
-
-      raise MkspecAppError, "testscriptgroup.rb 6" if tmp.size > 4
-
-      Util.check_numeric_and_raise(tmp, 0, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 1, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 2, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 3, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 4, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 5, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 6, MkspecAppError)
-
-      Util.check_numeric_and_raise(tmp, 7, MkspecAppError)
       # Loggerxcm.debug("tmp=#{tmp}")
       tgroup = tgroup.tr('-', '_').tr('.', '_')
       testgroup = (state[tgroup] ||= TestGroup.new(tgroup, @make_arg_basename))

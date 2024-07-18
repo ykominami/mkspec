@@ -3,13 +3,13 @@ path: m/content.txt
 desc: tecsgen command
 rspec_describe_head:
   path: rspec_describe_head/content.txt
-  top_dir: "/home/ykominami/repo_ykominami/mkspec_data"
+  top_dir: "/home/ykominami/repo_ykominami/mkspec/test_data"
   original_output_dir: _DATA/hier27
   target_cmd_1: mkspec
   target_cmd_2: tecsmerge
-  tecspath: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecslib"
-  tecspath_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
-  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec_data/global.yml"
+  tecspath: "./test_other/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec/test_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -19,7 +19,7 @@ sharedOpaqueRPC:
   path: rspec_describe_context/content.txt
   context: sharedOpaqueRPC
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_sharedOpaqueRPC:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -44,7 +44,7 @@ signaturePlugin:
   path: rspec_describe_context/content.txt
   context: signaturePlugin
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_signaturePlugin:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -69,7 +69,7 @@ celltypePlugin:
   path: rspec_describe_context/content.txt
   context: celltypePlugin
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_celltypePlugin:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -94,7 +94,7 @@ cellPlugin:
   path: rspec_describe_context/content.txt
   context: cellPlugin
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_cellPlugin:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -119,7 +119,7 @@ cppbridge:
   path: rspec_describe_context/content.txt
   context: cppbridge
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_cppbridge:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -144,7 +144,7 @@ reverse_require:
   path: rspec_describe_context/content.txt
   context: reverse_require
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_reverse_require:
   path: make_arg/content.txt
   func_name: make_cmdline_1

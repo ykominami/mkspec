@@ -11,7 +11,7 @@ logger_init_x
 
 RSpec.describe 'command-line', type: :aruba do
   before(:all) do
-    Mkspec::Loggerxcm.fatal("#### mkspec_cli_spec.rb ####")
+    Mkspec::Loggerxcm.fatal("#### mkspec_cli_tad_spec.rb ####")
     @conf = TestHelp.make_testconf
     @ost = @conf.ost
   end

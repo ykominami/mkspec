@@ -1,15 +1,15 @@
-tecsgen_top_dir: /home/ykominami/repo_ykominami/tecsgen
-asp_dir: /mnt/e/v/ext2/svn-toppers/asp/trunk
-asp3_dir: /mnt/e/v/ext2/svn-toppers/asp3/trunk
-top_dir: /home/ykominami/repo_ykominami/mkspec_data
 tsv_path_index: 0
 tsv_path_array:
-  - /home/ykominami/repo_ykominami/mkspec_data/test/misc/testlist-x.txt
-  - /home/ykominami/repo_ykominami/mkspec_data/test/misc/t.txt
-original_output_root_dir: /home/ykominami/repo_ykominami/mkspec_output
+- "./test_data/test/misc/testlist-x.txt"
+- "./test_data/test/misc/t.txt"
+tecsgen_top_dir: ./test_other/tecsgen
+asp_dir: "./test_other/asp/trunk"
+asp3_dir: "./test_other/asp3/trunk"
+top_dir: "./test_data"
+original_output_root_dir: "./test_output"
 limit: 6
 start_char: a
 cmd: all # all tad spec
-log_dir: /home/ykominami/repo_ykominami/mkspec_output/logs
+log_dir: "./test_output/logs"
 
 
