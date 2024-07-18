@@ -5,7 +5,7 @@ require "pathname"
 RSpec.describe "tecsgen command", type: :aruba do
   let(:test_case_parent_dir) { "test_case" }
   let(:test_case_parent_dir_pn) { Pathname.new(test_case_parent_dir) }
-  let(:conf) { Mkspec::TestConf.new(ENV["MKSPEC_SPECIFIC_YAML_FNAME"], ENV["MKSPEC_GLOBAL_YAML_FNAME"], "mkspec", "tecsmerge", "/home/ykominami/repo_ykominami/mkspec_data") }
+  let(:conf) { Mkspec::TestConf.new(ENV["MKSPEC_SPECIFIC_YAML_FNAME"], ENV["MKSPEC_GLOBAL_YAML_FNAME"], "mkspec", "tecsmerge", "/home/ykominami/repo_ykominami/mkspec/test_data") }
   let(:o) { conf.o }
   let(:original_output_dir_pn) { o.original_output_dir_pn }
   let(:original_output_dir) { original_output_dir_pn.to_s }

@@ -106,20 +106,32 @@ module Mkspec
       @new_count = new_count
       # global_yaml_pna = global_yaml.pathname
       global_yaml_pna = dirs_and_files.global_yaml.pathname
-      raise Mkspec::MkspecAppError, "globalconfig.rb 2 #{global_yaml_pna}" unless global_yaml_pna.exist?
+      unless global_yaml_pna.exist?
+        Loggerxcm.debug("globalconfig.rb 2 #{global_yaml_pna}")
+        return
+      end
       specific_yaml_pna = dirs_and_files.specific_yaml.pathname
-      puts "specific_yaml_pna=#{specific_yaml_pna}"
-      @specific_hash = Util.load_info(specific_yaml_pna)
+      Loggerxcm.debug "###########################################  specific_yaml_pna=#{specific_yaml_pna}"
+      Loggerxcm.debug "specific_yaml_pna=#{specific_yaml_pna}"
+      ret = Util.load_info(specific_yaml_pna)
+      @specific_hash = ret.first
+      Loggerxcm.debug "###########################################  Before merge @global_hash=#{@global_hash}"
       @specific_hash = @specific_hash.first if @specific_hash.instance_of?(Array)
+      Loggerxcm.debug "###########################################  @specific_hash=#{@specific_hash}"
       @global_hash = Util.extract_in_yaml_file(global_yaml_pna, @specific_hash)
-
+      Loggerxcm.debug "###########################################  After merge @global_hash=#{@global_hash}"
       result = Util.not_empty_hash?(@global_hash)
-      raise MkspecAppError, "globalconfig.rb 3" unless result.first
-
+      unless result.first
+        Loggerxcm.debug "globalconfig.rb 3"
+        return
+      end
       Loggerxcm.debug("GlobalConfig.initialize @global_hash=#{@global_hash}")
       Loggerxcm.debug("GlobalConfig.initialize @specific_hash=#{@specific_hash}")
+      # return unless
       init_for_common(@specific_hash)
+      # return unless
       init_for_ost(target_cmd_1, target_cmd_2, init_hash, global_yaml_pna)
+      # return unless
       init_for_output(dirs_and_files)
       setup(@ost)
     end
@@ -137,11 +149,15 @@ module Mkspec
       @ost.spec_test_test_include_dir_pn = @ost.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
       @ost.spec_test_test_cygwn_dir_pn = @ost.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
       @ost.spec_test_test_cygwn3_dir_pn = @ost.spec_test_dir_pn.join(TEST_CYGWIN3_DIR)
-
-      raise Mkspec::MkspecDebugError, "globalconfig.rb X4 | Can't find #{@ost.log_dir_pn}" unless @ost.log_dir_pn.exist?
-
+      
+      unless @ost.log_dir_pn.exist?
+        Loggerxcm.debug "globalconfig.rb X4 | Can't find #{@ost.log_dir_pn}"
+        return false
+      end
       Loggerxcm.debug "@ost.log_dir_pn.expand_path=#{@ost.log_dir_pn.expand_path}"
       @ost.log_dir_pn.mkpath
+      
+      return true
     end
 
     def setup(ost)
@@ -185,10 +201,12 @@ module Mkspec
       unless ret
         Loggerxcm.debug("GlobalConfig.initialize @specific_hash.class=#{specific_hash.class}")
         Loggerxcm.debug("GlobalConfig.initialize kind=#{kind}")
-        raise Mkspec::MkspecDebugError, "globalconfig.rb 1"
+        Loggerxcm.debug("globalconfig.rb 1")
+        return false
       end
 
       @global_hash.merge!(specific_hash)
+      return true
     end
 
     def init_for_ost(target_cmd_1, target_cmd_2, init_hash, global_yaml_pna)
@@ -271,22 +289,28 @@ module Mkspec
       @ost.global_yaml_fname = global_yaml_pna.to_s
 
       if target_cmd_1
-        raise MkspecAppError, "globalconfig.rb 6" unless target_cmd_2
+        unless target_cmd_2
+          Logger.debug("globalconfig.rb 6")
+          return false
+        end
       elsif target_cmd_2
-        raise MkspecAppError, "globalconfig.rb 7"
+        Logger.debug("globalconfig.rb 7")
+        return false
       end
-      return unless target_cmd_1 && target_cmd_2
-
+      unless target_cmd_1 && target_cmd_2
+        return false
+      end
       _tmp, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, ".", target_cmd_1, target_cmd_2)
       unless @ost.target_cmd_1_pn
         @ost.bin_dir_pn, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, "bin", target_cmd_1,
                                                                                     target_cmd_2)
       end
-      return if @ost.target_cmd_1_pn.nil?
+      return false if @ost.target_cmd_1_pn.nil?
 
       @ost.exe_dir_pn, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, "exe", target_cmd_1, target_cmd_2)
 
-      @ost
+      #@ost
+      return true
     end
 
     def arrange(ost)

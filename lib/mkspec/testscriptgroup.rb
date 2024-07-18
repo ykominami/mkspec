@@ -47,35 +47,79 @@ module Mkspec
     # @param line [String] A line from the TSV file containing test group and test case definitions.
     # @param state [Hash] A hash used to track the state of test group creation and modification.
     # @return [TestScriptGroup] The instance of TestScriptGroup, allowing for method chaining.
-    def setup_test_group(line, state)
+    def setup_test_group_orig(line, state)
       # tgroup, tcase, tmp = l.chomp.split(/\s+|\t+/)
       tgroup, tcase, *tmp = line.chomp.split("\t")
       raise MkspecAppError, "testscriptgroup.rb 2 tgroup=#{tgroup}" if tgroup.nil?
-
+      
       Loggerxcm.debug("tgroup=#{tgroup}|")
       raise MkspecAppError, "testscriptgroup.rb 3" if tgroup =~ /^\s*#/
-
+      
       raise MkspecAppError, "testscriptgroup.rb 4" if tcase.nil?
-
+      
       raise MkspecAppError, "testscriptgroup.rb 5" if tcase =~ /^\s*#/
-
+      
       raise MkspecAppError, "testscriptgroup.rb 6" if tmp.size > 4
-
+      
       Util.check_numeric_and_raise(tmp, 0, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 1, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 2, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 3, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 4, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 5, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 6, MkspecAppError)
-
+      
       Util.check_numeric_and_raise(tmp, 7, MkspecAppError)
+      # Loggerxcm.debug("tmp=#{tmp}")
+      tgroup = tgroup.tr('-', '_').tr('.', '_')
+      testgroup = (state[tgroup] ||= TestGroup.new(tgroup, @make_arg_basename))
+      tcase = tcase.tr('-', '_').tr('.', '_')
+      array = DEFAULT_VALUES.zip(tmp[0, 8]).map { |lh, rh| rh.nil? ? lh : rh }
+      extra = tmp[4, tmp.size]
+      # Loggerxcm.debug("array=#{array}")
+      test_1, test_1_value, test_1_message, test_1_tag, test_2, test_2_value, test_2_message, test_2_tag = array
+      testgroup.add_test_case("#{testgroup}_#{tcase}", tcase, test_1, test_1_value, test_1_message, test_1_tag, test_2,
+                              test_2_value, test_2_message, test_2_tag, extra)
+      self
+    end
+    
+    def setup_test_group(line, state)
+    # tgroup, tcase, tmp = l.chomp.split(/\s+|\t+/)
+      tgroup, tcase, *tmp = line.chomp.split("\t")
+      if tgroup.nil?
+        Loggerxcm.debug("tgroup=#{tgroup}|")
+        retirm self
+      end
+      if tgroup =~ /^\s*#/
+        Loggerxcm.debug("testscriptgroup.rb 3")
+        return self
+      end
+      if tcase.nil?
+        Loggerxcm.debug("testscriptgroup.rb 4")
+        return self
+      end
+      if tcase =~ /^\s*#/
+        Loggerxcm.debug("testscriptgroup.rb 5")
+        return self
+      end
+      if tmp.size > 4
+        Loggerxcm.debug("testscriptgroup.rb 6")
+        return self
+      end
+  
+      (1..7).each do |num|
+        if Util.check_numeric(tmp, num)
+          Loggerxcm.debug("testscriptgroup.rb #{num}")
+          return self
+        end
+      end
+    
       # Loggerxcm.debug("tmp=#{tmp}")
       tgroup = tgroup.tr('-', '_').tr('.', '_')
       testgroup = (state[tgroup] ||= TestGroup.new(tgroup, @make_arg_basename))

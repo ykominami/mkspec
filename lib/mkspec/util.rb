@@ -22,8 +22,10 @@ module Mkspec
       def load_info(path)
         pna = Pathname.new(path)
         hash = if pna.exist?
+                 Loggerxcm.debug("Util.load_info Exist pna=#{pna}")
                  extract_in_yaml_file(pna)
                else
+                 Loggerxcm.debug("Util.load_info Not Exist pna=#{pna}")
                  {}
                end
         [hash, pna]
@@ -239,9 +241,11 @@ module Mkspec
       # @param hashx [Hash] The hash where the adjusted key-value pairs are stored.
       # @raise [Mkspec::MkspecDebugError] If the value is not a valid instance or if tag replacement fails.
       def adjust_hash_sub(hash, key_0, value_0, hashx)
-        unless Util.valid_instance?(value_0, String, Integer, Array, Hash)
+        ret =  Util.valid_instance?(value_0, String, Integer, Array, Hash)
+        unless ret
           Loggerxcm.debug("Util#adjust_hash_sub util.rb adjust_hash_sub value_0=#{value_0} value_0.class=#{value_0.class} key_0=#{key_0}")
-          raise Mkspec::MkspecDebugError, "util.rb adjust_hash_sub 1 key_0=#{key_0}"
+          Loggerxcm.debug("util.rb adjust_hash_sub ret=#{ret}")
+          return
         end
         tag_x_ary = tag_analyze_for_string(value_0)
         if tag_x_ary.size.positive?
@@ -250,18 +254,24 @@ module Mkspec
             # Util.not_empty_sting?は、返値が2個の要素の配列である。
             # 第1要素は空文字列でないStringのインスタンスであればtrue、そうでなけらばfalseが設定される
             # 第2要素は引数をstripした結果を持つ。Stringのインスタンスでなければ、そのままが設定される
-            raise(MkspecAppError, "util.rb 4 tag_x.class=#{tag_x.class}") unless Util.not_empty_string?(tag_x).first
-
+            ret = Util.not_empty_string?(tag_x)
+            unless ret.first
+              Loggerxcm.debug("util.rb 4 adjust_hash_sub ret=#{ret}")
+              next
+            end
             while (tag_y_ary = tag_analyze_for_string(hash[tag_x])).size.positive?
               tag_y_ary.each do |tag_y|
-                unless Util.not_empty_string?(tag_y).first
-                  raise(MkspecAppError,
-                        "util.rb 5 tag_y.class=#{tag_y.class}")
+                ret = Util.not_empty_string?(tag_y)
+                unless ret.first
+                  Loggerxcm.debug("util.rb 5 ret=#{ret} tag_y.class=#{tag_y.class} ret=#{ret}")
+                  next
                 end
                 value = hash[tag_x]
-                unless Util.not_empty_string?(value).first
-                  raise(MkspecAppError,
+                ret = Util.not_empty_string?(value)
+                unless ret.first
+                  Loggerxcm.debug(
                         "util.rb 6 _value.class=#{value.class}")
+                  next
                 end
                 hashx[tag_y] = hash[tag_y]
                 hashx[tag_x] = extract_with_eruby(value, hashx)
@@ -399,7 +409,7 @@ module Mkspec
           []
         end
       end
-      
+
       # Extracts and processes YAML content from a string, applying any necessary transformations
       # based on the provided hash. This method safely loads YAML content, merges it with an optional
       # hash for additional context, and then adjusts the merged hash to ensure it conforms to expected
@@ -410,39 +420,77 @@ module Mkspec
       # @param hash [Hash, nil] An optional hash containing values to replace placeholders in the YAML string.
       # @return [Object] The loaded YAML content after processing.
       def extract_in_yaml(yaml_str, hash = nil)
+        error_count = 0
+        Loggerxcm.debug "Util extract_in_yaml ############################ 1"
+        Loggerxcm.debug "Util extract_in_yaml yaml_str=#{yaml_str}"
+        Loggerxcm.debug "Util extract_in_yaml ############################ 2"
         #        raise Mkspec::MkspecDebugError, "util.rb 14 hs.class=#{hash.class}" if hash.instance_of?(Array)
-        return {} unless Util.not_empty_string?(yaml_str.to_s).first
-        
+        ret = Util.not_empty_string?(yaml_str.to_s)
+        unless ret.first
+          Loggerxcm.debug("extract_in_yaml 1 ret=#{ret}")
+          return {}
+        end
+        Loggerxcm.debug "Util extract_in_yaml ############################ 3"
+
         yaml_hash ||= {}
         if Util.not_empty_string?(yaml_str).first
           begin
             yaml_hash = YAML.safe_load(yaml_str, permitted_classes: [Pathname])
+          rescue StandardError => exc
+            Loggerxcm.fatal(exc)
+            Loggerxcm.fatal("extract_in_yaml XX")
+            error_count += 1
+          end
+
+          begin
             yaml_hash = yaml_hash.first if yaml_hash.is_a?(Array)
           rescue StandardError => exc
             Loggerxcm.fatal(exc)
+            Loggerxcm.fatal("extract_in_yaml YY")
+            error_count += 1
           end
         end
-        
+        if error_count.positive?
+          Loggerxcm.debug("extract_in_yaml 2")
+          # raise
+          return {}
+        end
+
         hash = {} unless Util.not_empty_hash?(hash).first
         hash_x = yaml_hash.merge(hash)
         hash_y = adjust_hash(hash_x)
-        unless Util.not_empty_string?(yaml_str).first
-          raise Mkspec::MkspecDebugError.new(
-            "util.rb extract_in_yaml 16 yaml_str", yaml_str
+        ret = Util.not_empty_string?(yaml_str)
+        Loggerxcm.debug("extract_in_yaml A ret=#{ret}")
+        unless ret.first
+          Loggerxcm.debug(
+            "util.rb extract_in_yaml 16 yaml_str=#{yaml_str}"
           )
+          raise
+          return {}
         end
-        unless Util.not_empty_hash?(hash_y).first
-          raise Mkspec::MkspecDebugError.new(
-            "util.rb extract_in_yaml 17x", hash_y
+        Loggerxcm.debug "hash_y=#{hash_y}"
+        ret2 = Util.not_empty_hash?(hash_y)
+        Loggerxcm.debug "extract_in_yaml B ret2=#{ret2}"
+        unless ret2.first
+          Loggerxcm.debug(
+            "util.rb extract_in_yaml 17x #{hash_y}"
           )
+          raise
+          return {}
         end
         extracted_text = extract_with_eruby(yaml_str, hash_y)
+        Loggerxcm.debug "extract_in_yaml C extracted_text=#{extracted_text}"
         array = Util.not_empty_string?(extracted_text)
-        raise Mkspec::MkspecDebugError.new("extract_in_yaml 2 ", array) unless array.first
-        
+        unless array.first
+          Loggerxcm.debug "extract_in_yaml D ret2=#{array}"
+          raise
+          return {}
+        end
+        Loggerxcm.debug "extract_in_yaml E ret2=#{array}"
+
         YAML.safe_load(extracted_text)
       end
-      
+
       # Extracts and processes YAML content from a file, applying any necessary transformations
       # based on the provided hash. This method reads a YAML file, safely loads its content, and
       # merges it with an optional hash for additional context. It then adjusts the merged hash
@@ -454,33 +502,49 @@ module Mkspec
       # @param hashx [Hash, nil] An optional hash containing values to replace placeholders in the YAML content.
       # @return [Hash] The loaded and processed YAML content as a hash.
       def extract_in_yaml_file(yaml_file_path, hashx = nil)
-        Loggerxcm.debug("yaml_file_path=#{yaml_file_path}")
-        Loggerxcm.debug("yaml_file_path.class=#{yaml_file_path.class}")
-        raise Mkspec::MkspecDebugError, "util.rb 15 yml_file_path=#{yaml_file_path}" unless Util.not_empty_string?(yaml_file_path.to_s).first
-        
+        Loggerxcm.debug("extract_in_yaml_file Util.yaml_file_path=#{yaml_file_path}")
+        Loggerxcm.debug("extract_in_yaml_file Util.yaml_file_path.class=#{yaml_file_path.class}")
+        ret = Util.not_empty_string?(yaml_file_path.to_s)
+        unless ret.first
+          Loggerxcm.debug("extract_in_yaml_file empty_string Util.extract_in_yaml_file ret=#{ret}")
+          return {}
+        end
         pn = Pathname.new(yaml_file_path)
-        Loggerxcm.debug("yaml_file_path=#{yaml_file_path}")
-        raise Mkspec::MkspecDebugError.new("util.rb 18 #{pn}", pn) unless pn.exist?
-        
+        unless pn.exist?
+          Loggerxcm.debug("extract_in_yaml_file exist yaml_file_path=#{yaml_file_path}")
+          return {}
+        end
         content = File.read(pn.to_s)
         Loggerxcm.debug("Util#extract_in_yaml_file content=#{content}")
-        Loggerxcm.debug("Util#extract_in_yaml_file hash=#{hashx}")
+        Loggerxcm.debug("Util#extract_in_yaml_file BEFORE hash=#{hashx}")
         hash = extract_in_yaml(content, hashx)
+        Loggerxcm.debug("Util#extract_in_yaml_file AFTER hash=#{hashx}")
         dump_var(:hash, hash)
-        raise Mkspec::MkspecDebugError, "extract_in_yaml_file 1 ret=#{ret}" unless Util.not_empty_hash?(hash).first
-        
-        hash
+        ret = Util.not_empty_hash?(hash)
+        if ret.first
+          
+          hash
+        else
+          {}
+        end
       end
-      
-      # Checks if the element at a specified index in an array is numeric and raises an error if it is.
-      # This method is useful for validating that a specific position in an array contains a numeric value.
-      # @param tmp [Array] The array to check.
-      # @param num [Integer] The index in the array to check.
-      # @param error [Exception] The error to raise if the condition is met.
+
       def check_numeric_and_raise(tmp, num, error)
-        raise error if tmp.size > num && Util.numeric?(tmp[num])
+        if tmp.size > num && Util.numeric?(tmp[num])
+          true
+        else
+          false
+        end
       end
-      
+
+      def check_numeric(tmp, num)
+        if tmp.size > num && Util.numeric?(num) && Util.numeric?(tmp[num])
+          true
+        else
+          false
+        end
+      end
+
       # Determines if a given string represents a numeric value without decimal points.
       # This method is particularly useful for validating string inputs that are expected to be integer values.
       # @param lookahead [String] The string to check.
@@ -497,7 +561,7 @@ module Mkspec
           !lookahead.match?(/\./)
         end
       end
-      
+
       # Checks if the given string is not empty after stripping whitespace.
       # Similar to `nil_or_not_empty_string?` but does not consider nil as valid.
       # @param str [String] The string to check.
@@ -505,13 +569,13 @@ module Mkspec
       def nil_or_not_empty_string?(str)
         return [true, 1] unless str
         return [false, 2] unless str.instance_of?(String)
-        
+
         stripped_str = str.strip
         return [false, 3] if stripped_str.empty?
-        
+
         [true, 4]
       end
-      
+
       # Checks if the given hash is not empty.
       # This method returns a tuple where the first element is a boolean indicating the result,
       # and the second element is an integer representing the specific check that was performed.
@@ -520,28 +584,21 @@ module Mkspec
       def not_empty_string?(str)
         return [false, 1] unless str
         return [false, 2] unless str.instance_of?(String)
-        
+
         stripped_str = str.strip
         return [false, 3] if stripped_str.empty?
-        
+
         [true, 4]
       end
-      
-      # Checks if the given hash is not empty.
-      # This method returns a tuple where the first element is a boolean indicating the result,
-      # and the second element is an integer representing the specific check that was performed.
-      # @param hash [Hash] The hash to check.
-      # @return [Array<Boolean, Integer>] A tuple with the result and the check identifier.
-      def not_empty_string?(str)
-        return [false, 1] unless str
-        return [false, 2] unless str.instance_of?(String)
-        
-        stripped_str = str.strip
-        return [false, 3] if stripped_str.empty?
-        
+
+      def not_empty_hash?(hash)
+        return [false, 1] unless hash
+        return [false, 2] unless hash.instance_of?(Hash)
+        return [false, 3] if hash.empty?
+
         [true, 4]
       end
-      
+
       # Logs the name and value of a variable for debugging purposes.
       # This method is useful for tracking variable values at different points in the code.
       # @param name [Symbol] The name of the variable.
@@ -550,7 +607,7 @@ module Mkspec
         Loggerxcm.debug("Util#dump_var name=#{name}")
         Loggerxcm.debug("Util#dump_var value=#{value}")
       end
-      
+
       # Analyzes lines of content to determine the indentation level of embedded Ruby code.
       # This method is useful for processing template strings to understand their structure.
       # @param content_lines [Array<String>] The lines of content to analyze.
@@ -558,23 +615,23 @@ module Mkspec
       def analyze(content_lines)
         content_lines.each_with_object({}) do |l, state|
           next unless @re2.match(l)
-          
+
           space = Regexp.last_match[1]
           key = Regexp.last_match[2].strip
           state[key] = space.size
         end
       end
-      
+
       # Checks if the given object is an instance of Hash.
       # This method is useful for type validation before performing operations that expect a hash.
       # @param hash [Object] The object to check.
       # @return [Boolean] True if the object is an instance of Hash, false otherwise.
       def valid_hash_instance?(hash)
         return false unless hash
-        
+
         hash.instance_of?(Hash)
       end
-      
+
       # Validates that a specific key in a hash maps to a value of a given class.
       # This method is useful for ensuring data integrity in hash structures.
       # @param hash [Hash] The hash to validate.
@@ -585,7 +642,7 @@ module Mkspec
         x = hash[key]
         x && !x.instance_of?(klass) ? false : true
       end
-      
+
       # Recursively validates that a specific key in a nested hash maps to a value of a given class.
       # This method extends `valid_hash?` to work with nested structures.
       # @param hash [Hash] The hash to validate.
@@ -605,25 +662,25 @@ module Mkspec
         end
         ret
       end
-      
+
       # Checks if the given object is an instance of Array.
       # @param item [Object] The object to check.
       # @return [Boolean] True if the object is an instance of Array, false otherwise.
       def valid_array?(item)
         return false unless item
-        
+
         item.instance_of?(Array)
       end
-      
+
       # Checks if the given Pathname object represents an existing path.
       # @param pna [Pathname] The Pathname object to check.
       # @return [Boolean] True if the path exists, false otherwise.
       def valid_pathname?(pna)
         return false unless pna
-        
+
         pna.exist?
       end
-      
+
       # Determines if the given object is an instance of any class specified in the arguments.
       # @param item [Object] The object to check.
       # @param klasses [Array<Class>] A list of classes to check against the object.
@@ -632,7 +689,7 @@ module Mkspec
         ret = klasses.find { |x| item.instance_of?(x) }
         ret != nil
       end
-      
+
       # Creates a new Struct for adding a test case to a test group with keyword initialization.
       # This Struct includes various fields related to the test case and test group, such as test values, messages, tags, and extra information.
       # @return [Struct] A new Struct with fields for test group and test case information.

@@ -3,13 +3,13 @@ path: i/content.txt
 desc: tecsgen command
 rspec_describe_head:
   path: rspec_describe_head/content.txt
-  top_dir: "/home/ykominami/repo_ykominami/mkspec_data"
+  top_dir: "/home/ykominami/repo_ykominami/mkspec/test_data"
   original_output_dir: _DATA/hier27
   target_cmd_1: mkspec
   target_cmd_2: tecsmerge
-  tecspath: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecslib"
-  tecspath_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
-  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec_data/global.yml"
+  tecspath: "./test_other/tecsgen/tecsgen/tecslib"
+  tecspath_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
+  global_yaml_fname: "/home/ykominami/repo_ykominami/mkspec/test_data/global.yml"
   test_case_dir: test_case
 rspec_describe_end:
   path: rspec_describe_end/content.txt
@@ -19,7 +19,7 @@ hello:
   path: rspec_describe_context/content.txt
   context: hello
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_hello:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -44,7 +44,7 @@ simple:
   path: rspec_describe_context/content.txt
   context: simple
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_simple:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -69,7 +69,7 @@ optional:
   path: rspec_describe_context/content.txt
   context: optional
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_optional:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -110,7 +110,7 @@ series:
   path: rspec_describe_context/content.txt
   context: series
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_series:
   path: make_arg/content.txt
   func_name: make_cmdline_1
@@ -135,7 +135,7 @@ pointer:
   path: rspec_describe_context/content.txt
   context: pointer
   tecsgen_cmd: tecsgen
-  tecsgen_cmd_path: "/home/ykominami/repo_ykominami/tecsgen/tecsgen/tecsgen"
+  tecsgen_cmd_path: "./test_other/tecsgen/tecsgen/tecsgen"
 make_cmdline_1_pointer:
   path: make_arg/content.txt
   func_name: make_cmdline_1
