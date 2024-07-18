@@ -231,15 +231,6 @@ module Mkspec
         File.readlines(file_path).grep_v(/^(\s*)#/).map(&:chomp)
       end
 
-      # Adjusts a hash by analyzing and replacing tags with their corresponding values.
-      # This method processes a hash, looking for tags within the values and replacing them with actual values
-      # based on other entries in the hash. It supports nested tag replacement and raises errors for invalid configurations.
-      #
-      # @param hash [Hash] The original hash to adjust.
-      # @param key_0 [String] The key associated with the value being processed.
-      # @param value_0 [Object] The value to process for tag replacement.
-      # @param hashx [Hash] The hash where the adjusted key-value pairs are stored.
-      # @raise [Mkspec::MkspecDebugError] If the value is not a valid instance or if tag replacement fails.
       def adjust_hash_sub(hash, key_0, value_0, hashx)
         ret =  Util.valid_instance?(value_0, String, Integer, Array, Hash)
         unless ret
@@ -270,7 +261,8 @@ module Mkspec
                 ret = Util.not_empty_string?(value)
                 unless ret.first
                   Loggerxcm.debug(
-                        "util.rb 6 _value.class=#{value.class}")
+                    "util.rb 6 _value.class=#{value.class}"
+                  )
                   next
                 end
                 hashx[tag_y] = hash[tag_y]
@@ -465,7 +457,7 @@ module Mkspec
           Loggerxcm.debug(
             "util.rb extract_in_yaml 16 yaml_str=#{yaml_str}"
           )
-          raise
+          # raise
           return {}
         end
         Loggerxcm.debug "hash_y=#{hash_y}"
@@ -475,7 +467,7 @@ module Mkspec
           Loggerxcm.debug(
             "util.rb extract_in_yaml 17x #{hash_y}"
           )
-          raise
+          # raise
           return {}
         end
         extracted_text = extract_with_eruby(yaml_str, hash_y)
@@ -483,7 +475,7 @@ module Mkspec
         array = Util.not_empty_string?(extracted_text)
         unless array.first
           Loggerxcm.debug "extract_in_yaml D ret2=#{array}"
-          raise
+          # raise
           return {}
         end
         Loggerxcm.debug "extract_in_yaml E ret2=#{array}"
@@ -522,43 +514,32 @@ module Mkspec
         dump_var(:hash, hash)
         ret = Util.not_empty_hash?(hash)
         if ret.first
-          
+
           hash
         else
           {}
         end
       end
 
-      def check_numeric_and_raise(tmp, num, error)
-        if tmp.size > num && Util.numeric?(tmp[num])
-          true
-        else
-          false
-        end
-      end
-
       def check_numeric(tmp, num)
-        if tmp.size > num && Util.numeric?(num) && Util.numeric?(tmp[num])
-          true
-        else
-          false
-        end
+        Util.numeric?(num) && tmp.size > num && Util.numeric?(tmp[num])
       end
 
-      # Determines if a given string represents a numeric value without decimal points.
-      # This method is particularly useful for validating string inputs that are expected to be integer values.
-      # @param lookahead [String] The string to check.
-      # @return [Boolean] True if the string is numeric and does not contain a decimal point, false otherwise.
       def numeric?(lookahead)
-        if lookahead.to_i.zero?
-          chunk = lookahead.strip
-          if chunk.size == 1
-            chunk == "0"
-          else
-            false
-          end
+        if lookahead.instance_of?(String)
+          return false if lookahead.match?(/\./)
+
+          str = lookahead.strip
+          mdata = /[:blank:]/.match(str)
+          return false if mdata.nil?
+
+          num = str.to_i
+          num.negative? ? false : true
+
+        elsif lookahead.instance_of?(Integer)
+          lookahead.negative? ? false : true
         else
-          !lookahead.match?(/\./)
+          false
         end
       end
 

@@ -149,15 +149,15 @@ module Mkspec
       @ost.spec_test_test_include_dir_pn = @ost.spec_test_dir_pn.join(TEST_INCLUDE_DIR)
       @ost.spec_test_test_cygwn_dir_pn = @ost.spec_test_dir_pn.join(TEST_CYGWIN_DIR)
       @ost.spec_test_test_cygwn3_dir_pn = @ost.spec_test_dir_pn.join(TEST_CYGWIN3_DIR)
-      
+
       unless @ost.log_dir_pn.exist?
         Loggerxcm.debug "globalconfig.rb X4 | Can't find #{@ost.log_dir_pn}"
         return false
       end
       Loggerxcm.debug "@ost.log_dir_pn.expand_path=#{@ost.log_dir_pn.expand_path}"
       @ost.log_dir_pn.mkpath
-      
-      return true
+
+      true
     end
 
     def setup(ost)
@@ -206,7 +206,7 @@ module Mkspec
       end
 
       @global_hash.merge!(specific_hash)
-      return true
+      true
     end
 
     def init_for_ost(target_cmd_1, target_cmd_2, init_hash, global_yaml_pna)
@@ -297,9 +297,8 @@ module Mkspec
         Logger.debug("globalconfig.rb 7")
         return false
       end
-      unless target_cmd_1 && target_cmd_2
-        return false
-      end
+      return false unless target_cmd_1 && target_cmd_2
+
       _tmp, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, ".", target_cmd_1, target_cmd_2)
       unless @ost.target_cmd_1_pn
         @ost.bin_dir_pn, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, "bin", target_cmd_1,
@@ -309,8 +308,8 @@ module Mkspec
 
       @ost.exe_dir_pn, @ost.target_cmd_1_pn, @ost.target_cmd_2_pn = Util.get_path(@ost.top_dir_pn, "exe", target_cmd_1, target_cmd_2)
 
-      #@ost
-      return true
+      # @ost
+      true
     end
 
     def arrange(ost)
