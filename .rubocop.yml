@@ -1,6 +1,6 @@
 inherit_from: .rubocop_todo.yml
 
-require:
+plugins:
   - rubocop-rake
   - rubocop-rspec
 
@@ -27,6 +27,7 @@ AllCops:
     - "config/puma.rb"
     - "root/**/*"
     - "test_data/**/*"
+    - "test_output/**/*"
 Layout:
   # メソッド名をcamelCase に設定します
   MethodName:
@@ -67,4 +68,7 @@ Lint/DuplicateRegexpCharacterClassElement:
   Enabled: false
 
 Style/IfWithBooleanLiteralBranches:
+  Enabled: false
+
+Naming/PredicateMethod:
   Enabled: false

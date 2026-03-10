@@ -7,7 +7,7 @@ require "spec_helper_2"
 begin
   require "debug"
 rescue StandardError => exc
-  puts exc.message
+  puts exc.message # rubocop:disable RSpec/Output
 end
 
 require "aruba/rspec"
@@ -71,7 +71,7 @@ RSpec.describe "command-line", type: :aruba do
     #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
     #                      /script(出力先)
     context "when create files under template_and_data_2 directory" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:tsv_fname) { @ost.misc_tsv_fname }
       let(:argv) do
         %W[
@@ -110,7 +110,7 @@ RSpec.describe "command-line", type: :aruba do
     #                      #/script(出力先)
     #                      /script_3 (今回の出力先)　ここに出力するだけ
     context "when create spec files from files under templaet_and_data_2 to script_3 directory" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:tsv_fname) { @ost.misc_tsv_fname }
       let(:argv) do
         %W[
@@ -144,7 +144,7 @@ RSpec.describe "command-line", type: :aruba do
     end
 
     context "when create all files to script x from tadx" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:argv) do
         %W[
           -G #{@ost.specific_yaml_fname}
@@ -177,7 +177,7 @@ RSpec.describe "command-line", type: :aruba do
     end
 
     context "when create all files to script y from tady" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:argv) do
         %W[
           -G #{@ost.specific_yaml_fname}
@@ -210,7 +210,7 @@ RSpec.describe "command-line", type: :aruba do
     end
 
     context "when create all files to script y only from tady" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:argv) do
         %W[
           -G #{@ost.specific_yaml_fname}
@@ -243,7 +243,7 @@ RSpec.describe "command-line", type: :aruba do
     end
 
     context "when create all files to script x from tadv" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:argv) do
         %W[
           -G #{@ost.specific_yaml_fname}
@@ -276,7 +276,7 @@ RSpec.describe "command-line", type: :aruba do
     end
 
     context "when create all files to script y from tadw" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:argv) do
         %W[
           -G #{@ost.specific_yaml_fname}
@@ -309,7 +309,7 @@ RSpec.describe "command-line", type: :aruba do
     end
 
     context "when create all files to script y only from tadw" do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:argv) do
         %W[
           -G #{@ost.specific_yaml_fname}
