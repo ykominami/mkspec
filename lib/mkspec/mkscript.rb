@@ -99,7 +99,7 @@ module Mkspec
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_O, "not specified -o") unless @output_dir
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_T, "not specified -t") unless @tsv_fname
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "not specified -c") unless @cmd
-      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless @cmd_options.find { |it| @cmd == it }
+      return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_C, "invalid -c") unless @cmd_options.find { |opt| @cmd == opt }
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_S, "not specified -s") unless @start_char
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_L, "not specified -l") unless @limit
       return STATE.change(Mkspec::CMDLINE_OPTION_ERROR_Y, "not specified -y") unless @target_cmd_1

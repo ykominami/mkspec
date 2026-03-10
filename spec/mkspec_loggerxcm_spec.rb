@@ -5,7 +5,7 @@ require 'spec_helper_1'
 begin
   require 'debug'
 rescue StandardError => exc
-  puts exc.message
+  puts exc.message # rubocop:disable RSpec/Output
 end
 
 logger_init_x

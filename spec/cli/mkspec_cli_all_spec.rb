@@ -25,7 +25,7 @@ RSpec.describe 'command-line', type: :aruba do
     #                      /template_and_data_2(今回の出力先)　ここに出力するだけ
     #                      /script(出力先)
     context 'when create files under template_and_data_2 directory' do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:ost) { @conf.ost }
       let(:argv) do
         %W[-D #{ost.top_dir_yaml_fname}
@@ -52,7 +52,6 @@ RSpec.describe 'command-line', type: :aruba do
       end
 
       it 'do not output error string', :cli, :test_normal_sh_out, cmd: 2 do
-        test_case_dir = 1
         run_command("clitest #{cmdline}")
         expect(last_command_started).not_to have_output(/error:/)
       end
@@ -65,7 +64,7 @@ RSpec.describe 'command-line', type: :aruba do
     #                      #/script(出力先)
     #                      /script_3 (今回の出力先)　ここに出力するだけ
     context 'when create spec files from files under templaet_and_data_2 to script_3 directory' do
-      test_case_dir = 1
+      let(:test_case_dir) { 1 }
       let(:ost) { @conf.ost }
       let(:tsv_fname) { ost.misc_tsv_fname }
       let(:argv) do

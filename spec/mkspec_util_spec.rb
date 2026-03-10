@@ -5,15 +5,17 @@ require "spec_helper_1"
 begin
   require "debug"
 rescue StandardError => exc
-  puts exc.message
+  puts exc.message # rubocop:disable RSpec/Output
 end
 
 logger_init_x
 
 RSpec.describe "Mkspec::Util" do
   context "with adjust_files" do
+    # rubocop:disable RSpec/LeakyLocalVariable
     ret = Mkspec::Util.adjust_files
     top_dir_yaml_file, resolved_top_dir_yaml_file, specific_yaml_file, global_yaml_file = ret
+    # rubocop:enable RSpec/LeakyLocalVariable
     it "The number of elements in the array is four.", cmd: 1 do
       expect(ret.size).to eq(4)
     end
@@ -57,7 +59,7 @@ RSpec.describe "Mkspec::Util" do
     end
 
     # conf = TestHelp.make_testconf
-    _, _, global_yaml_file, = Mkspec::Util.adjust_files
+    _, _, global_yaml_file, = Mkspec::Util.adjust_files # rubocop:disable RSpec/LeakyLocalVariable
     let(:ret) { Mkspec::Util.get_file_content(global_yaml_file[2]) }
 
     it "get_file_content", cmd: 0 do
