@@ -1,0 +1,120 @@
+classDiagram
+    class NotStringInstError
+    class EmptyStringError
+    class MkspecError
+    class MkspecDebugError
+    class MkspecAppError
+    class Config
+    class GlobalConfig
+    class Item
+    class Mkscript
+    class Root
+    class Setting
+    class State
+    class Templatex
+    class TestCase
+    class TestGroup
+    class TestScript
+    class TestScriptGroup
+    class Util
+    class Loggerxcm0
+    class Loggerxcm
+    class Loggerxcmcli
+    class Loggerxcmspec
+
+    %% 継承
+    MkspecError <|-- MkspecDebugError : 継承
+    MkspecError <|-- MkspecAppError : 継承
+    Loggerxcm0 <|-- Loggerxcm : 継承
+    Loggerxcm0 <|-- Loggerxcmcli : 継承
+    Loggerxcm0 <|-- Loggerxcmspec : 継承
+
+    %% Mkscript（CLIエントリーポイント）の依存
+    Mkscript ..> GlobalConfig : 設定生成
+    Mkscript ..> Config : ディレクトリ管理
+    Mkscript ..> TestScriptGroup : テストスクリプト構築
+    Mkscript ..> TestScript : テストスクリプト参照
+    Mkscript ..> Setting : 設定生成
+    Mkscript ..> Templatex : テンプレート生成
+    Mkscript ..> Root : spec文字列生成
+    Mkscript ..> Util : ユーティリティ利用
+    Mkscript ..> Loggerxcm : ログ出力
+    Mkscript ..> State : 状態管理
+    Mkscript ..> MkspecAppError : 例外送出
+    Mkscript ..> MkspecDebugError : 例外送出
+
+    %% Config の依存
+    Config ..> GlobalConfig : 定数参照
+    Config ..> Loggerxcm : ログ出力
+    Config ..> MkspecDebugError : 例外送出
+
+    %% GlobalConfig の依存
+    GlobalConfig ..> Util : YAML読込・検証
+    GlobalConfig ..> Loggerxcm : ログ出力
+    GlobalConfig ..> MkspecAppError : 例外送出
+
+    %% Item の依存
+    Item ..> Util : YAML抽出・ERuby展開
+    Item ..> Loggerxcm : ログ出力
+    Item ..> Config : パス解決
+    Item ..> State : 状態確認
+    Item ..> Item : 子Item生成（再帰）
+    Item ..> MkspecDebugError : 例外送出
+    Item ..> MkspecAppError : 例外送出
+
+    %% Root の依存
+    Root ..> Item : Item生成
+    Root ..> Util : YAML抽出・ERuby展開
+    Root ..> Config : パス解決
+    Root ..> Loggerxcm : ログ出力
+    Root ..> MkspecDebugError : 例外送出
+
+    %% Setting の依存
+    Setting ..> TestScript : テストスクリプト参照
+    Setting ..> TestGroup : テストグループ参照
+    Setting ..> TestCase : テストケース参照
+    Setting ..> GlobalConfig : キー定数解決
+    Setting ..> Util : 文字列検証
+    Setting ..> Loggerxcm : ログ出力
+    Setting ..> State : 状態参照
+    Setting ..> MkspecAppError : 例外送出
+    Setting ..> MkspecDebugError : 例外送出
+
+    %% Templatex の依存
+    Templatex ..> Setting : 設定情報取得
+    Templatex ..> Config : パス解決
+    Templatex ..> GlobalConfig : 定数参照
+    Templatex ..> Util : ファイル読込
+    Templatex ..> Loggerxcm : ログ出力
+    Templatex ..> MkspecDebugError : 例外送出
+
+    %% TestGroup の依存
+    TestGroup ..> TestCase : テストケース生成
+    TestGroup ..> Util : 文字列検証
+    TestGroup ..> MkspecAppError : 例外送出
+
+    %% TestScript の依存
+    TestScript ..> TestGroup : グループ管理
+    TestScript ..> Util : ファイル名生成・文字列検証
+    TestScript ..> MkspecAppError : 例外送出
+
+    %% TestScriptGroup の依存
+    TestScriptGroup ..> TestGroup : グループ生成
+    TestScriptGroup ..> TestScript : スクリプト生成
+    TestScriptGroup ..> Util : 文字列検証・数値チェック
+    TestScriptGroup ..> Loggerxcm : ログ出力
+    TestScriptGroup ..> MkspecAppError : 例外送出
+
+    %% TestCase の依存
+    TestCase ..> Util : 文字列検証
+    TestCase ..> MkspecAppError : 例外送出
+
+    %% Util の依存
+    Util ..> Loggerxcm : ログ出力
+    Util ..> MkspecAppError : 例外送出
+
+    %% Loggerxcm0 の依存
+    Loggerxcm0 ..> Util : 文字列出力
+
+    %% State の依存
+    State ..> Loggerxcm : メッセージ表示
